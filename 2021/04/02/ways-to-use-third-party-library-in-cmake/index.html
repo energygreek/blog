@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=z20lYmACQgemxcrzNk1C8Q"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'z20lYmACQgemxcrzNk1C8Q');
+</script>
+<!-- End Google Analytics -->
+
+  
+  <title>cmake 使用第三方库 | 又是元气满满的一天</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="cmake 使用第三方库在项目中链接第三方库的方法都是’target_include_directories’ 和 ‘target_link_library’, 前提引入第三方包. 而查找可以使用find_package find_package找包find_package分为Module和Config两种方式 Module方式find_package先在’&#x2F;usr&#x2F;share&#x2F;cmake&#x2F;Mod">
+<meta property="og:type" content="article">
+<meta property="og:title" content="cmake 使用第三方库">
+<meta property="og:url" content="https://energygreek.github.io/2021/04/02/ways-to-use-third-party-library-in-cmake/index.html">
+<meta property="og:site_name" content="又是元气满满的一天">
+<meta property="og:description" content="cmake 使用第三方库在项目中链接第三方库的方法都是’target_include_directories’ 和 ‘target_link_library’, 前提引入第三方包. 而查找可以使用find_package find_package找包find_package分为Module和Config两种方式 Module方式find_package先在’&#x2F;usr&#x2F;share&#x2F;cmake&#x2F;Mod">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-04-02T06:15:03.000Z">
+<meta property="article:modified_time" content="2024-02-07T09:59:29.791Z">
+<meta property="article:author" content="greek_soon@hotmail.com">
+<meta property="article:tag" content="cmake">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/" title="又是元气满满的一天">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="又是元气满满的一天" type="application/atom+xml">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">又是元气满满的一天</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">个人博客</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS 订阅"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://energygreek.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-ways-to-use-third-party-library-in-cmake" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/04/02/ways-to-use-third-party-library-in-cmake/" class="article-date">
+  <time class="dt-published" datetime="2021-04-02T06:15:03.000Z" itemprop="datePublished">2021-04-02</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      cmake 使用第三方库
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="cmake-使用第三方库"><a href="#cmake-使用第三方库" class="headerlink" title="cmake 使用第三方库"></a>cmake 使用第三方库</h1><p>在项目中链接第三方库的方法都是’target_include_directories’ 和 ‘target_link_library’, 前提引入第三方包. 而查找可以使用<code>find_package</code></p>
+<h2 id="find-package找包"><a href="#find-package找包" class="headerlink" title="find_package找包"></a>find_package找包</h2><p>find_package分为Module和Config两种方式</p>
+<h3 id="Module方式"><a href="#Module方式" class="headerlink" title="Module方式"></a>Module方式</h3><p>find_package先在’/usr/share/cmake/Modules/Find/‘下添加FindXXX.cmake文件，以及自定义路径(CMAKE_MODULE_PATH)下查找<br>然后在项目的CMakeList.txt中使用find_package(), 然后可以在链接的时候使用第三方库</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">find_package</span>()</span><br></pre></td></tr></table></figure>
+
+<h3 id="Config模式"><a href="#Config模式" class="headerlink" title="Config模式"></a>Config模式</h3><p>当find_package找不到FindXXX.cmake文件，则会找</p>
+<ul>
+<li><LibraryName>Config.cmake</li>
+<li><lower-case-package-name>-config.cmake</li>
+</ul>
+<p>如果第三方项目支持cmake, 那么先通过cmake编译和安装到环境或者docker环境，这时会在’/usr/lib/cmake/<LibraryName>/‘下添加上述文件</p>
+<h3 id="安装FindXXX-cmake文件"><a href="#安装FindXXX-cmake文件" class="headerlink" title="安装FindXXX.cmake文件"></a>安装FindXXX.cmake文件</h3><p>当没有FindXXX.cmake时，可以使用安装包管理工具安装cmake-extra包, 可能找到需要的</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pacman -S extra-cmake-modules</span><br></pre></td></tr></table></figure>
+
+<p>然后执行下面的命令，可以看到大量的’Find*.cmake’文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ls &#x2F;usr&#x2F;share&#x2F;cmake-3.20&#x2F;Modules&#x2F;</span><br></pre></td></tr></table></figure>
+
+<h3 id="自定义FindXXX-cmake文件"><a href="#自定义FindXXX-cmake文件" class="headerlink" title="自定义FindXXX.cmake文件"></a>自定义FindXXX.cmake文件</h3><p>如果上述方式都不行，那么需要自己写FindXXX.cmake，放到CMAKE_MODULE_PATH下<br>例如在项目根目录创建文件夹<code>cmake_module</code>, 再使用<code>set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake_module)</code>来指定module的路径<br>最后在’cmake_module’下创建FindXXX.cmake结尾的文件，这个文件用来写找header和lib规则, 内容大致为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">find_path(Grpc_INCLUDE_DIR grpc++&#x2F;grpc++.h)</span><br><span class="line">mark_as_advanced(Grpc_INCLUDE_DIR)</span><br><span class="line"></span><br><span class="line">find_library(Grpc++_LIBRARY NAMES grpc++ grpc++-1-dll)</span><br><span class="line">mark_as_advanced(Grpc++_LIBRARY)</span><br></pre></td></tr></table></figure>
+
+<p>有这个文件之后，可以在项目的cmake中直接使用<code>find_package()</code></p>
+<h2 id="源代码编译链接"><a href="#源代码编译链接" class="headerlink" title="源代码编译链接"></a>源代码编译链接</h2><p>将第三方库源码放到项目指定目录如third</p>
+<ol>
+<li>放到third目录并可以使用<code>git submodule</code>管理</li>
+<li>在thrid目录添加CMakeList.txt，在其中添加目标，已备在项目中链接<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># for gsl-lite target</span><br><span class="line">add_library(gsl-lite INTERFACE)</span><br><span class="line">target_include_directories(gsl-lite SYSTEM INTERFACE $&#123;CMAKE_CURRENT_SOURCE_DIR&#125;&#x2F;gsl-lite&#x2F;include)</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h2 id="FetchContent-自动源代码链接"><a href="#FetchContent-自动源代码链接" class="headerlink" title="FetchContent 自动源代码链接"></a>FetchContent 自动源代码链接</h2><p>cmake3.11之后，可以使用这个办法来自动拉取网上的库，并可以直接在自己的项目中使用</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># <span class="doctag">NOTE:</span> This example uses cmake version 3.14 (FetchContent_MakeAvailable).</span></span><br><span class="line"><span class="comment"># Since it streamlines the FetchContent process</span></span><br><span class="line"><span class="keyword">cmake_minimum_required</span>(VERSION <span class="number">3.14</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">include</span>(FetchContent)</span><br><span class="line"></span><br><span class="line"><span class="comment"># In this example we are picking a specific tag.</span></span><br><span class="line"><span class="comment"># You can also pick a specific commit, if you need to.</span></span><br><span class="line">FetchContent_Declare(GSL</span><br><span class="line">    GIT_REPOSITORY <span class="string">"https://github.com/microsoft/GSL"</span></span><br><span class="line">    GIT_TAG <span class="string">"v3.1.0"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">FetchContent_MakeAvailable(GSL)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Now you can link against the GSL interface library</span></span><br><span class="line"><span class="keyword">add_executable</span>(foobar)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Link against the interface library (IE header only library)</span></span><br><span class="line"><span class="keyword">target_link_libraries</span>(foobar PRIVATE GSL)</span><br></pre></td></tr></table></figure>
+
+<p>##cmake使用openssl存在问题</p>
+<p>因为openssl不用cmake,也就没有.cmake文件, 导致项目配置失败 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Could NOT find OpenSSL, try to set the path to OpenSSL root folder in the</span><br><span class="line"> system variable OPENSSL_ROOT_DIR (missing: OPENSSL_LIBRARIES</span><br><span class="line"> OPENSSL_INCLUDE_DIR)</span><br></pre></td></tr></table></figure>
+<p>后面发现它是使用package_config方式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#&#x2F;usr&#x2F;local&#x2F;lib&#x2F;pkgconfig&#x2F;openssl.pc</span><br><span class="line">prefix&#x3D;&#x2F;usr</span><br><span class="line">exec_prefix&#x3D;$&#123;prefix&#125;</span><br><span class="line">libdir&#x3D;$&#123;exec_prefix&#125;&#x2F;lib</span><br><span class="line">includedir&#x3D;$&#123;prefix&#125;&#x2F;include</span><br><span class="line"></span><br><span class="line">Name: OpenSSL</span><br><span class="line">Description: Secure Sockets Layer and cryptography libraries and tools</span><br><span class="line">Version: 1.1.1k</span><br><span class="line">Requires: libssl libcrypto</span><br></pre></td></tr></table></figure>
+
+<p>这种情况除了通过cmake_module来解决之外，还可以通过指定pc文件的路径</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmake -DOPENSSL_ROOT_DIR&#x3D;&#x2F;usr&#x2F;local&#x2F;</span><br></pre></td></tr></table></figure>
+
+<h2 id="ExternalProject-Add"><a href="#ExternalProject-Add" class="headerlink" title="ExternalProject_Add"></a>ExternalProject_Add</h2><p>这个不常用</p>
+<h2 id="find-package-和-find-library-区别"><a href="#find-package-和-find-library-区别" class="headerlink" title="find_package 和 find_library 区别"></a>find_package 和 find_library 区别</h2><p>find_library 是cmake的底层方法，在find_path指定的目录下查找库文件<br>而find_package 使用了find_library的来找库文件，而且find_package在找到目标后，会定义一些变量，如下面的’Findlibproxy.cmake’文件头</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"># - Try to find libproxy</span><br><span class="line"># Once done this will define</span><br><span class="line">#</span><br><span class="line">#  LIBPROXY_FOUND - system has libproxy</span><br><span class="line">#  LIBPROXY_INCLUDE_DIR - the libproxy include directory</span><br><span class="line">#  LIBPROXY_LIBRARIES - libproxy library</span><br><span class="line">#</span><br><span class="line"># Copyright (c) 2010, Dominique Leuenberger</span><br><span class="line">#</span><br><span class="line"># Redistribution and use is allowed according the license terms</span><br><span class="line"># of libproxy, which this file is integrated part of.</span><br><span class="line"></span><br><span class="line"># Find proxy.h and the corresponding library (libproxy.so)</span><br><span class="line">FIND_PATH(LIBPROXY_INCLUDE_DIR proxy.h )</span><br><span class="line">FIND_LIBRARY(LIBPROXY_LIBRARIES NAMES proxy )</span><br></pre></td></tr></table></figure>
+
+<p>当找到libproxy.so的时候，LIBPROXY_FOUND被设置为TRUE等</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://energygreek.github.io/2021/04/02/ways-to-use-third-party-library-in-cmake/" data-id="clsbmbv570050bwop23fh71aq" data-title="cmake 使用第三方库" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cmake/" rel="tag">cmake</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2021/04/13/grpc-learning/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前一篇</strong>
+      <div class="article-nav-title">
+        
+          grpc 学习
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2021/03/25/my-urxvt/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">urxvt配置</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/51%E5%8D%95%E7%89%87%E6%9C%BA/" rel="tag">51单片机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DP/" rel="tag">DP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aarch64/" rel="tag">aarch64</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/admin/" rel="tag">admin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/" rel="tag">algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algoritm/" rel="tag">algoritm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bash/" rel="tag">bash</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/basics/" rel="tag">basics</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/" rel="tag">c++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c-c/" rel="tag">c/c++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cmake/" rel="tag">cmake</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dns/" rel="tag">dns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/email-client/" rel="tag">email_client</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/exam/" rel="tag">exam</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/exception-safe/" rel="tag">exception-safe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ffmpeg/" rel="tag">ffmpeg</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/filesystem/" rel="tag">filesystem</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flask/" rel="tag">flask</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gdb/" rel="tag">gdb</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/" rel="tag">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/grpc/" rel="tag">grpc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/grub/" rel="tag">grub</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hawei/" rel="tag">hawei</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/heapsort/" rel="tag">heapsort</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/" rel="tag">k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linkage/" rel="tag">linkage</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux%E5%9F%BA%E7%A1%80/" rel="tag">linux基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lock/" rel="tag">lock</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lvm/" rel="tag">lvm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maintance/" rel="tag">maintance</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/malloc/" rel="tag">malloc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mdns/" rel="tag">mdns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memory/" rel="tag">memory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mutex/" rel="tag">mutex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mutt/" rel="tag">mutt</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/namespace/" rel="tag">namespace</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/network/" rel="tag">network</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/os-maintain/" rel="tag">os-maintain</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/printer/" rel="tag">printer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/program/" rel="tag">program</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rancher-k8s/" rel="tag">rancher,k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rhce/" rel="tag">rhce</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rtp/" rel="tag">rtp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/safe/" rel="tag">safe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scope/" rel="tag">scope</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/seralize/" rel="tag">seralize</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shared-ptr/" rel="tag">shared_ptr</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/socket/" rel="tag">socket</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/socketopt/" rel="tag">socketopt</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sql/" rel="tag">sql</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/storageduration/" rel="tag">storageduration</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sysemd/" rel="tag">sysemd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/template-programing/" rel="tag">template programing</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/terminal/" rel="tag">terminal</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tool/" rel="tag">tool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/udp/" rel="tag">udp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/unique-ptr/" rel="tag">unique_ptr</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/unit-test/" rel="tag">unit test</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/urxvt/" rel="tag">urxvt</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webcrawler/" rel="tag">webcrawler</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webserver/" rel="tag">webserver</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/weechat/" rel="tag">weechat</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/wordpress/" rel="tag">wordpress</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" rel="tag">二叉树</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E6%A0%B8%E5%8E%9F%E7%90%86/" rel="tag">内核原理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%B7%E6%9C%BA%E6%95%99%E7%A8%8B/" rel="tag">刷机教程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" rel="tag">包管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9F%A5%E6%89%BE/" rel="tag">查找</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/" rel="tag">系统调用</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E8%AF%91/" rel="tag">编译</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%B0%83%E4%BC%98/" rel="tag">调优</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9F%B3%E8%A7%86%E9%A2%91/" rel="tag">音视频</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/51%E5%8D%95%E7%89%87%E6%9C%BA/" style="font-size: 10px;">51单片机</a> <a href="/tags/DP/" style="font-size: 10px;">DP</a> <a href="/tags/Linux/" style="font-size: 10px;">Linux</a> <a href="/tags/aarch64/" style="font-size: 10px;">aarch64</a> <a href="/tags/admin/" style="font-size: 10px;">admin</a> <a href="/tags/algorithm/" style="font-size: 16px;">algorithm</a> <a href="/tags/algoritm/" style="font-size: 10px;">algoritm</a> <a href="/tags/android/" style="font-size: 10px;">android</a> <a href="/tags/bash/" style="font-size: 10px;">bash</a> <a href="/tags/basics/" style="font-size: 10px;">basics</a> <a href="/tags/c/" style="font-size: 12px;">c++</a> <a href="/tags/c-c/" style="font-size: 20px;">c/c++</a> <a href="/tags/cmake/" style="font-size: 10px;">cmake</a> <a href="/tags/dns/" style="font-size: 10px;">dns</a> <a href="/tags/docker/" style="font-size: 18px;">docker</a> <a href="/tags/email-client/" style="font-size: 10px;">email_client</a> <a href="/tags/exam/" style="font-size: 10px;">exam</a> <a href="/tags/exception-safe/" style="font-size: 10px;">exception-safe</a> <a href="/tags/ffmpeg/" style="font-size: 10px;">ffmpeg</a> <a href="/tags/filesystem/" style="font-size: 14px;">filesystem</a> <a href="/tags/flask/" style="font-size: 10px;">flask</a> <a href="/tags/gdb/" style="font-size: 10px;">gdb</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/grpc/" style="font-size: 10px;">grpc</a> <a href="/tags/grub/" style="font-size: 10px;">grub</a> <a href="/tags/hawei/" style="font-size: 10px;">hawei</a> <a href="/tags/heapsort/" style="font-size: 10px;">heapsort</a> <a href="/tags/k8s/" style="font-size: 10px;">k8s</a> <a href="/tags/linkage/" style="font-size: 10px;">linkage</a> <a href="/tags/linux/" style="font-size: 14px;">linux</a> <a href="/tags/linux%E5%9F%BA%E7%A1%80/" style="font-size: 10px;">linux基础</a> <a href="/tags/lock/" style="font-size: 10px;">lock</a> <a href="/tags/lvm/" style="font-size: 10px;">lvm</a> <a href="/tags/maintance/" style="font-size: 10px;">maintance</a> <a href="/tags/malloc/" style="font-size: 10px;">malloc</a> <a href="/tags/mdns/" style="font-size: 10px;">mdns</a> <a href="/tags/memory/" style="font-size: 12px;">memory</a> <a href="/tags/mutex/" style="font-size: 10px;">mutex</a> <a href="/tags/mutt/" style="font-size: 10px;">mutt</a> <a href="/tags/namespace/" style="font-size: 10px;">namespace</a> <a href="/tags/network/" style="font-size: 10px;">network</a> <a href="/tags/os-maintain/" style="font-size: 10px;">os-maintain</a> <a href="/tags/printer/" style="font-size: 10px;">printer</a> <a href="/tags/program/" style="font-size: 10px;">program</a> <a href="/tags/python/" style="font-size: 14px;">python</a> <a href="/tags/rancher-k8s/" style="font-size: 10px;">rancher,k8s</a> <a href="/tags/rhce/" style="font-size: 10px;">rhce</a> <a href="/tags/rtp/" style="font-size: 10px;">rtp</a> <a href="/tags/safe/" style="font-size: 12px;">safe</a> <a href="/tags/scope/" style="font-size: 10px;">scope</a> <a href="/tags/seralize/" style="font-size: 10px;">seralize</a> <a href="/tags/shared-ptr/" style="font-size: 10px;">shared_ptr</a> <a href="/tags/socket/" style="font-size: 10px;">socket</a> <a href="/tags/socketopt/" style="font-size: 10px;">socketopt</a> <a href="/tags/sql/" style="font-size: 12px;">sql</a> <a href="/tags/storageduration/" style="font-size: 10px;">storageduration</a> <a href="/tags/sysemd/" style="font-size: 10px;">sysemd</a> <a href="/tags/template-programing/" style="font-size: 10px;">template programing</a> <a href="/tags/terminal/" style="font-size: 10px;">terminal</a> <a href="/tags/tool/" style="font-size: 18px;">tool</a> <a href="/tags/udp/" style="font-size: 10px;">udp</a> <a href="/tags/unique-ptr/" style="font-size: 10px;">unique_ptr</a> <a href="/tags/unit-test/" style="font-size: 10px;">unit test</a> <a href="/tags/urxvt/" style="font-size: 10px;">urxvt</a> <a href="/tags/webcrawler/" style="font-size: 10px;">webcrawler</a> <a href="/tags/webserver/" style="font-size: 10px;">webserver</a> <a href="/tags/weechat/" style="font-size: 10px;">weechat</a> <a href="/tags/wordpress/" style="font-size: 10px;">wordpress</a> <a href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" style="font-size: 10px;">二叉树</a> <a href="/tags/%E5%86%85%E6%A0%B8%E5%8E%9F%E7%90%86/" style="font-size: 10px;">内核原理</a> <a href="/tags/%E5%88%B7%E6%9C%BA%E6%95%99%E7%A8%8B/" style="font-size: 10px;">刷机教程</a> <a href="/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" style="font-size: 10px;">包管理</a> <a href="/tags/%E6%9F%A5%E6%89%BE/" style="font-size: 10px;">查找</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 10px;">算法</a> <a href="/tags/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/" style="font-size: 10px;">系统调用</a> <a href="/tags/%E7%BC%96%E8%AF%91/" style="font-size: 10px;">编译</a> <a href="/tags/%E8%B0%83%E4%BC%98/" style="font-size: 10px;">调优</a> <a href="/tags/%E9%9F%B3%E8%A7%86%E9%A2%91/" style="font-size: 10px;">音视频</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/02/">二月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/12/">十二月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/05/">五月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">四月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">十二月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/11/">十一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">十月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/08/">八月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">三月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">二月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/02/07/streaming-h264-with-rtp/">streaming h264 with rtp</a>
+          </li>
+        
+          <li>
+            <a href="/2023/09/08/wifi-tool/">随身wifi工具</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/21/docker-network/">docker network</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/18/mail-setup/">mail setup</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/08/install-wordpress/">install wordpress</a>
+          </li>
+        
+          <li>
+            <a href="/2022/12/29/amrnb-and-amrwb/">amrnb和amrwb的编解码</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 greek_soon@hotmail.com<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

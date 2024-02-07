@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=z20lYmACQgemxcrzNk1C8Q"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'z20lYmACQgemxcrzNk1C8Q');
+</script>
+<!-- End Google Analytics -->
+
+  
+  <title>又是元气满满的一天</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="记录总结">
+<meta property="og:type" content="website">
+<meta property="og:title" content="又是元气满满的一天">
+<meta property="og:url" content="https://energygreek.github.io/page/3/index.html">
+<meta property="og:site_name" content="又是元气满满的一天">
+<meta property="og:description" content="记录总结">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="greek_soon@hotmail.com">
+<meta property="article:tag" content="c&#x2F;c++">
+<meta property="article:tag" content=" Linux日常">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/" title="又是元气满满的一天">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="又是元气满满的一天" type="application/atom+xml">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">又是元气满满的一天</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">个人博客</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS 订阅"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://energygreek.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-docker-storage" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/08/13/docker-storage/" class="article-date">
+  <time class="dt-published" datetime="2021-08-13T08:55:33.000Z" itemprop="datePublished">2021-08-13</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2021/08/13/docker-storage/">docker storage</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="docker-存储"><a href="#docker-存储" class="headerlink" title="docker 存储"></a>docker 存储</h1><p>docker 有3种方式使用系统存储:</p>
+<ul>
+<li>bind:<br>宿主机目录映射方式，启动容器命令添加参数<code>-v dir1:dir2</code>。将宿主机的目录dir1挂载到容器的dir2目录，实际执行的<code>mount -o bind</code>类似命令</li>
+<li>volume:<br>由docker管理的存储，先创建后使用，且可以在多个容器中共享，是官方推荐的方式</li>
+<li>tmpfs:<br>使用宿主机的内存作为存储，这种使用内存文件系统来挂载到容器目录, 使用参数<code>--mount type=tmpfs,destination=/dir</code>, tmpfs是退出即释放的一种文件系统</li>
+</ul>
+<h2 id="docker使用的文件系统"><a href="#docker使用的文件系统" class="headerlink" title="docker使用的文件系统"></a>docker使用的文件系统</h2><p>docker使用的文件系统经过很多变化，而且在各发行版下可能不同，但目前主流的是overlay2，执行<code>docker info</code> 查看当前使用的是overlay2</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo docker info | grep  Storage                                                                                                                                              </span><br><span class="line"> Storage Driver: overlay2</span><br></pre></td></tr></table></figure>
+
+<p>除了overlay2，还有aufs（ubuntu），devicemapper（centos），btrfs和zfs。他们的实现都不同，都能支持分层和支持写时复制（Cow/copy-on-write），而他们实现的方式有区别，所以效率也有区别</p>
+<ul>
+<li>分层：<br>镜像都是分层的，在Dockerfile构建时，每次执行COPY/RUN时，都会增加一层</li>
+<li>写时复制:<br>在容器或者DockerFile执行修改操作时，包括权限修改，会将lower layer 的文件复制到container层再修改</li>
+</ul>
+<p>而容器就是在镜像顶层<code>压栈</code>了一个<code>可写</code>层，而且是临时的，当容器销毁时，这层的文件也会删除</p>
+<h2 id="overlay的优势"><a href="#overlay的优势" class="headerlink" title="overlay的优势"></a>overlay的优势</h2><ol>
+<li>page caching， 可以在多个不同实例之间共享</li>
+<li>不同层之间，相同文件使用硬连接， 节省inode 和 大小</li>
+</ol>
+<p>写时复制 copy-up 会导致第一次写时造成延迟，特别是大文件，拷贝起来费时。 但第二次就不会延时， 而且overlay2 有caching， 相比其它文件系统，更减少延时</p>
+<h2 id="overlay的问题"><a href="#overlay的问题" class="headerlink" title="overlay的问题"></a>overlay的问题</h2><ol>
+<li>实现不够完全， 例如没有实现uname </li>
+<li>先只读打开一个文件 open（read）， 再读写打开相同文件open（write）， 两个fd 会对应2个不同文件， 第一个对应的lower的文件，第二个造成写时复制，对应容器里的文件。 <ul>
+<li>规避方法是先执行touch 操作。 现实的例子是 yum 需要安装yum-plugin-ovl。 但这个只有7.2才支持， 之前的话就需要先<code>touch /var/lib/rpm/*</code></li>
+</ul>
+</li>
+</ol>
+<h2 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h2><ol>
+<li>使用ssd </li>
+<li>对于写操作比较多的场景，例如数据库，应使用映射文件(bind)或者volume。这样跳过了overlay的复杂操作，直接使用主机的文件系统</li>
+</ol>
+<h2 id="overlay的增删改"><a href="#overlay的增删改" class="headerlink" title="overlay的增删改"></a>overlay的增删改</h2><p>当运行docker容器时查看挂载</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">overlay on &#x2F;var&#x2F;lib&#x2F;docker&#x2F;overlay2&#x2F;04ea1faa8074e5862f40eecdba968bd9b7f222cb30e5bf6a0b9a9c48be0940f2&#x2F;merged type overlay (rw,relatime,lowerdir&#x3D;&#x2F;var&#x2F;lib&#x2F;docker&#x2F;overlay2&#x2F;l&#x2F;B74PWZCBMRCWXFH5UL2ZXB5WEU:&#x2F;var&#x2F;lib&#x2F;docker&#x2F;overlay2&#x2F;l&#x2F;WNHICVPVSDNUGSCZW435TPSMOK,upperdir&#x3D;&#x2F;var&#x2F;lib&#x2F;docker&#x2F;overlay2&#x2F;04ea1faa8074e5862f40eecdba968bd9b7f222cb30e5bf6a0b9a9c48be0940f2&#x2F;diff,workdir&#x3D;&#x2F;var&#x2F;lib&#x2F;docker&#x2F;overlay2&#x2F;04ea1faa8074e5862f40eecdba968bd9b7f222cb30e5bf6a0b9a9c48be0940f2&#x2F;work)</span><br></pre></td></tr></table></figure>
+<p>docker 将镜像的文件挂载为只读， 将容器层挂载为可读可写。 文件系统可以分为2部分<br>upper（容器层） + lower （镜像层）</p>
+<ul>
+<li>当在容器里执行写时， 如果文件不存在， 会依次遍历lower。如果都不存在就会在upper层创建文件</li>
+<li>读也相同</li>
+<li>删除时会创建一个without 来隐藏， 这是为什么即使删除容器里的文件， 镜像还是会增大。 </li>
+<li>删除目录情况也差不多</li>
+</ul>
+<h2 id="特殊情况"><a href="#特殊情况" class="headerlink" title="特殊情况"></a>特殊情况</h2><p>在保存容器后(docker commit)，会多一层，里面包含了修改的文件，以及删除后生成的without文件，然后生成镜像</p>
+<p>但对于以下特殊目录文件不会提交， 因为这些文件是运行时docker 要根据用户配置进行修改的。  </p>
+<ol>
+<li>/etc/hostname </li>
+<li>/etc/hosts </li>
+<li>/etc/resov.conf</li>
+</ol>
+<p>例如docker 的link选项，会在容器的hosts 文件里定义对应的容器名-&gt;容器ip</p>
+<h2 id="手动mount-overlayfs的例子"><a href="#手动mount-overlayfs的例子" class="headerlink" title="手动mount overlayfs的例子"></a>手动mount overlayfs的例子</h2><ol>
+<li>原本目录，文件都分散在不同目录ABC<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── A</span><br><span class="line">│   ├── aa</span><br><span class="line">│   └── a.txt</span><br><span class="line">├── B</span><br><span class="line">│   ├── a.txt</span><br><span class="line">│   └── b.txt</span><br><span class="line">├── C</span><br><span class="line">│   └── c.txt</span><br><span class="line">└── worker</span><br><span class="line">    └── work [error opening dir]</span><br></pre></td></tr></table></figure></li>
+<li>overlay 挂载到/tmp/test目录 <code>sudo mount -t overlay overlay -o lowerdir=A:B,upperdir=C,workdir=worker /tmp/test/</code></li>
+<li>查看test目录 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;tmp&#x2F;test&#x2F;</span><br><span class="line">├── aa</span><br><span class="line">├── a.txt</span><br><span class="line">├── b.txt</span><br><span class="line">└── c.txt</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mount  | grep &#39;overlay&#39;</span><br><span class="line">overlay on &#x2F;tmp&#x2F;test type overlay (rw,relatime,lowerdir&#x3D;A:B,upperdir&#x3D;C,workdir&#x3D;worker)</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://docs.docker.com/storage/storagedriver/" target="_blank" rel="noopener">https://docs.docker.com/storage/storagedriver/</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://energygreek.github.io/2021/08/13/docker-storage/" data-id="clsbmbv3j0029bwop8gov01y7" data-title="docker storage" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/" rel="tag">docker</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-storage-duration" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/04/29/storage-duration/" class="article-date">
+  <time class="dt-published" datetime="2021-04-29T10:30:32.000Z" itemprop="datePublished">2021-04-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2021/04/29/storage-duration/">c++ 存储周期、链接和作用域</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="c-中变量和函数的三个重要属性"><a href="#c-中变量和函数的三个重要属性" class="headerlink" title="c++中变量和函数的三个重要属性"></a>c++中变量和函数的三个重要属性</h1><p>存储周期类型： 有关变量的创建和销毁<br>链接类型： 有关变量函数的内存位置<br>作用域: 有关变量函数的可见范围</p>
+<p>本文讨论的标识符，包括变量和函数</p>
+<h2 id="存储说明符"><a href="#存储说明符" class="headerlink" title="存储说明符"></a>存储说明符</h2><p><code>存储说明符</code>控制变量何时分配和释放，有以下几种</p>
+<ul>
+<li>automatic</li>
+<li>thread_local</li>
+<li>static </li>
+<li>register</li>
+<li>mutable</li>
+<li>extern</li>
+</ul>
+<p>说明</p>
+<ul>
+<li>automatic: 最常见的局部变量，且没有声明为static或者thread_local，位于栈上, 随着代码块的执行和结束而自动分配和销毁</li>
+<li>static: 静态变量, 在程序启动和结束时创建和销毁，但初始化是在第一次执行初始化代码时执行</li>
+<li>thread: 在线程开始和结束时分配和销毁</li>
+<li>dynamic: 最常见的堆上的变量, 需要执行new和delete, </li>
+</ul>
+<p>auto 在c++11中不是声明存储周期，而是类型推导符, 但这种存储周期类型的依然存在（局部变量）  </p>
+<h2 id="初始化的时机"><a href="#初始化的时机" class="headerlink" title="初始化的时机"></a>初始化的时机</h2><ul>
+<li>automatic: 必须手动初始化，换句话说局部变量必须初始化，否则值为不确定</li>
+<li>static: 在执行时初始化，且初始化一次，特殊情况下在执行前初始化</li>
+<li>thread: 因为thread_local变量自带static性质，所以认为其同于static</li>
+<li>dynamic: 在new时初始化</li>
+</ul>
+<h2 id="Linkage"><a href="#Linkage" class="headerlink" title="Linkage"></a>Linkage</h2><p>标识符（变量&amp;函数）用一块内存里的值或者函数体来表示的， 而linkage决定其他相同的标识符是否指向同一块内存。c/c++有3种linkage, no-linkage, internal linkage和external linkage</p>
+<ul>
+<li>no linkage 局部变量没有linkage, 所以两个a是独立的，后面的a会覆盖前面的a，不相干。此时linkage与可见域(scope)类似</li>
+<li>internal linkage 表示只能在文件内部访问(file scope)，换句话就是不会暴露给链接器， 用修饰符<code>static</code>声明internal linkage，所以允许在不同文件声明两个名称&amp;类型相同的internal linkage 标识符，他们指向不同的内存单元。 </li>
+<li>external linkage 表示可以在程序所有地方访问，包括外部文件(global scope)，所以是真“全局”（scope&amp;linkage）， 所有标识符指向独一份内存。</li>
+</ul>
+<h3 id="修饰符"><a href="#修饰符" class="headerlink" title="修饰符"></a>修饰符</h3><ul>
+<li>全局const变量和全局constexpr变量默认具备internal linkage, 再加上<code>static</code>没有影响</li>
+<li>全局非const变量默认是external linkage， 故再加上extern没有影响。在其他文件使用<code>extern</code>声明这个变量，就能使用指向同一内存的变量</li>
+<li>函数默认external linkage，故再加上extern没有影响。 在其他文件使用<code>extern</code>声明这个函数（可省），就能使用指向同一内存的函数</li>
+<li>使用extern修饰全局const变量和constexpr变量可以使起具备external linkage</li>
+</ul>
+<p>可见<code>static</code>和<code>extern</code>即表示存储周期，又表示linkage， static相对简单，extern则比较复杂，如以下情况</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">int g_x &#x3D; 1; &#x2F;&#x2F; 定义有初始化的全局变量（可加可不加extern）</span><br><span class="line">int g_x; &#x2F;&#x2F; 定义没有初始化的全局变量（不可加extern），可选初始化</span><br><span class="line">extern int g_x; &#x2F;&#x2F; 前置声明一个全局变量，不可初始化</span><br><span class="line"></span><br><span class="line">extern const int g_y &#123; 1 &#125;; &#x2F;&#x2F; 定义全局常量，const必须初始化</span><br><span class="line">extern const int g_y; &#x2F;&#x2F; 前置声明全局常量，不可初始化</span><br></pre></td></tr></table></figure>
+
+<p>所以若是定义未初始化的全局变量，不能加extern，不然就成了前置声明了。</p>
+<h3 id="constexpr-特殊情况"><a href="#constexpr-特殊情况" class="headerlink" title="constexpr 特殊情况"></a>constexpr 特殊情况</h3><p>虽然通过给constexpr添加<code>extern</code>修饰符来让其具备external属性，但不能在其他文件前置声明。因为constexpr是在编译期替换的，编译器（compile)的可见域限定在文件内，所以编译期无法知道constexpr的值，所以在编译期无法获取到其内存单元的值， 也就无法在其他文件进行声明，只能定义。</p>
+<h2 id="file-scope和global-scope"><a href="#file-scope和global-scope" class="headerlink" title="file scope和global scope"></a>file scope和global scope</h2><p>局部变量的scope、no-linkage以及duration相同，从<code>{</code>开始到<code>}</code>结束。 理论上global scope涵盖了file scope。而linkage来规定其是否能在其他文件里使用。</p>
+<h2 id="local-class"><a href="#local-class" class="headerlink" title="local class"></a>local class</h2><p>local class 不允许有static data member</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://en.cppreference.com/w/cpp/language/storage_duration" target="_blank" rel="noopener">https://en.cppreference.com/w/cpp/language/storage_duration</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://energygreek.github.io/2021/04/29/storage-duration/" data-id="clsbmbv4q004ibwop4xawgxxp" data-title="c++ 存储周期、链接和作用域" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c/" rel="tag">c++</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linkage/" rel="tag">linkage</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/scope/" rel="tag">scope</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/storageduration/" rel="tag">storageduration</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-buffer-cache-too-high" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/04/15/buffer-cache-too-high/" class="article-date">
+  <time class="dt-published" datetime="2021-04-15T08:16:26.000Z" itemprop="datePublished">2021-04-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2021/04/15/buffer-cache-too-high/">buffer-cache too high</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="Linux-调优"><a href="#Linux-调优" class="headerlink" title="Linux 调优"></a>Linux 调优</h1><p>系统原厂商是不喜欢讨论系统调优的，一方面说起来没完没了，二来比较复杂，而且私以为调优即说明系统默认不够好？</p>
+<p>而且SUSE的原厂<a href="https://www.suse.com/support/handbook/#donotsupport" target="_blank" rel="noopener">规定</a>:</p>
+<p>原理机制的介绍及系统调优并不在我们的技术支持范畴</p>
+<p>这里是一点相关介绍</p>
+<h2 id="buffer-cache-的作用和区别"><a href="#buffer-cache-的作用和区别" class="headerlink" title="buffer/cache 的作用和区别"></a>buffer/cache 的作用和区别</h2><p>buffer是用于存放将要输出到disk（块设备）的数据，而cache是存放从disk上读出的数据。二者都是为提高IO性能而设计的。                                                                                                                                                         </p>
+<ul>
+<li><p>buffer：缓冲将数据缓冲下来，解决速度慢和快的交接问题；速度快的需要通过缓冲区将数据一点一点传给速度慢的区域。<br>例如：从内存中将数据往硬盘中写入，并不是直接写入，而是缓冲到一定大小之后刷入硬盘中。<br>A buffer is something that has yet to be “written” to disk.                                                                                                                                    </p>
+</li>
+<li><p>cache：缓存实现数据的重复使用，速度慢的设备需要通过缓存将经常要用到的数据缓存起来，缓存下来的数据可以提供高速的传输速度给速度快的设备。<br>例如：将硬盘中的数据读取出来放在内存的缓存区中，这样以后再次访问同一个资源，速度会快很多。<br>A cache is something that has been “read” from the disk and stored for later use.                                                           </p>
+</li>
+</ul>
+<p>总之buff和cache都是内存和硬盘之间的过渡，前者是写入磁盘方向，而后者是写入内存方向</p>
+<h3 id="回收cache"><a href="#回收cache" class="headerlink" title="回收cache"></a>回收cache</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">drop_caches回收一下。</span><br><span class="line">#sync;sync;sync</span><br><span class="line">#echo 3 &gt; &#x2F;proc&#x2F;sys&#x2F;vm&#x2F;drop_caches</span><br></pre></td></tr></table></figure>
+<p>free增加300M</p>
+<h2 id="swap-介绍"><a href="#swap-介绍" class="headerlink" title="swap 介绍"></a>swap 介绍</h2><p>Swap意思是交换分区，是硬盘中的一个分区。内核将内存Page移出内存到swap分区(swap out)</p>
+<p>swap通过 vm.swappiness 这个内核参数控制，默认值是60。<code>cat /proc/sys/vm/swappiness</code> 可以查看当前值<br>这个参数控制内核使用swap的优先级。该参数从0到100。</p>
+<p>设置该参数为0，表示只要有可能就尽力避免交换进程移出物理内存；<br>设置该参数为100，这告诉内核疯狂的将swapout物理内存移到swap分区。<br>注意：设置该参数为0，并不代表禁用swap分区，只是告诉内核，能少用到swap分区就尽量少用到，设置vm.swappiness=100的话，则表示尽量使用swap分区。                                                    </p>
+<p>这里面涉及到当然还涉swappiness及到复杂的算法。如果以为所有物理内在用完之后，再使用swap, 实事并不是这样。以前曾经遇到过，物理内存只剩下10M了，但是依然没有使用Swap交换空间，另外一台服务器，物理内存还剩下15G，居然用了一点点Swap交换空间。<br>其实少量使用Swap交换空间是不会影响性能，只有当内存资源出现瓶颈或者内存泄露，进程异常时导致频繁、大量使用交换分区才会导致严重性能问题。             </p>
+<h3 id="问题：何时使用swap"><a href="#问题：何时使用swap" class="headerlink" title="问题：何时使用swap"></a>问题：何时使用swap</h3><p>这个问题如上面说的，比较难说，理论上是当物理内存不够用的时候，又需要读入内存时，会将一些长时间不用的程序的内存Page 交换出去。<br>但是很多时候会发现，内核即使在内存充足的情况下也是使用到swap</p>
+<h3 id="问题-那些东西被swap了？"><a href="#问题-那些东西被swap了？" class="headerlink" title="问题: 那些东西被swap了？"></a>问题: 那些东西被swap了？</h3><p>可以看下面的测试</p>
+<h3 id="回收swap"><a href="#回收swap" class="headerlink" title="回收swap"></a>回收swap</h3><p>swapoff 之后执行<code>sudo sysctl vm.swappiness=0</code> 临时让内核不用swapout</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">并把swap的数据加载内存，并重启swap </span><br><span class="line">#swapoff -a</span><br><span class="line">#swapon -a</span><br></pre></td></tr></table></figure>
+<p>即把swap分区清空,  自测效果如下，内核版本<code>5.10.0-8-amd64</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">               total        used        free      shared  buff&#x2F;cache   available</span><br><span class="line">Mem:        12162380     4911564     5605744      459364     1645072     6466572</span><br><span class="line">Swap:        1000444      763040      237404</span><br></pre></td></tr></table></figure>
+
+<p>重启swap后</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">               total        used        free      shared  buff&#x2F;cache   available</span><br><span class="line">Mem:        12162380     5605800     4843176      524984     1713404     5707112</span><br><span class="line">Swap:        1000444           0     1000444</span><br></pre></td></tr></table></figure>
+
+<p>可见，停用swap后，swap的used大部分到了mem的<code>used</code>，小部分到了Mem的shared</p>
+<h2 id="调优的一些有效工具"><a href="#调优的一些有效工具" class="headerlink" title="调优的一些有效工具"></a>调优的一些有效工具</h2><p>perf + flame火焰图: 查看运行耗时，可以查看函数调用耗时，如果是自己的程序，可以知道哪些函数需要优化<br>vmstat 查看磁盘io情况，使用<code>vmstat -t 3</code>命令，如果b状态的数字一直很大，那么说明磁盘阻塞严重，可能是磁盘坏了，可能是程序设计不合理</p>
+<p>还有top，iperf等等</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://energygreek.github.io/2021/04/15/buffer-cache-too-high/" data-id="clsbmbv39001rbwop9qd6fn8r" data-title="buffer-cache too high" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/" rel="tag">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/memory/" rel="tag">memory</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%B0%83%E4%BC%98/" rel="tag">调优</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-grpc-learning" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/04/13/grpc-learning/" class="article-date">
+  <time class="dt-published" datetime="2021-04-13T11:04:30.000Z" itemprop="datePublished">2021-04-13</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2021/04/13/grpc-learning/">grpc 学习</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="rpc"><a href="#rpc" class="headerlink" title="rpc"></a>rpc</h1><p>rpc 意为<code>远程过程调用</code>, http, grpc 广义上讲都是rpc。<br>而且还有个项目叫<a href="https://github.com/grpc-ecosystem/grpc-gateway" target="_blank" rel="noopener">grpc-gateway</a>, 可以将grpc通过http的方式暴露。</p>
+<h1 id="grpc"><a href="#grpc" class="headerlink" title="grpc"></a>grpc</h1><p>grpc 是rpc的一种实现，由google开源，其他还有thrift, sogorpc 等等。 并且grpc使用的http/2协议</p>
+<h2 id="http-1-1-与-http-2-的区别"><a href="#http-1-1-与-http-2-的区别" class="headerlink" title="http/1.1 与 http/2 的区别"></a>http/1.1 与 http/2 的区别</h2><ul>
+<li>2使用二进制，而1.1使用文本，提高效率</li>
+<li>2将相同的tcp连接合并为一个请求，提高性能,而1.1则为每个请求创建tcp连接</li>
+<li>2的客户端使用流，这样可以多次请求</li>
+<li>2含有trailers，也就是尾部消息，可以用来发送body的checksume等, 当然也可以直接放到body里<br>…</li>
+</ul>
+<p>而1.1中也已经实现服务端到客户端的流,使用’Transfer-Encoding=chunked’来替代’Content-Length’，详见<a href="https://datatracker.ietf.org/doc/html/rfc7230#section-3.3.2" target="_blank" rel="noopener">rfc</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">A sender MUST NOT send a Content-Length header field in any message</span><br><span class="line">  that contains a Transfer-Encoding header field.</span><br></pre></td></tr></table></figure>
+
+<h2 id="认识proto文件"><a href="#认识proto文件" class="headerlink" title="认识proto文件"></a>认识proto文件</h2><h3 id="proto-文件中多个service和单个service-区别"><a href="#proto-文件中多个service和单个service-区别" class="headerlink" title="proto 文件中多个service和单个service 区别"></a>proto 文件中多个service和单个service 区别</h3><p>在同一个service里的方法会codegen到同一个类，但这个类比较鸡肋。<br>由于RPC调用是RESTful的，所以多次调用或者多个rpc方法无法通过同一个service来共享数据，这需要使用者借助其他办法来解决。</p>
+<p>service 还可以用以隔离相同名称的rpc， 如 </p>
+<ul>
+<li>service1/helloworld</li>
+<li>service2/helloworld</li>
+</ul>
+<p>而方法和方法通过<code>RpcServiceMethod</code>来保存，而通过index来调用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">::grpc::Service::RequestAsyncUnary(0, context, request, response, new_call_cq, notification_cq, tag);</span><br><span class="line">::grpc::Service::RequestAsyncUnary(1, context, request, response, new_call_cq, notification_cq, tag);</span><br></pre></td></tr></table></figure>
+
+<h3 id="rpc-声明UnaryCall-amp-StreamingCall"><a href="#rpc-声明UnaryCall-amp-StreamingCall" class="headerlink" title="rpc 声明UnaryCall&amp;StreamingCall"></a>rpc 声明UnaryCall&amp;StreamingCall</h3><p>非流调用也称为<code>UnaryCall</code>，指发送或接受的消息大小是固定的。<br>流调用称为<code>StreamingCall</code>，可以多次发送或者接收，所以消息大小并不固定。</p>
+<p>StreamCall 可以多次调用，直到发送<code>WriteDone/Finish</code>，所以在接受的一端总是</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">while(read stream)&#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>grpc支持客户端流服务端非流、客户端非流、服务端流以及双向流，而普通的就是客户端和服务端都不流NORMAL_RPC(unary call)</p>
+<ul>
+<li>grpc::internal::RpcMethod::NORMAL_RPC</li>
+<li>grpc::internal::RpcMethod::RpcType::SERVER_STREAMING</li>
+<li>grpc::internal::RpcMethod::RpcType::CLIENT_STREAMING</li>
+<li>grpc::internal::RpcMethod::RpcType::BIDI_STREAMING</li>
+</ul>
+<h3 id="认识pb-h和grpc-pb-h文件"><a href="#认识pb-h和grpc-pb-h文件" class="headerlink" title="认识pb.h和grpc.pb.h文件"></a>认识pb.h和grpc.pb.h文件</h3><p>protoc 调用<code>grpc_cpp_plugin</code> 插件生成grpc.pb.{h,cc}文件，生成rpc方法的实现  </p>
+<p>pb.{h,cc}则是定义了protobuf消息的序列化和反序列化方法</p>
+<h4 id="反射、序列化和反序列化的实现"><a href="#反射、序列化和反序列化的实现" class="headerlink" title="反射、序列化和反序列化的实现"></a>反射、序列化和反序列化的实现</h4><p>pb.h 实现grpc的请求参数和返回参数的特定语言的解析，还有pb的通用方法，<br>例如: <code>has_xx</code>(版本3里只有自定义类型才支持), <code>class XXX_CPP_API</code></p>
+<p>生成的class都继承自<code>google::protobuf::Message</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">class HelloRequest PROTOBUF_FINAL :</span><br><span class="line">      public ::PROTOBUF_NAMESPACE_ID::Message</span><br><span class="line"></span><br><span class="line">#define PROTOBUF_NAMESPACE &quot;google::protobuf&quot;</span><br><span class="line">#define PROTOBUF_NAMESPACE_ID google::protobuf</span><br></pre></td></tr></table></figure>
+<p>而在<code>message</code>中有注释说明, 关键函数是<code>SerializeToString</code>和<code>ParseFromString</code>，还有个array版本<code>SerializeToArray</code>,<br>还有一个反射函数<code>GetDescriptor()</code>用来动态获取指定槽位的数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; Example usage:</span><br><span class="line">  &#x2F;&#x2F;</span><br><span class="line">  &#x2F;&#x2F; Say you have a message defined as:</span><br><span class="line">  &#x2F;&#x2F;</span><br><span class="line">  &#x2F;&#x2F;   message Foo &#123;</span><br><span class="line">  &#x2F;&#x2F;     optional string text &#x3D; 1;</span><br><span class="line">  &#x2F;&#x2F;     repeated int32 numbers &#x3D; 2;</span><br><span class="line">  &#x2F;&#x2F;   &#125;</span><br><span class="line">  &#x2F;&#x2F;</span><br><span class="line">  &#x2F;&#x2F; Then, if you used the protocol compiler to generate a class from the above</span><br><span class="line">  &#x2F;&#x2F; definition, you could use it like so:</span><br><span class="line">  &#x2F;&#x2F;</span><br><span class="line">  &#x2F;&#x2F;   std::string data;  &#x2F;&#x2F; Will store a serialized version of the message.</span><br><span class="line">  &#x2F;&#x2F;</span><br><span class="line">  &#x2F;&#x2F;   &#123;</span><br><span class="line">  &#x2F;&#x2F;     &#x2F;&#x2F; Create a message and serialize it.</span><br><span class="line">  &#x2F;&#x2F;     Foo foo;</span><br><span class="line">  &#x2F;&#x2F;     foo.set_text(&quot;Hello World!&quot;);</span><br><span class="line">  &#x2F;&#x2F;     foo.add_numbers(1);</span><br><span class="line">  &#x2F;&#x2F;     foo.add_numbers(5);</span><br><span class="line">  &#x2F;&#x2F;     foo.add_numbers(42);</span><br><span class="line">  &#x2F;&#x2F;</span><br><span class="line">  &#x2F;&#x2F;     foo.SerializeToString(&amp;data);</span><br><span class="line">  &#x2F;&#x2F;   &#125;</span><br><span class="line">  &#x2F;&#x2F;</span><br><span class="line">  &#x2F;&#x2F;   &#123;</span><br><span class="line">  &#x2F;&#x2F;     &#x2F;&#x2F; Parse the serialized message and check that it contains the</span><br><span class="line">  &#x2F;&#x2F;     &#x2F;&#x2F; correct data.</span><br><span class="line">  &#x2F;&#x2F;     Foo foo;</span><br><span class="line">  &#x2F;&#x2F;     foo.ParseFromString(data);</span><br><span class="line">  &#x2F;&#x2F;</span><br><span class="line">  &#x2F;&#x2F;     assert(foo.text() &#x3D;&#x3D; &quot;Hello World!&quot;);</span><br><span class="line">  &#x2F;&#x2F;     assert(foo.numbers_size() &#x3D;&#x3D; 3);</span><br><span class="line">  &#x2F;&#x2F;     assert(foo.numbers(0) &#x3D;&#x3D; 1);</span><br><span class="line">  &#x2F;&#x2F;     assert(foo.numbers(1) &#x3D;&#x3D; 5);</span><br><span class="line">  &#x2F;&#x2F;     assert(foo.numbers(2) &#x3D;&#x3D; 42);</span><br><span class="line">  &#x2F;&#x2F;   &#125;</span><br></pre></td></tr></table></figure>
+
+<p>如下可以将Message转换为基本类型</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">int size &#x3D; reqMsg.ByteSizeLong();</span><br><span class="line">char* array &#x3D; new char[size];</span><br><span class="line">reqMsg.SerializeToArray(array, size);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">std::string bytes &#x3D; reqMsg.SerializeAsString();</span><br><span class="line">const char* array &#x3D; bytes.data();</span><br><span class="line">int size &#x3D; bytes.size();</span><br></pre></td></tr></table></figure>
+
+<p>进一步看<code>protobuf::message</code>继承自<code>protobuf::message_lite</code>, 后者实现了<code>SerializeAsString</code>和<code>SerializeToArray</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">inline uint8* SerializeToArrayImpl(const MessageLite&amp; msg, uint8* target,</span><br><span class="line">                                     int size) &#123;</span><br><span class="line">    constexpr bool debug &#x3D; false;</span><br><span class="line">    if (debug) &#123;</span><br><span class="line">      &#x2F;&#x2F; Force serialization to a stream with a block size of 1, which forces</span><br><span class="line">      &#x2F;&#x2F; all writes to the stream to cross buffers triggering all fallback paths</span><br><span class="line">      &#x2F;&#x2F; in the unittests when serializing to string &#x2F; array.</span><br><span class="line">      io::ArrayOutputStream stream(target, size, 1);</span><br><span class="line">      uint8* ptr;</span><br><span class="line">      io::EpsCopyOutputStream out(</span><br><span class="line">          &amp;stream, io::CodedOutputStream::IsDefaultSerializationDeterministic(),</span><br><span class="line">          &amp;ptr);</span><br><span class="line">      ptr &#x3D; msg._InternalSerialize(ptr, &amp;out);</span><br><span class="line">      out.Trim(ptr);</span><br><span class="line">      GOOGLE_DCHECK(!out.HadError() &amp;&amp; stream.ByteCount() &#x3D;&#x3D; size);</span><br><span class="line">      return target + size;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">      io::EpsCopyOutputStream out(</span><br><span class="line">          target, size,</span><br><span class="line">          io::CodedOutputStream::IsDefaultSerializationDeterministic());</span><br><span class="line">实际调用-&gt;    auto res &#x3D; msg._InternalSerialize(target, &amp;out);</span><br><span class="line">      GOOGLE_DCHECK(target + size &#x3D;&#x3D; res);</span><br><span class="line">      return res;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>可见，其实序列化最终调用的是pb.h文件里定义的<code>_InternalSerialize</code>, 举例官方例子<code>HelloRequest</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">::PROTOBUF_NAMESPACE_ID::uint8* HelloRequest::_InternalSerialize(</span><br><span class="line">     ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream*   stream) const &#123;</span><br><span class="line">   &#x2F;&#x2F; @@protoc_insertion_point(serialize_to_array_start:helloworld.HelloRequest)</span><br><span class="line">   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits &#x3D; 0;</span><br><span class="line">   (void) cached_has_bits;</span><br><span class="line"> </span><br><span class="line">   &#x2F;&#x2F; string name &#x3D; 1;</span><br><span class="line">   if (this-&gt;name().size() &gt; 0) &#123;</span><br><span class="line">     ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(</span><br><span class="line">       this-&gt;_internal_name().data(), static_cast&lt;int&gt;(this-&gt;_internal_name().length()),</span><br><span class="line">       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,</span><br><span class="line">       &quot;helloworld.HelloRequest.name&quot;);</span><br><span class="line">     target &#x3D; stream-&gt;WriteStringMaybeAliased(</span><br><span class="line">         1, this-&gt;_internal_name(), target);</span><br><span class="line">   &#125;</span><br><span class="line"> </span><br><span class="line">   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) &#123;</span><br><span class="line">     target &#x3D; ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToA  rray(</span><br><span class="line">        _internal_metadata_.unknown_fields&lt;::PROTOBUF_NAMESPACE_ID::UnknownFieldSet&gt;(::PROTOB  UF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);</span><br><span class="line">   &#125;</span><br><span class="line">   &#x2F;&#x2F; @@protoc_insertion_point(serialize_to_array_end:helloworld.HelloRequest)</span><br><span class="line">   return target;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="grpc-pb生成的代码实现rpc调用"><a href="#grpc-pb生成的代码实现rpc调用" class="headerlink" title="grpc.pb生成的代码实现rpc调用"></a>grpc.pb生成的代码实现rpc调用</h4><p>生成的框架代码用来继承实现Service和获取stub来发起rpc call。实际上这些代码并不是必须的<br>在下面讲了如何使用几个工厂类来创建Stub，还有直接<code>new</code>出Service</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">class XXXServer &#123;</span><br><span class="line">        &#x2F;&#x2F; 客户端使用的桩</span><br><span class="line">	class Stub</span><br><span class="line">        &#x2F;&#x2F; base </span><br><span class="line">	class Service</span><br><span class="line">	&#x2F;&#x2F; 各种版本的rpc包装，但都继承自base</span><br><span class="line">        class WithAsyncMethod_XXX</span><br><span class="line">        typedef WithAsyncMethod_XXX&lt;Service &gt; AsyncService;</span><br><span class="line">	typedef ExperimentalWithCallbackMethod_XXX&lt;Service &gt; CallbackService;</span><br><span class="line">	class WithGenericMethod_XXX</span><br><span class="line">	class WithRawMethod_XXX</span><br><span class="line">	typedef WithStreamedUnaryMethod_XXX&lt;Service &gt; StreamedUnaryService;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="同步与异步"><a href="#同步与异步" class="headerlink" title="同步与异步"></a>同步与异步</h2><p>grpc 的异步即为使用cq事件驱动（cq-based），使用tag标记事件。另外还有callback方式</p>
+<h3 id="对于客户端"><a href="#对于客户端" class="headerlink" title="对于客户端"></a>对于客户端</h3><p>同步时，通过调用’::grpc::internal::BlockingUnaryCall’<br>异步时，创建’ClientAsyncResponseReader’(非流), 然后通过调用’ClientAsyncResponseReader’的write和finish，并等待tag<br>当存在流时分别是</p>
+<ul>
+<li>::grpc::ClientAsyncReader</li>
+<li>::grpc::ClientAsyncWriter</li>
+<li>::grpc::ClientAsyncReaderWriter</li>
+</ul>
+<p>这些类型可用对应的工厂类来创建, 生成代码的stub也是这么用的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">class ClientReaderFactory </span><br><span class="line">class ClientWriterFactory </span><br><span class="line">class ClientReaderWriterFactory</span><br></pre></td></tr></table></figure>
+
+<h3 id="对于服务端"><a href="#对于服务端" class="headerlink" title="对于服务端"></a>对于服务端</h3><p>同步时，通过’AddMethod’来注册，生成代码会在父类构造时执行。注册后由grpc调用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Greeter::Service::Service() &#123;</span><br><span class="line">    AddMethod(new ::grpc::internal::RpcServiceMethod(</span><br><span class="line">        Greeter_method_names[0],</span><br><span class="line">        ::grpc::internal::RpcMethod::NORMAL_RPC,</span><br><span class="line">        new ::grpc::internal::RpcMethodHandler&lt; Greeter::Service, ::helloworld::HelloRequest, ::helloworld::HelloReply&gt;(</span><br><span class="line">            [](Greeter::Service* service,</span><br><span class="line">               ::grpc_impl::ServerContext* ctx,</span><br><span class="line">               const ::helloworld::HelloRequest* req,</span><br><span class="line">               ::helloworld::HelloReply* resp) &#123;</span><br><span class="line">                 return service-&gt;SayHello(ctx, req, resp);</span><br><span class="line">               &#125;, this)));</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>异步时，类似客户端</p>
+<ul>
+<li>grpc::ServerAsyncReaderWriter</li>
+<li>grpc::ServerAsyncReader</li>
+<li>grpc::ServerAsyncWriter</li>
+</ul>
+<p>可见服务端是直接new出来的，异步时这些io操作对象也是直接new出来的, 在调用以下时传入</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">RequestAsyncBidiStreaming</span><br><span class="line">RequestAsyncClientStreaming</span><br><span class="line">RequestAsyncServerStreaming</span><br></pre></td></tr></table></figure>
+
+<h2 id="grpc-callback"><a href="#grpc-callback" class="headerlink" title="grpc callback"></a>grpc callback</h2><p>只在客户端使用，callback方式的请求可以传入一个lambda, 在请求完成时调用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">stub_-&gt;async()-&gt;SayHello(&amp;context, &amp;request, &amp;reply,</span><br><span class="line">                         [&amp;mu, &amp;cv, &amp;done, &amp;status](Status s) &#123;</span><br><span class="line">                           status &#x3D; std::move(s);</span><br><span class="line">                           std::lock_guard&lt;std::mutex&gt; lock(mu);</span><br><span class="line">                           done &#x3D; true;</span><br><span class="line">                           cv.notify_one();</span><br><span class="line">                         &#125;);</span><br></pre></td></tr></table></figure>
+
+<p>新版本的grpc已经将实验性的标记去除，说明此方式成熟了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL</span><br><span class="line">  ::grpc::Service::</span><br><span class="line">#else</span><br><span class="line">  ::grpc::Service::experimental().</span><br><span class="line">#endif</span><br></pre></td></tr></table></figure>
+
+<h2 id="grpc异步流"><a href="#grpc异步流" class="headerlink" title="grpc异步流"></a>grpc异步流</h2><p>官方仓库的示例代码没有异步且流的, 在实际项目中用到异步流,使用大概方法</p>
+<ol>
+<li>手动创建writereader</li>
+<li>启动时，调用’grpc::Service::RequestAsyncBidiStreaming’ 和 ‘grpc::Service::RequestAsyncClientStreaming’ 以及’RequestAsyncServerStreaming’, 向cq塞请求new_connection事件</li>
+<li>收到’new_connection’事件返回后，再调用read事件。</li>
+</ol>
+<p>一共有5个类型</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">new_connection, read, write, finish, done</span><br></pre></td></tr></table></figure>
+<p>我写了一个demo <a href="https://github.com/energygreek/grpcstreamhelloworld" target="_blank" rel="noopener">grpcstreamhelloworld</a></p>
+<h2 id="grpc-消息大小"><a href="#grpc-消息大小" class="headerlink" title="grpc 消息大小"></a>grpc 消息大小</h2><p>老版本的grpc中，发送端是支持无限大小的，但接受端只能是4M</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#define GRPC_DEFAULT_MAX_SEND_MESSAGE_LENGTH -1</span><br><span class="line">#define GRPC_DEFAULT_MAX_RECV_MESSAGE_LENGTH (4 * 1024 * 1024)</span><br></pre></td></tr></table></figure>
+<p>服务端代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">std::unique_ptr&lt;Server&gt; ServerBuilder::BuildAndStart() &#123;</span><br><span class="line">    if (max_receive_message_size_ &gt;&#x3D; 0) &#123;</span><br><span class="line">      args.SetInt(GRPC_ARG_MAX_RECEIVE_MESSAGE_LENGTH, max_receive_message_size_);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>但在新版grpc中变了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">std::unique_ptr&lt;grpc::Server&gt; ServerBuilder::BuildAndStart() &#123;</span><br><span class="line">  grpc::ChannelArguments args;</span><br><span class="line">  if (max_receive_message_size_ &gt;&#x3D; -1) &#123;</span><br><span class="line">    args.SetInt(GRPC_ARG_MAX_RECEIVE_MESSAGE_LENGTH, max_receive_message_size_);</span><br><span class="line">  &#125;</span><br><span class="line">  if (max_send_message_size_ &gt;&#x3D; -1) &#123;</span><br><span class="line">    args.SetInt(GRPC_ARG_MAX_SEND_MESSAGE_LENGTH, max_send_message_size_);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="grpc-编译安装的问题"><a href="#grpc-编译安装的问题" class="headerlink" title="grpc 编译安装的问题"></a>grpc 编译安装的问题</h2><p><a href="https://github.com/grpc/grpc/issues/13841" target="_blank" rel="noopener">https://github.com/grpc/grpc/issues/13841</a></p>
+<h2 id="grpc异步存在问题"><a href="#grpc异步存在问题" class="headerlink" title="grpc异步存在问题"></a>grpc异步存在问题</h2><p>因为异步服务端通过completionqueue来通知rpc执行结果和执行下次调用，通常使用多queue和多线程的方式提高处理效率</p>
+<ol>
+<li>通常情况是多queue, 即每个service对应一个queue, 而每个service又有多个rpc，线程去轮询这个complete_queue。这样导致高线程切换开销，而且complete_queue也占用大量内存</li>
+<li>多线程，queue可以用多个线程去轮询，但0.13版本可能出现bug</li>
+</ol>
+<h2 id="grpc异步流存在的问题"><a href="#grpc异步流存在的问题" class="headerlink" title="grpc异步流存在的问题"></a>grpc异步流存在的问题</h2><p>grpc区别与其他框架很大一个优势是支持异步流，即可以多次请求和多次回复。异步是基于cq的事件驱动，所以必须等待tag回调, 连续两次发送会异常。<br>而真正的请求一般在业务模块处理, 不知道tag的状态即不知道是否正在发送， 那么如何在cq回调外发送消息呢？ </p>
+<p>办法是维护一个发送队列，消息先存队列里，等待cq回调时取出发送。 另外由于流同步需要显式发送结束标记(服务端调Stream::Finish, 客户端调用WriteDown和Finish),<br>所以需要有一个特殊消息加以区分，通常用空指针，也可以设置结束标志。另外由于发送代码会同时被业务调用和cq回调，需要对发送代码加锁</p>
+<h2 id="调试grpc"><a href="#调试grpc" class="headerlink" title="调试grpc"></a>调试grpc</h2><p>通过设置环境变量，让grpc向控制台打印详细信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">export GRPC_VERBOSITY&#x3D;DEBUG</span><br><span class="line">bash-5.0# .&#x2F;build&#x2F;bin&#x2F;hasync slave  stdin stdout @127.0.0.1:7615</span><br><span class="line">D1026 08:27:44.142802149   24658 ev_posix.cc:174]            Using polling engine: epollex</span><br><span class="line">D1026 08:27:44.143406685   24658 dns_resolver_ares.cc:490]   Using ares dns resolver</span><br><span class="line">I1026 08:27:44.158115785   24658 server_builder.cc:332]      Synchronous server. Num CQs: 1, Min pollers: 1, Max Pollers: 2, CQ timeout (msec): 10000</span><br></pre></td></tr></table></figure>
+
+<h2 id="项目实践"><a href="#项目实践" class="headerlink" title="项目实践"></a>项目实践</h2><p>项目使用客户端异步/同步，服务端全异步， 可以兼容四种传输方式</p>
+<h2 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h2><p><a href="https://grpc.github.io/grpc/cpp/grpcpp_2impl_2codegen_2sync__stream_8h_source.html" target="_blank" rel="noopener">https://grpc.github.io/grpc/cpp/grpcpp_2impl_2codegen_2sync__stream_8h_source.html</a><br><a href="https://grpc.github.io/grpc/cpp/grpcpp_2impl_2codegen_2byte__buffer_8h_source.html" target="_blank" rel="noopener">https://grpc.github.io/grpc/cpp/grpcpp_2impl_2codegen_2byte__buffer_8h_source.html</a><br><a href="https://grpc.github.io/grpc/cpp/call__op__set_8h_source.html" target="_blank" rel="noopener">https://grpc.github.io/grpc/cpp/call__op__set_8h_source.html</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://energygreek.github.io/2021/04/13/grpc-learning/" data-id="clsbmbv3q002qbwopfvjs7sdv" data-title="grpc 学习" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c/" rel="tag">c++</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/grpc/" rel="tag">grpc</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-ways-to-use-third-party-library-in-cmake" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/04/02/ways-to-use-third-party-library-in-cmake/" class="article-date">
+  <time class="dt-published" datetime="2021-04-02T06:15:03.000Z" itemprop="datePublished">2021-04-02</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2021/04/02/ways-to-use-third-party-library-in-cmake/">cmake 使用第三方库</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="cmake-使用第三方库"><a href="#cmake-使用第三方库" class="headerlink" title="cmake 使用第三方库"></a>cmake 使用第三方库</h1><p>在项目中链接第三方库的方法都是’target_include_directories’ 和 ‘target_link_library’, 前提引入第三方包. 而查找可以使用<code>find_package</code></p>
+<h2 id="find-package找包"><a href="#find-package找包" class="headerlink" title="find_package找包"></a>find_package找包</h2><p>find_package分为Module和Config两种方式</p>
+<h3 id="Module方式"><a href="#Module方式" class="headerlink" title="Module方式"></a>Module方式</h3><p>find_package先在’/usr/share/cmake/Modules/Find/‘下添加FindXXX.cmake文件，以及自定义路径(CMAKE_MODULE_PATH)下查找<br>然后在项目的CMakeList.txt中使用find_package(), 然后可以在链接的时候使用第三方库</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">find_package</span>()</span><br></pre></td></tr></table></figure>
+
+<h3 id="Config模式"><a href="#Config模式" class="headerlink" title="Config模式"></a>Config模式</h3><p>当find_package找不到FindXXX.cmake文件，则会找</p>
+<ul>
+<li><LibraryName>Config.cmake</li>
+<li><lower-case-package-name>-config.cmake</li>
+</ul>
+<p>如果第三方项目支持cmake, 那么先通过cmake编译和安装到环境或者docker环境，这时会在’/usr/lib/cmake/<LibraryName>/‘下添加上述文件</p>
+<h3 id="安装FindXXX-cmake文件"><a href="#安装FindXXX-cmake文件" class="headerlink" title="安装FindXXX.cmake文件"></a>安装FindXXX.cmake文件</h3><p>当没有FindXXX.cmake时，可以使用安装包管理工具安装cmake-extra包, 可能找到需要的</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pacman -S extra-cmake-modules</span><br></pre></td></tr></table></figure>
+
+<p>然后执行下面的命令，可以看到大量的’Find*.cmake’文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ls &#x2F;usr&#x2F;share&#x2F;cmake-3.20&#x2F;Modules&#x2F;</span><br></pre></td></tr></table></figure>
+
+<h3 id="自定义FindXXX-cmake文件"><a href="#自定义FindXXX-cmake文件" class="headerlink" title="自定义FindXXX.cmake文件"></a>自定义FindXXX.cmake文件</h3><p>如果上述方式都不行，那么需要自己写FindXXX.cmake，放到CMAKE_MODULE_PATH下<br>例如在项目根目录创建文件夹<code>cmake_module</code>, 再使用<code>set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake_module)</code>来指定module的路径<br>最后在’cmake_module’下创建FindXXX.cmake结尾的文件，这个文件用来写找header和lib规则, 内容大致为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">find_path(Grpc_INCLUDE_DIR grpc++&#x2F;grpc++.h)</span><br><span class="line">mark_as_advanced(Grpc_INCLUDE_DIR)</span><br><span class="line"></span><br><span class="line">find_library(Grpc++_LIBRARY NAMES grpc++ grpc++-1-dll)</span><br><span class="line">mark_as_advanced(Grpc++_LIBRARY)</span><br></pre></td></tr></table></figure>
+
+<p>有这个文件之后，可以在项目的cmake中直接使用<code>find_package()</code></p>
+<h2 id="源代码编译链接"><a href="#源代码编译链接" class="headerlink" title="源代码编译链接"></a>源代码编译链接</h2><p>将第三方库源码放到项目指定目录如third</p>
+<ol>
+<li>放到third目录并可以使用<code>git submodule</code>管理</li>
+<li>在thrid目录添加CMakeList.txt，在其中添加目标，已备在项目中链接<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># for gsl-lite target</span><br><span class="line">add_library(gsl-lite INTERFACE)</span><br><span class="line">target_include_directories(gsl-lite SYSTEM INTERFACE $&#123;CMAKE_CURRENT_SOURCE_DIR&#125;&#x2F;gsl-lite&#x2F;include)</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h2 id="FetchContent-自动源代码链接"><a href="#FetchContent-自动源代码链接" class="headerlink" title="FetchContent 自动源代码链接"></a>FetchContent 自动源代码链接</h2><p>cmake3.11之后，可以使用这个办法来自动拉取网上的库，并可以直接在自己的项目中使用</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># <span class="doctag">NOTE:</span> This example uses cmake version 3.14 (FetchContent_MakeAvailable).</span></span><br><span class="line"><span class="comment"># Since it streamlines the FetchContent process</span></span><br><span class="line"><span class="keyword">cmake_minimum_required</span>(VERSION <span class="number">3.14</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">include</span>(FetchContent)</span><br><span class="line"></span><br><span class="line"><span class="comment"># In this example we are picking a specific tag.</span></span><br><span class="line"><span class="comment"># You can also pick a specific commit, if you need to.</span></span><br><span class="line">FetchContent_Declare(GSL</span><br><span class="line">    GIT_REPOSITORY <span class="string">"https://github.com/microsoft/GSL"</span></span><br><span class="line">    GIT_TAG <span class="string">"v3.1.0"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">FetchContent_MakeAvailable(GSL)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Now you can link against the GSL interface library</span></span><br><span class="line"><span class="keyword">add_executable</span>(foobar)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Link against the interface library (IE header only library)</span></span><br><span class="line"><span class="keyword">target_link_libraries</span>(foobar PRIVATE GSL)</span><br></pre></td></tr></table></figure>
+
+<p>##cmake使用openssl存在问题</p>
+<p>因为openssl不用cmake,也就没有.cmake文件, 导致项目配置失败 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Could NOT find OpenSSL, try to set the path to OpenSSL root folder in the</span><br><span class="line"> system variable OPENSSL_ROOT_DIR (missing: OPENSSL_LIBRARIES</span><br><span class="line"> OPENSSL_INCLUDE_DIR)</span><br></pre></td></tr></table></figure>
+<p>后面发现它是使用package_config方式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#&#x2F;usr&#x2F;local&#x2F;lib&#x2F;pkgconfig&#x2F;openssl.pc</span><br><span class="line">prefix&#x3D;&#x2F;usr</span><br><span class="line">exec_prefix&#x3D;$&#123;prefix&#125;</span><br><span class="line">libdir&#x3D;$&#123;exec_prefix&#125;&#x2F;lib</span><br><span class="line">includedir&#x3D;$&#123;prefix&#125;&#x2F;include</span><br><span class="line"></span><br><span class="line">Name: OpenSSL</span><br><span class="line">Description: Secure Sockets Layer and cryptography libraries and tools</span><br><span class="line">Version: 1.1.1k</span><br><span class="line">Requires: libssl libcrypto</span><br></pre></td></tr></table></figure>
+
+<p>这种情况除了通过cmake_module来解决之外，还可以通过指定pc文件的路径</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmake -DOPENSSL_ROOT_DIR&#x3D;&#x2F;usr&#x2F;local&#x2F;</span><br></pre></td></tr></table></figure>
+
+<h2 id="ExternalProject-Add"><a href="#ExternalProject-Add" class="headerlink" title="ExternalProject_Add"></a>ExternalProject_Add</h2><p>这个不常用</p>
+<h2 id="find-package-和-find-library-区别"><a href="#find-package-和-find-library-区别" class="headerlink" title="find_package 和 find_library 区别"></a>find_package 和 find_library 区别</h2><p>find_library 是cmake的底层方法，在find_path指定的目录下查找库文件<br>而find_package 使用了find_library的来找库文件，而且find_package在找到目标后，会定义一些变量，如下面的’Findlibproxy.cmake’文件头</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"># - Try to find libproxy</span><br><span class="line"># Once done this will define</span><br><span class="line">#</span><br><span class="line">#  LIBPROXY_FOUND - system has libproxy</span><br><span class="line">#  LIBPROXY_INCLUDE_DIR - the libproxy include directory</span><br><span class="line">#  LIBPROXY_LIBRARIES - libproxy library</span><br><span class="line">#</span><br><span class="line"># Copyright (c) 2010, Dominique Leuenberger</span><br><span class="line">#</span><br><span class="line"># Redistribution and use is allowed according the license terms</span><br><span class="line"># of libproxy, which this file is integrated part of.</span><br><span class="line"></span><br><span class="line"># Find proxy.h and the corresponding library (libproxy.so)</span><br><span class="line">FIND_PATH(LIBPROXY_INCLUDE_DIR proxy.h )</span><br><span class="line">FIND_LIBRARY(LIBPROXY_LIBRARIES NAMES proxy )</span><br></pre></td></tr></table></figure>
+
+<p>当找到libproxy.so的时候，LIBPROXY_FOUND被设置为TRUE等</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://energygreek.github.io/2021/04/02/ways-to-use-third-party-library-in-cmake/" data-id="clsbmbv570050bwop23fh71aq" data-title="cmake 使用第三方库" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cmake/" rel="tag">cmake</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-my-urxvt" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/03/25/my-urxvt/" class="article-date">
+  <time class="dt-published" datetime="2021-03-25T08:39:47.000Z" itemprop="datePublished">2021-03-25</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2021/03/25/my-urxvt/">urxvt配置</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>自使用arch以来，一直在用urxvt, 它简洁，轻量，但不可否认的有问题，比如中文输入模式长时间时会无法输入中文，配置麻烦, 需要在启动脚本配置.xresource<br>这里要记一下自己的urxvt的配置以做备份  </p>
+<h2 id="使用urxvt的主要功能"><a href="#使用urxvt的主要功能" class="headerlink" title="使用urxvt的主要功能"></a>使用urxvt的主要功能</h2><p>urxvt 非常简洁的tab功能,支持多路复用以及右键菜单格式化字符串，而且支持假透明，非常轻量。</p>
+<p>urxvt不够现代化，不是开箱即用的，需要如下修改： </p>
+<ul>
+<li>tab功能需要修改perl的包，因为默认情况下不支持切换tab</li>
+<li>不支持icon, 需要在配置文件手动指定icon的位置</li>
+<li>tab功能需要额外启动参数，所以顺便编一个desktop启动文件</li>
+</ul>
+<h2 id="perl修改"><a href="#perl修改" class="headerlink" title="perl修改"></a>perl修改</h2><p>复制/usr/lib/perl/ext/tabbed到用户目录~/.urxvt/ext/, 修改<code>tab_key_press</code>函数如下</p>
+<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># if ($keysym == 0xff51 || $keysym == 0xff53)  表示使用ctrl+shift 和方向键来移动tab</span></span><br><span class="line"><span class="function"><span class="keyword">sub</span> <span class="title">tab_key_press</span> </span>&#123;</span><br><span class="line">   <span class="keyword">my</span> ($self, $tab, $event, $keysym, $str) = @_;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">if</span> ($event-&gt;&#123;state&#125; &amp; urxvt::ShiftMask &amp;&amp; !($event-&gt;&#123;state&#125; &amp; urxvt::ControlMask) ) &#123;</span><br><span class="line">      <span class="keyword">if</span> ($keysym == <span class="number">0xff51</span> || $keysym == <span class="number">0xff53</span>) &#123;</span><br><span class="line">         <span class="keyword">my</span> ($idx) = <span class="keyword">grep</span> $self-&gt;&#123;tabs&#125;[$_] == $tab, <span class="number">0</span> .. $#&#123; $self-&gt;&#123;tabs&#125; &#125;;</span><br><span class="line"></span><br><span class="line">         --$idx <span class="keyword">if</span> $keysym == <span class="number">0xff51</span>;</span><br><span class="line">         ++$idx <span class="keyword">if</span> $keysym == <span class="number">0xff53</span>;</span><br><span class="line"></span><br><span class="line">         $self-&gt;make_current ($self-&gt;&#123;tabs&#125;[$idx % @&#123; $self-&gt;&#123;tabs&#125;&#125;]);</span><br><span class="line"></span><br><span class="line">         <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">      &#125; <span class="keyword">elsif</span> ($keysym == <span class="number">0xff54</span>) &#123;</span><br><span class="line">         $self-&gt;new_tab;</span><br><span class="line"></span><br><span class="line">         <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">      &#125;</span><br><span class="line">   &#125;<span class="keyword">elsif</span> ($event-&gt;&#123;state&#125; &amp; urxvt::ControlMask &amp;&amp; $event-&gt;&#123;state&#125; &amp; urxvt::ShiftMask) &#123;</span><br><span class="line">      <span class="keyword">if</span> ($keysym == <span class="number">0xff51</span> || $keysym == <span class="number">0xff53</span>) &#123;</span><br><span class="line">         <span class="keyword">my</span> ($idx1) = <span class="keyword">grep</span> $self-&gt;&#123;tabs&#125;[$_] == $tab, <span class="number">0</span> .. $#&#123; $self-&gt;&#123;tabs&#125; &#125;;</span><br><span class="line">         <span class="keyword">my</span>  $idx2  = ($idx1 + ($keysym == <span class="number">0xff51</span> ? -<span class="number">1</span> : +<span class="number">1</span>)) % @&#123; $self-&gt;&#123;tabs&#125; &#125;;</span><br><span class="line"></span><br><span class="line">         ($self-&gt;&#123;tabs&#125;[$idx1], $self-&gt;&#123;tabs&#125;[$idx2]) =</span><br><span class="line">            ($self-&gt;&#123;tabs&#125;[$idx2], $self-&gt;&#123;tabs&#125;[$idx1]);</span><br><span class="line"></span><br><span class="line">         $self-&gt;make_current ($self-&gt;&#123;tabs&#125;[$idx2]);</span><br><span class="line"></span><br><span class="line">         <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">      &#125;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   ()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="urxvt-启动文件"><a href="#urxvt-启动文件" class="headerlink" title="urxvt 启动文件"></a>urxvt 启动文件</h2><p>创建启动文件，使其默认为tab模式 ‘.local/share/applications/urxvtq.desktop’</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[Desktop Entry]</span><br><span class="line">Version&#x3D;1.0</span><br><span class="line">Name&#x3D;urxvtq</span><br><span class="line">Comment&#x3D;An unicode capable rxvt clone</span><br><span class="line">Exec&#x3D;urxvt -pe tabbed</span><br><span class="line">Icon&#x3D;utilities-terminal</span><br><span class="line">Terminal&#x3D;false</span><br><span class="line">Type&#x3D;Application</span><br><span class="line">Categories&#x3D;System;TerminalEmulator;</span><br></pre></td></tr></table></figure>
+
+<h2 id="urxvt-配置"><a href="#urxvt-配置" class="headerlink" title="urxvt 配置"></a>urxvt 配置</h2><p>创建如下的文件，并要在合适的启动脚本里添加一行<code>[ -f &quot;$HOME/.Xresources&quot; ] &amp;&amp;  xrdb -merge &quot;$HOME/.Xresources&quot;</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line">!!$HOME&#x2F;.Xresources</span><br><span class="line"></span><br><span class="line">!! dbi</span><br><span class="line">Xft.dpi:98</span><br><span class="line"></span><br><span class="line">&#x2F;* Couleurs Tango *&#x2F;</span><br><span class="line"></span><br><span class="line">!! 下划线色</span><br><span class="line">URxvt.colorUL:  #87afd7</span><br><span class="line">URxvt.colorBD:  white</span><br><span class="line">URxvt.colorIT:  green</span><br><span class="line"></span><br><span class="line">!! tab 配色</span><br><span class="line">URxvt.tabbed.tabbar-fg: 2</span><br><span class="line">URxvt.tabbed.tabbar-bg: 0</span><br><span class="line">URxvt.tabbed.tab-fg:    3</span><br><span class="line">URxvt.tabbed.tab-bg:    2</span><br><span class="line">URxvt.tabbed.tabren-bg: 3</span><br><span class="line">URxvt.tabbed.tabdiv-fg: 8</span><br><span class="line">URxvt.tabbed.tabsel-fg: 1</span><br><span class="line">URxvt.tabbed.tabsel-bg: 8</span><br><span class="line"></span><br><span class="line">!! fake transparent</span><br><span class="line">URxvt.transparent: true</span><br><span class="line">URxvt.shading:     10</span><br><span class="line">URxvt.fading:      40</span><br><span class="line">!! font</span><br><span class="line">URxvt.font:        xft:Monospace,xft:Awesome:pixelsize&#x3D;14</span><br><span class="line">URxvt.boldfont:    xft:Monospace,xft:Awesome:style&#x3D;Bold:pixelsize&#x3D;16</span><br><span class="line"></span><br><span class="line">!! scroll behavior</span><br><span class="line">URxvt.scrollBar:         false</span><br><span class="line">URxvt.scrollTtyOutput:   false</span><br><span class="line">URxvt.scrollWithBuffer:  true</span><br><span class="line">URxvt.scrollTtyKeypress: true</span><br><span class="line"></span><br><span class="line">!! addtional</span><br><span class="line">URxvt.internalBorder:     0</span><br><span class="line">URxvt.cursorBlink: true</span><br><span class="line">URxvt.saveLines:          2000</span><br><span class="line">URxvt.mouseWheelScrollPage:             false</span><br><span class="line"></span><br><span class="line">! Restore Ctrl+Shift+(c|v)</span><br><span class="line">URxvt.keysym.Shift-Control-V: eval:paste_clipboard</span><br><span class="line">URxvt.keysym.Shift-Control-C: eval:selection_to_clipboard</span><br><span class="line">URxvt.iso14755: false</span><br><span class="line">URxvt.iso14755_52: false</span><br><span class="line"></span><br><span class="line">! alt+s 搜索</span><br><span class="line">URxvt.perl-ext:   default,matcher,searchable-scrollback</span><br><span class="line">URxvt.keysym.M-s: searchable-scrollback:start</span><br><span class="line"></span><br><span class="line">! url match 问题是tab模式下不支持跳转浏览器</span><br><span class="line">URxvt.url-launcher:       &#x2F;usr&#x2F;bin&#x2F;firefox</span><br><span class="line">URxvt.matcher.button:     1</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">URxvt.termName:         xterm-256color</span><br><span class="line">URxvt.iconFile:		&#x2F;usr&#x2F;share&#x2F;icons&#x2F;gnome&#x2F;32x32&#x2F;apps&#x2F;gnome-terminal-icon.png</span><br><span class="line">! fast key</span><br><span class="line">URxvt.keysym.Control-Up:     \033[1;5A</span><br><span class="line">URxvt.keysym.Control-Down:   \033[1;5B</span><br><span class="line">URxvt.keysym.Control-Left:   \033[1;5D</span><br><span class="line">URxvt.keysym.Control-Right:  \033[1;5C</span><br></pre></td></tr></table></figure>
+
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>用了kitty就不会有输入法的问题，字体也很丰富, 推荐现代化模拟终端kitty</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://energygreek.github.io/2021/03/25/my-urxvt/" data-id="clsbmbv42003abwop0zn0dy06" data-title="urxvt配置" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/terminal/" rel="tag">terminal</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/urxvt/" rel="tag">urxvt</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-static-compile-warning-if-namespace-resolving-function-used" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/03/17/static-compile-warning-if-namespace-resolving-function-used/" class="article-date">
+  <time class="dt-published" datetime="2021-03-17T02:47:35.000Z" itemprop="datePublished">2021-03-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2021/03/17/static-compile-warning-if-namespace-resolving-function-used/">static compile warning if namespace resolving function used</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>当程序里面有使用到解析函数的时候， 静态编译程序会报warning</p>
+<h2 id="现象"><a href="#现象" class="headerlink" title="现象"></a>现象</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">..&#x2F;..&#x2F;lib&#x2F;libhacore.a(File.cpp.o): In function &#96;_ZN2ha4core9gid2groupB5cxx11Ej&#39;:</span><br><span class="line">&#x2F;tmp&#x2F;src&#x2F;ha&#x2F;core&#x2F;File.cpp:213: warning: Using &#39;getgrgid_r&#39; in statically linked applications requires at runtime the shared libraries from the glibc version used for linking</span><br><span class="line">..&#x2F;..&#x2F;lib&#x2F;libhacore.a(File.cpp.o): In function &#96;ha::core::group2gid(std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;, unsigned int&amp;)&#39;:</span><br><span class="line">&#x2F;tmp&#x2F;src&#x2F;ha&#x2F;core&#x2F;File.cpp:291: warning: Using &#39;getgrnam_r&#39; in statically linked applications requires at runtime the shared libraries from the glibc version used for linking</span><br><span class="line">..&#x2F;..&#x2F;lib&#x2F;libhacore.a(File.cpp.o): In function &#96;ha::core::username2uid(std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;, unsigned int&amp;)&#39;:</span><br><span class="line">&#x2F;tmp&#x2F;src&#x2F;ha&#x2F;core&#x2F;File.cpp:271: warning: Using &#39;getpwnam_r&#39; in statically linked applications requires at runtime the shared libraries from the glibc version used for linking</span><br><span class="line">..&#x2F;..&#x2F;lib&#x2F;libhacore.a(File.cpp.o): In function &#96;_ZN2ha4core12uid2usernameB5cxx11Ej&#39;:</span><br><span class="line">&#x2F;tmp&#x2F;src&#x2F;ha&#x2F;core&#x2F;File.cpp:194: warning: Using &#39;getpwuid_r&#39; in statically linked applications requires at runtime the shared libraries from the glibc version used for linking</span><br><span class="line">CMakeFiles&#x2F;hasync-exec.dir&#x2F;main.cpp.o: In function &#96;boost::asio::detail::socket_ops::getaddrinfo(char const*, char const*, addrinfo const&amp;, addrinfo**, boost::system::error_code&amp;)&#39;:</span><br><span class="line">&#x2F;usr&#x2F;local&#x2F;include&#x2F;boost&#x2F;asio&#x2F;detail&#x2F;impl&#x2F;socket_ops.ipp:3348: warning: Using &#39;getaddrinfo&#39; in statically linked applications requires at runtime the shared libraries from the glibc version used for linking</span><br><span class="line">&#x2F;usr&#x2F;local&#x2F;lib&#x2F;gcc&#x2F;x86_64-pc-linux-gnu&#x2F;8.2.0&#x2F;..&#x2F;..&#x2F;..&#x2F;..&#x2F;lib64&#x2F;libcrypto.a(b_sock.o): In function &#96;BIO_gethostbyname&#39;:</span><br><span class="line">b_sock.c:(.text+0x51): warning: Using &#39;gethostbyname&#39; in statically linked applications requires at runtime the shared libraries from the glibc version used for linking</span><br><span class="line">&#x2F;usr&#x2F;local&#x2F;lib&#x2F;gcc&#x2F;x86_64-pc-linux-gnu&#x2F;8.2.0&#x2F;..&#x2F;..&#x2F;..&#x2F;..&#x2F;lib64&#x2F;libcares.a(libcares_la-ares_getaddrinfo.o): In function &#96;ares_getaddrinfo&#39;:</span><br><span class="line">ares_getaddrinfo.c:(.text+0x73f): warning: Using &#39;getservbyname&#39; in statically linked applications requires at runtime the shared libraries from the glibc version used for linking</span><br><span class="line">&#x2F;usr&#x2F;local&#x2F;lib&#x2F;gcc&#x2F;x86_64-pc-linux-gnu&#x2F;8.2.0&#x2F;..&#x2F;..&#x2F;..&#x2F;..&#x2F;lib64&#x2F;libcares.a(libcares_la-ares_getnameinfo.o): In function &#96;lookup_service.part.0.constprop.2&#39;:</span><br><span class="line">ares_getnameinfo.c:(.text+0x32d): warning: Using &#39;getservbyport_r&#39; in statically linked applications requires at runtime the shared libraries from the glibc version used for linking</span><br></pre></td></tr></table></figure>
+
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>即使静态链接glibc, glibc内部在运行时依旧要调用<code>动态库</code>，这些库函数多与域名解析有关, 所以要求运行时的库版本要与编译时相同， 当然基于容器化部署就不用担心了  </p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://energygreek.github.io/2021/03/17/static-compile-warning-if-namespace-resolving-function-used/" data-id="clsbmbv4p004fbwop1va13e5j" data-title="static compile warning if namespace resolving function used" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c-c/" rel="tag">c/c++</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%BC%96%E8%AF%91/" rel="tag">编译</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-shared-pointer" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/03/15/shared-pointer/" class="article-date">
+  <time class="dt-published" datetime="2021-03-15T09:16:05.000Z" itemprop="datePublished">2021-03-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2021/03/15/shared-pointer/">智能指针</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="智能指针"><a href="#智能指针" class="headerlink" title="智能指针"></a>智能指针</h1><p>智能指针是c++11加入的特性，包括shared_ptr和unique_ptr，weak_ptr，以及make_shared函数，但make_unique是c++14才出来<br>不过c++11可以通过模版来实现make_unique</p>
+<h2 id="普通指针和智能指针的区别"><a href="#普通指针和智能指针的区别" class="headerlink" title="普通指针和智能指针的区别"></a>普通指针和智能指针的区别</h2><p>shared_ptr和unique_ptr都是异常安全的(exception-safe)，而普通指针不是，举例如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">void nonsafe_call(T1* t1, T2* t2);</span><br><span class="line">void safe_call(unique_ptr&lt;T1&gt; t1, unique_ptr&lt;T2&gt; t2);</span><br><span class="line"></span><br><span class="line">nonsafe_call(new T1, new T2);</span><br><span class="line">safe_call(make_unique&lt;T1&gt;, make_unique&lt;T2&gt;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="当形参为普通指针时"><a href="#当形参为普通指针时" class="headerlink" title="当形参为普通指针时"></a>当形参为普通指针时</h3><p>虽然new是安全的，会先申请内存再构造对象t1。 如果t1的构造函数抛异常，申请的内存会自动释放，不会内存泄漏<br>但当两个new作为函数参数时，情况不同。 因为参数必须在调用函数前决断，所以步骤如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1. 为t1申请内存</span><br><span class="line">2. 构造t1</span><br><span class="line">3. 为t2申请内存</span><br><span class="line">4. 构造t2</span><br><span class="line">5. 调用函数</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>当执行到2失败时，不会泄漏，new会释放t1的内存</li>
+<li>当执行到4失败是，会泄漏t1，因为t1已经构造完成，不会释放内存</li>
+</ul>
+<h3 id="当形参为智能指针时"><a href="#当形参为智能指针时" class="headerlink" title="当形参为智能指针时"></a>当形参为智能指针时</h3><p>步骤为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1. t1 &#x3D; make_unique&lt;T1&gt;()</span><br><span class="line">2. t2 &#x3D; make_unique&lt;T2&gt;()</span><br><span class="line">3. 调用函数</span><br></pre></td></tr></table></figure>
+<p>如果2失败，t1的对象由unique_ptr管理，当t1释放时，会释放内存，所以无论t1构造失败还是t2构造失败，都能正确释放内存，不会导致泄漏<br>就因为unique_ptr和shared_ptr是内存安全的</p>
+<h3 id="但以普通指针构造智能指针的方式不是异常安全的"><a href="#但以普通指针构造智能指针的方式不是异常安全的" class="headerlink" title="但以普通指针构造智能指针的方式不是异常安全的"></a>但以普通指针构造智能指针的方式不是异常安全的</h3><p>即<code>foo(std::unique_ptr&lt;T1&gt;(new T1()), std::unique_ptr&lt;T2&gt;(new T2()));</code> 不是异常安全的</p>
+<p>此时步骤可能如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">1. 为t1申请内存</span><br><span class="line">2. 构造t1</span><br><span class="line">3. 为t2申请内存</span><br><span class="line">4. 构造t2</span><br><span class="line">5. 构造unique_ptr&lt;T1&gt;</span><br><span class="line">6. 构造unique_ptr&lt;T2&gt;</span><br><span class="line">7. 调用函数</span><br></pre></td></tr></table></figure>
+<p>当步骤4发生异常时，t1并未被unique_ptr管理，所以不会去释放t1的内存，故发生内存泄漏</p>
+<h2 id="智能指针的构造"><a href="#智能指针的构造" class="headerlink" title="智能指针的构造"></a>智能指针的构造</h2><p>shared_ptr对应的函数是make_shared<T><br>但c++11中没有make_unique, 可以使用模版实现如下</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T,<span class="keyword">typename</span> ...Args&gt;</span><br><span class="line"><span class="function"><span class="built_in">std</span>::<span class="built_in">unique_ptr</span>&lt;T&gt; <span class="title">make_unique</span><span class="params">(Args&amp;&amp; ...args)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">std</span>::<span class="built_in">unique_ptr</span>&lt;T&gt;(<span class="keyword">new</span> T(<span class="built_in">std</span>::forward&lt;Args&gt;(args)... ));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>那为什么这样就能异常安全呢？因为调用make_uniqe时，可以确保t1的内存被unique_ptr管理了 </p>
+<h2 id="make-shared创建智能指针和用new创建智能指针的区别"><a href="#make-shared创建智能指针和用new创建智能指针的区别" class="headerlink" title="make_shared创建智能指针和用new创建智能指针的区别"></a>make_shared创建智能指针和用new创建智能指针的区别</h2><p>除了上面说所的make_shared/make_unique是异常安全，而unique_ptr<T>(new T()) 不是异常安全外，其构造的智能指针也不同  </p>
+<p>智能指针之所以会释放内存，是因为智能指针本身也是一个对象，在其生命周期结束后会调用dtor, 并在那里释放内存<br>所以智能指针的对象内存即包含了T，也包含了智能指针本身，而make_shared<T>() 和 shared_ptr<T>(new T)的区别在于<code>前者是两个部分的地址连续，而后者并不一定连续</code></p>
+<h2 id="unique-ptr的区别"><a href="#unique-ptr的区别" class="headerlink" title="unique_ptr的区别"></a>unique_ptr的区别</h2><p>unique_ptr和shared_ptr不同，后者为了多变量同时拥有资源的访问，而unique_ptr表示任何时刻，只有一个变量能访问资源和释放资源，比如打开的文件设备,<br>而且通常为管理的资源设置析构函数，比如指定析构时关闭文件和设备</p>
+<p>如下代码，当fp析构时，自动关闭文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; helper function for the custom deleter demo below</span><br><span class="line">void close_file(std::FILE* fp)</span><br><span class="line">&#123;</span><br><span class="line">    std::fclose(fp);</span><br><span class="line">&#125;</span><br><span class="line">using unique_file_t &#x3D; std::unique_ptr&lt;std::FILE, decltype(&amp;close_file)&gt;;</span><br><span class="line">unique_file_t fp(std::fopen(&quot;demo.txt&quot;, &quot;r&quot;), &amp;close_file);</span><br></pre></td></tr></table></figure>
+
+<p>unique_ptr要配合move使用，当move之后，原对象不拥有指针资源</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>为了避免多参数决断时，导致已经决断的参数内存泄漏，应尽可能使用智能指针来管理内存</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://energygreek.github.io/2021/03/15/shared-pointer/" data-id="clsbmbv4k0046bwopadl1bwrj" data-title="智能指针" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c-c/" rel="tag">c/c++</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/exception-safe/" rel="tag">exception-safe</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/shared-ptr/" rel="tag">shared_ptr</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/unique-ptr/" rel="tag">unique_ptr</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-setup-printer-use-avahi" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/03/10/setup-printer-use-avahi/" class="article-date">
+  <time class="dt-published" datetime="2021-03-10T08:06:52.000Z" itemprop="datePublished">2021-03-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2021/03/10/setup-printer-use-avahi/">使用avahi将传统打印机支持无线打印</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>自从知道mdns之后，发现它非常方便，例如可以找到lan下有哪些ftp服务，ssh服务等。甚至我配置好的打印机服务。</p>
+<h2 id="mdns介绍"><a href="#mdns介绍" class="headerlink" title="mdns介绍"></a>mdns介绍</h2><p>有别于dns, mdns专门用来解析链路域名（TLD为*.local）， 且不需要域名服务器（nameserver）。<br>原理是同一个lan里的主机通过avahi或zeroconfig类似的工具，向lan广播自己的ip信息和服务</p>
+<h2 id="avahi-介绍"><a href="#avahi-介绍" class="headerlink" title="avahi 介绍"></a>avahi 介绍</h2><p>avahi是zeroconfig的开源实现，在linux下还有systemd-resolve 同样可以实现mdns解析，但是avahi依旧是linux预装的软件。</p>
+<h3 id="avahi-配置"><a href="#avahi-配置" class="headerlink" title="avahi 配置"></a>avahi 配置</h3><p>主要修改<code>/etc/avahi/avahi-daemon.conf</code>, 这里使用了br0和wlan0两个网卡，avahi就可以访问两个网络</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">use-ipv4&#x3D;yes</span><br><span class="line">allow-interfaces&#x3D;br0,wlan0</span><br></pre></td></tr></table></figure>
+<p>再设置自启动</p>
+<h3 id="nss-配置"><a href="#nss-配置" class="headerlink" title="nss 配置"></a>nss 配置</h3><p>要让主机能解析到*.local 域名，需要修改配置文件<code>/etc/nsswitch.conf</code> </p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="deletion">- hosts: files mymachines myhostname resolve [!UNAVAIL=return] dns</span></span><br><span class="line"><span class="addition">+ hosts: files mymachines myhostname mdns_minimal [NOTFOUND=return] resolve [!UNAVAIL=return] dns</span></span><br></pre></td></tr></table></figure>
+<p>这样，在主机请求解析域名的时候， 会先去请求avahi解析，如果avahi解析失败（说明不是一个local域名）才会去查找域名解析（dns）</p>
+<h2 id="使用systemd-resolved"><a href="#使用systemd-resolved" class="headerlink" title="使用systemd-resolved"></a>使用systemd-resolved</h2><p>对于使用systemd-resoved来管理dns解析时，可以直接用<code>sudo systemd-resolve --set-mdns=yes --interface=eth0</code>启动eth0端口的mdns广播。</p>
+<p>顺便提一下，用systemd-networkd配置dns服务器和用systemd-resolved配置dns的区别，前者为每个以太网口单独配置，而systemd-resoved会读取每个以太网口配置，另外还有一个全局的dns配置。</p>
+<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><p>首先可以ping 本地local域名</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">~ &gt; ping hst.local                                                                                                                                                                                      </span><br><span class="line">PING hst.local(hst (fe80::3e9c:fff:fe8c:69c3%wlan0)) 56 data bytes</span><br><span class="line">64 bytes from hst (fe80::3e9c:fff:fe8c:69c3%wlan0): icmp_seq=1 ttl=64 time=0.113 ms</span><br><span class="line">64 bytes from hst (fe80::3e9c:fff:fe8c:69c3%wlan0): icmp_seq=2 ttl=64 time=0.144 ms</span><br></pre></td></tr></table></figure>
+
+<p>然后执行<code>avahi-discover-standalone</code> 可以查找到很多*.local的地址，特别是在公司网络里</p>
+<h2 id="广告自己的服务"><a href="#广告自己的服务" class="headerlink" title="广告自己的服务"></a>广告自己的服务</h2><p>配置好了avahi, 就可以向外界发布自己的服务，让其他人知道，也可以选择不发布<br>例如要广告我的ssh服务, 只需要将预设的配置文件拷贝到avahi的配置目录下</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo cp /usr/share/doc/avahi/ssh.service /etc/avahi/services</span><br></pre></td></tr></table></figure>
+<p>这样，别人就能发现我的ssh服务了</p>
+<h2 id="配置打印机"><a href="#配置打印机" class="headerlink" title="配置打印机"></a>配置打印机</h2><p>linux的打印功能依赖CUPS这个软件，先安装CUPS，设置自启动，然后就可以访问CUPS的网页版管理界面<code>http://localhost:631</code><br>在这个网页中添加网络打印机或者本地打印机，然后测试打印是否正常</p>
+<h2 id="最后，配置无线功能"><a href="#最后，配置无线功能" class="headerlink" title="最后，配置无线功能"></a>最后，配置无线功能</h2><p>上一部添加的打印机可能是有线网络打印机，也可能是串口打印机，都不能让我们的手机直接使用。  </p>
+<p>但是通过cups + avahi 就可以将你的有线打印机变成无线打印机了<br>首先在cups里配置，勾选<code>Share This Printer</code>，<br><img src="/images/cups_share.png" alt="cups shares printer"></p>
+<p>然后像刚才添加ssh服务一样， 添加打印服务<br>在<code>/etc/avahi/services/</code> 创建一个service后缀的文件<code>airprint.service</code></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" standalone='no'?&gt;</span><span class="comment">&lt;!--*-nxml-*--&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">service-group</span> <span class="meta-keyword">SYSTEM</span> <span class="meta-string">"avahi-service.dtd"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">service-group</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">name</span>&gt;</span>Printer<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">service</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">type</span>&gt;</span>_ipp._tcp<span class="tag">&lt;/<span class="name">type</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">subtype</span>&gt;</span>_universal._sub._ipp._tcp<span class="tag">&lt;/<span class="name">subtype</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">port</span>&gt;</span>631<span class="tag">&lt;/<span class="name">port</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">txt-record</span>&gt;</span>txtver=1<span class="tag">&lt;/<span class="name">txt-record</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">txt-record</span>&gt;</span>qtotal=1<span class="tag">&lt;/<span class="name">txt-record</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">txt-record</span>&gt;</span>rp=printers/Ricoh_MP_4055<span class="tag">&lt;/<span class="name">txt-record</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">txt-record</span>&gt;</span>ty=Ricoh_MP_4055<span class="tag">&lt;/<span class="name">txt-record</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">txt-record</span>&gt;</span>adminurl=http://yourip:631/printers/Ricoh_MP_4055<span class="tag">&lt;/<span class="name">txt-record</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">txt-record</span>&gt;</span>note=Ricoh_MP_4055<span class="tag">&lt;/<span class="name">txt-record</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">txt-record</span>&gt;</span>priority=0<span class="tag">&lt;/<span class="name">txt-record</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">txt-record</span>&gt;</span>product=(GPL Ghostscript)<span class="tag">&lt;/<span class="name">txt-record</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">txt-record</span>&gt;</span>printer-state=3<span class="tag">&lt;/<span class="name">txt-record</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">txt-record</span>&gt;</span>printer-type=0x801046<span class="tag">&lt;/<span class="name">txt-record</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">txt-record</span>&gt;</span>Transparent=T<span class="tag">&lt;/<span class="name">txt-record</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">txt-record</span>&gt;</span>Binary=T<span class="tag">&lt;/<span class="name">txt-record</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">txt-record</span>&gt;</span>Fax=F<span class="tag">&lt;/<span class="name">txt-record</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">txt-record</span>&gt;</span>Color=T<span class="tag">&lt;/<span class="name">txt-record</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">txt-record</span>&gt;</span>Duplex=T<span class="tag">&lt;/<span class="name">txt-record</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">txt-record</span>&gt;</span>Staple=F<span class="tag">&lt;/<span class="name">txt-record</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">txt-record</span>&gt;</span>Copies=T<span class="tag">&lt;/<span class="name">txt-record</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">txt-record</span>&gt;</span>Collate=F<span class="tag">&lt;/<span class="name">txt-record</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">txt-record</span>&gt;</span>Punch=F<span class="tag">&lt;/<span class="name">txt-record</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">txt-record</span>&gt;</span>Bind=F<span class="tag">&lt;/<span class="name">txt-record</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">txt-record</span>&gt;</span>Sort=F<span class="tag">&lt;/<span class="name">txt-record</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">txt-record</span>&gt;</span>Scan=F<span class="tag">&lt;/<span class="name">txt-record</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">txt-record</span>&gt;</span>pdl=application/octet-stream,application/pdf,application/postscript,image/jpeg,image/png,image/urf<span class="tag">&lt;/<span class="name">txt-record</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">txt-record</span>&gt;</span>URF=W8,SRGB24,CP1,RS600<span class="tag">&lt;/<span class="name">txt-record</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">service</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">service-group</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>根据情况修改一下内容，就完成了, 亲测iphone可以使用这个服务打印</p>
+<h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><p>上面的情况假设防火墙处于关闭状态，如果启用防火墙的情况下，需要开放avahi、ssh以及ipp服务</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo firewall-cmd --add-service ssh ipp --permanent</span><br><span class="line">sudo firewall-cmd --add-port&#x3D;5353&#x2F;tcp --permanent</span><br><span class="line">sudo firewall-cmd --reload</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://energygreek.github.io/2021/03/10/setup-printer-use-avahi/" data-id="clsbmbv4l0048bwopbdaidg39" data-title="使用avahi将传统打印机支持无线打印" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mdns/" rel="tag">mdns</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/printer/" rel="tag">printer</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-cpp-template-programing" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/03/04/cpp-template-programing/" class="article-date">
+  <time class="dt-published" datetime="2021-03-04T09:40:45.000Z" itemprop="datePublished">2021-03-04</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2021/03/04/cpp-template-programing/">cpp-template-programing</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="模板编程"><a href="#模板编程" class="headerlink" title="模板编程"></a>模板编程</h1><p>模板编程是其它高级语言没有的技术, 也称为范型编程，多在stl库使用。这种对类型的泛化相当于在编程之上编程</p>
+<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>模板可以作用于函数和类，即能泛化<code>类型</code>，也可以泛化<code>大小</code></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">int</span> N&gt; <span class="function"><span class="keyword">void</span> <span class="title">foo</span><span class="params">()</span> </span>&#123; T t[N]; &#125;</span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">int</span> N&gt; <span class="class"><span class="keyword">struct</span> <span class="title">Foo</span> &#123;</span> T t[N]; &#125;;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">   <span class="comment">// array of two int</span></span><br><span class="line">   foo&lt;<span class="keyword">int</span>, <span class="number">2</span>&gt;();</span><br><span class="line">   <span class="comment">// class has a array of two int </span></span><br><span class="line">   Foo&lt;<span class="keyword">int</span>, <span class="number">2</span>&gt; F;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="模板的特化"><a href="#模板的特化" class="headerlink" title="模板的特化"></a>模板的特化</h2><p>跟泛化相反的方向，叫特化，编译器会优先使用特化的版本, 而特化有2个方向，<code>类型特化</code>和<code>范围特化</code>  </p>
+<h3 id="类型特化"><a href="#类型特化" class="headerlink" title="类型特化"></a>类型特化</h3><p>对于特化类型个数的不同，分为偏特化和全特化，全特化即为所有类型都指定，特化类型越多匹配优先级越高<br>注意：模板函数不能偏特化</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">template&lt;typename T1, typename T2&gt; struct Foo&#123;&#125;;</span><br><span class="line">template&lt;typename T2&gt; struct Foo&lt;int, T2&gt; &#123;&#125;;</span><br><span class="line">&#x2F;&#x2F; 全特化</span><br><span class="line">template&lt;&gt; struct Foo&lt;int,int&gt;&#123;&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>例如`Foo&lt;int, int&gt; foo’，编译器会使用第三个版本</p>
+<h3 id="范围特化"><a href="#范围特化" class="headerlink" title="范围特化"></a>范围特化</h3><p>比如常见的指针和引用，这和int, float, class 都是无关的，属于另个维度，也可以说是范围, 在stl为兼容指针做大量的工作  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">template &lt;typename T, typename N&gt; struct Foo&lt;T *, N&gt; &#123;&#125;;</span><br></pre></td></tr></table></figure>
+<p>这样’Foo&lt;int *, int&gt; foo’会使用这个版本</p>
+<p>还例如指定对大小的特例化</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;模板</span><br><span class="line">template&lt;int n&gt; foo()&#123;&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;值特例化</span><br><span class="line">template&lt;&gt; foo&lt;10&gt; foo()&#123;&#125;</span><br></pre></td></tr></table></figure>
+<p>那么如果调用<code>foo&lt;10&gt;();</code>时，优先匹配特例化版本</p>
+<h3 id="函数匹配优先级"><a href="#函数匹配优先级" class="headerlink" title="函数匹配优先级"></a>函数匹配优先级</h3><p>在函数调用时，普通函数的匹配优先级高于模板函数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">template &lt;typename T&gt; void f(T) &#123; std::cout &lt;&lt; &quot;temp\n&quot;; &#125;</span><br><span class="line">void f(int d) &#123; std::cout &lt;&lt; &quot;temp1\n&quot;; &#125;</span><br><span class="line">template &lt;&gt; void f(int d) &#123; std::cout &lt;&lt; &quot;temp2\n&quot;; &#125;</span><br><span class="line"></span><br><span class="line">f(1); &#x2F;&#x2F; temp1</span><br></pre></td></tr></table></figure>
+
+<h3 id="自定义类型的范围特化"><a href="#自定义类型的范围特化" class="headerlink" title="自定义类型的范围特化"></a>自定义类型的范围特化</h3><p>上面讲的是指针类型和引用类型两种，但如果是自定义类型，那就无穷无尽了，所以模板编程也是’图灵完备’的</p>
+<p>例如以下，创建了一个自定义的类型来包装基本类型(int,float)，这样可以有自定义类型的特化版本</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">template &lt;typename T&gt; struct Decor &#123; using type &#x3D; T; &#125;;</span><br><span class="line">template &lt;typename T&gt; struct Strip &#123; using type &#x3D; T; &#125;;</span><br><span class="line">template &lt;typename T&gt; struct Strip&lt;Decor&lt;T&gt;&gt; &#123; using type &#x3D; T; &#125;;</span><br><span class="line">template &lt;typename T&gt; using StripDecor &#x3D; typename Strip&lt;T&gt;::type;</span><br><span class="line"></span><br><span class="line">template &lt;typename T&gt; class Row &#123;&#125;;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">  using nodecor &#x3D; Row&lt;int&gt;;</span><br><span class="line">  using decor &#x3D; Decor&lt;Row&lt;int&gt;&gt;;</span><br><span class="line">  &#x2F;&#x2F; 虽底层同为int, 但nodecor 类型不同于decor类型</span><br><span class="line">  static_assert(std::is_same&lt;col&gt;, nocol&gt;::value);</span><br><span class="line">  &#x2F;&#x2F; 通过Strip取出其底层类型</span><br><span class="line">  static_assert(std::is_same&lt;StripDecor&lt;col&gt;, nocol&gt;::value);</span><br><span class="line">  return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="模板的声明定义分离"><a href="#模板的声明定义分离" class="headerlink" title="模板的声明定义分离"></a>模板的声明定义分离</h3><ol>
+<li>由于template用来生成函数和类，所以编译器需要同时知道template的类型和其细节，所以模板函数不支持将定义放到源文件中</li>
+<li>而且编译器通常是以cpp为编译单元，当编译模板cpp时不知道调用cpp, 编译调用cpp时，不知道模板cpp。所以模板函数不支持将定义放到源文件中</li>
+<li>对于模板类可以将成员函数的定义放到源文件，但要为每个成员函数都添加’template’限定, <strong><em>而且要为实例添加特例化</em></strong>。</li>
+<li>显式特例化支持只声明不定义，而在源文件中为每种所需的类型都特例化，即与3相同。其实显示特例化是不需要特例化而强制特例化。 </li>
+</ol>
+<p>如下，模板类的定义放到cpp中，这样会报错，因为在编译call_foo.cpp时不知到模板定义, 因为没有生成过int版本的Foo。<br>为此，必须在foo.cpp里添加<code>template class Foo&lt;int&gt;</code>, 如同4，实在吃力不讨好。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// foo.h</span></span><br><span class="line">    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Foo</span> &#123;</span></span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">      Foo();</span><br><span class="line">      <span class="function"><span class="keyword">void</span> <span class="title">someMethod</span><span class="params">(T x)</span></span>;</span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">      T x;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// foo.cpp</span></span><br><span class="line">    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line">    Foo&lt;T&gt;::Foo()</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line">    <span class="keyword">void</span> Foo&lt;T&gt;::someMethod(T x)</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// call_foo.cpp</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">blah_blah_blah</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">      <span class="comment">// ...</span></span><br><span class="line">      Foo&lt;<span class="keyword">int</span>&gt; f;</span><br><span class="line">      f.someMethod(<span class="number">5</span>);</span><br><span class="line">      <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>当然把模板的定义放到头文件中会增加可执行文件的体积。</p>
+<h4 id="实际运用"><a href="#实际运用" class="headerlink" title="实际运用"></a>实际运用</h4><p>grpc 能以流和非流方式传输，而grpc参数protobuf消息类型是另一个范围。那么要封装grpc方法, 需要封装流+类型</p>
+<p>举例protobuf的消息类型有string, fixed32</p>
+<ul>
+<li>string</li>
+<li>fixed32</li>
+<li>Stream<fixed32></li>
+<li>Stream<string></li>
+</ul>
+<p>通过上面的偏特化可以即能区分流和非流又能区分类型</p>
+<h3 id="赘述一下模板的类型"><a href="#赘述一下模板的类型" class="headerlink" title="赘述一下模板的类型"></a>赘述一下模板的类型</h3><p>上面的模板类型T都是实际编程时定义的类型，但作为图灵完备的模板编程，未决的template类型也可以作为template类型</p>
+<p>如下是一个模板用另一个模板来特例化</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">template &lt;typename T&gt; struct Upper &#123;&#125;;</span><br><span class="line">template &lt;template &lt;typename&gt; class T&gt; struct Lower &#123;&#125;;</span><br><span class="line"></span><br><span class="line">template&lt;typename T&gt;</span><br><span class="line">Lower&lt;Upper&lt;T&gt;&gt; l;</span><br></pre></td></tr></table></figure>
+
+<h2 id="可变模版variadic-templates"><a href="#可变模版variadic-templates" class="headerlink" title="可变模版variadic templates"></a>可变模版variadic templates</h2><p>c中有可变参数<code>...</code>和gcc内置<code>__VA_ARGS__</code>宏定义, 实现不同个数的变量打印。这是由编译期实现的，会将format的格式符替换成参数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int printf ( const char * format, ... );</span><br></pre></td></tr></table></figure>
+
+<p>c++有模版，而且在c++11之后引入了动态参数模版，即模版函数或类可以使用动态参数</p>
+<h3 id="实际运用1"><a href="#实际运用1" class="headerlink" title="实际运用1"></a>实际运用1</h3><p>在实际项目中手动跑单元测试用例的时候，不希望再去看日志文件，而是想日志直接输出到终端, 有以下办法</p>
+<h4 id="c-11及以上标准"><a href="#c-11及以上标准" class="headerlink" title="c++11及以上标准"></a>c++11及以上标准</h4><p>可以使用动态参数模版替换原本的日志打印函数</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">undef</span> log_debug</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> First, <span class="keyword">typename</span> ...Rest&gt;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">log_debug</span><span class="params">(First &amp;&amp; first, Rest &amp;&amp; ... rest)</span></span>&#123;</span><br><span class="line">  <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; fmt::format(first, rest ...) &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 这时日志就直接输出到终端了, 这里使用了fmt库</span></span><br><span class="line">log_debug(<span class="string">"aasdas&#123;&#125;"</span>, <span class="string">"bbbb"</span>);</span><br></pre></td></tr></table></figure>
+
+<p>也可简单写成</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> ...Args&gt;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">log_debug</span><span class="params">(Args&amp;&amp; ...args)</span></span>&#123;</span><br><span class="line">	<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; fmt::format(args...) &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果不使用fmt格式化，还可以用</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">undef</span> log_debug</span></span><br><span class="line"><span class="comment">// 定义一个空函数</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">log_debug</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> First, <span class="keyword">typename</span> Rest&gt;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">log_debug</span><span class="params">(First&amp;&amp; first, Arg&amp;&amp; ...arg)</span></span>&#123;</span><br><span class="line">	<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; first;</span><br><span class="line">	log_debug(arg...);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>需要解释一下，函数<code>log_debug()</code>必须要先声明，因为模版实例化的的最终要调用这个无参的函数<br>模拟一下堆栈, 因为参数在每次递归时减少一个，所以最终是0个参数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">log_debug(1, 0.2, &quot;aaa&quot;);</span><br><span class="line">log_debug(0.2, &quot;aaa&quot;);</span><br><span class="line">log_debug(&quot;aaa&quot;);</span><br><span class="line">log_debug();</span><br></pre></td></tr></table></figure>
+
+<h4 id="c-11以前的标准"><a href="#c-11以前的标准" class="headerlink" title="c++11以前的标准"></a>c++11以前的标准</h4><p>可以使用宏定义来替换了, 然后需要重载<code>,</code>方法</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> log_debug(...) std::cout , __VA_ARGS__ , std::endl</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="built_in">std</span>::ostream&amp; <span class="keyword">operator</span>,(<span class="built_in">std</span>::ostream&amp; out, <span class="keyword">const</span> T&amp; t) &#123;</span><br><span class="line">  out &lt;&lt; t;</span><br><span class="line">  <span class="keyword">return</span> out;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//overloaded version to handle all those special std::endl and others...</span></span><br><span class="line"><span class="built_in">std</span>::ostream&amp; <span class="keyword">operator</span>,(<span class="built_in">std</span>::ostream&amp; out, <span class="built_in">std</span>::ostream&amp;(*f)(<span class="built_in">std</span>::ostream&amp;)) &#123;</span><br><span class="line">  out &lt;&lt; f;</span><br><span class="line">  <span class="keyword">return</span> out;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="直接用c的方式"><a href="#直接用c的方式" class="headerlink" title="直接用c的方式"></a>直接用c的方式</h4><p>因为printf是支持varidic的</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">undef</span> log_debug</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> log_debug(...) printf(__VA_ARGS__), printf(<span class="meta-string">"\n"</span>)</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  log_debug(<span class="string">"example"</span>,<span class="string">"output"</span>,<span class="string">"filler"</span>,<span class="string">"text"</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="c-17-引入了fold-expression"><a href="#c-17-引入了fold-expression" class="headerlink" title="c++17 引入了fold expression"></a>c++17 引入了<code>fold expression</code></h4><p>可以改写为</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> ...Args&gt;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">log_debug</span><span class="params">(Args &amp;&amp; ...args)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    (<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; ... &lt;&lt; args);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>动态参数模版除了以上的用法，还有更多用处, 例如<code>std::tupe</code>的实现</p>
+<h3 id="实际运用2"><a href="#实际运用2" class="headerlink" title="实际运用2"></a>实际运用2</h3><h4 id="使用模板生成并发代码"><a href="#使用模板生成并发代码" class="headerlink" title="使用模板生成并发代码"></a>使用模板生成并发代码</h4><p>以下代码实现复制二维数组，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">for( size_t ch&#x3D;0 ; ch&lt;channelNum ; ++ch ) &#123;</span><br><span class="line">    for( size_t i&#x3D;0; i&lt;length ; ++i ) &#123;</span><br><span class="line">        out[ch][i]&#x3D;in[ch][i];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但以下理论更快，没有两层for，前提是知道channel大小</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">for(size_t i&#x3D;0;i&lt;length;++i) &#123;</span><br><span class="line">    out[0][i]&#x3D;in[0][i];</span><br><span class="line">    out[1][i]&#x3D;in[1][i];</span><br><span class="line">    out[2][i]&#x3D;in[2][i];</span><br><span class="line">    out[3][i]&#x3D;in[3][i];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但如果用模板，就不需要知道channel大小，自动生成上面的代码</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">int</span> count&gt; <span class="class"><span class="keyword">class</span> <span class="title">Copy</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="keyword">static</span> <span class="keyword">inline</span> <span class="keyword">void</span> <span class="title">go</span><span class="params">(<span class="keyword">float</span> **<span class="keyword">const</span> out, <span class="keyword">float</span> **<span class="keyword">const</span> in, <span class="keyword">int</span> i)</span> </span>&#123;</span><br><span class="line">    Copy&lt;count - <span class="number">1</span>&gt;::go(out, in, i);</span><br><span class="line">    out[count - <span class="number">1</span>][i] = in[count - <span class="number">1</span>][i];</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;&gt; <span class="class"><span class="keyword">class</span> <span class="title">Copy</span>&lt;0&gt; &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="keyword">static</span> <span class="keyword">inline</span> <span class="keyword">void</span> <span class="title">go</span><span class="params">(<span class="keyword">float</span> **<span class="keyword">const</span>, <span class="keyword">float</span> **<span class="keyword">const</span>, <span class="keyword">int</span>)</span> </span>&#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">int</span> channelNum&gt;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">parall_copy</span><span class="params">(<span class="keyword">float</span> **out, <span class="keyword">float</span> **in, <span class="keyword">size_t</span> length)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>; i &lt; length; ++i) &#123;</span><br><span class="line">    Copy&lt;channelNum&gt;::go(out, in, i);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>需要提醒的，如同打印日志的，0的特例化不能省，否则编译出错</p>
+<h3 id="实际运用3-工厂模式"><a href="#实际运用3-工厂模式" class="headerlink" title="实际运用3 工厂模式"></a>实际运用3 工厂模式</h3><p>在使用spdlog时发现有使用到template未决名, 用来实现两个维度的工厂模式。</p>
+<p>第一层提供两种sink的工厂，而其factory是未决名，所以要加上<code>Factory::template</code>消歧义，不然<code>&lt;</code>会当成小于号  </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// factory functions</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Factory = default_factory&gt;</span><br><span class="line"><span class="keyword">inline</span> <span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;logger&gt; basic_logger_mt(<span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span> &amp;logger_name, <span class="keyword">const</span> <span class="keyword">filename_t</span> &amp;filename, <span class="keyword">bool</span> truncate = <span class="literal">false</span>)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> Factory::<span class="keyword">template</span> create&lt;sinks::basic_file_sink_mt&gt;(logger_name, filename, truncate);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Factory = default_factory&gt;</span><br><span class="line"><span class="keyword">inline</span> <span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;logger&gt; basic_logger_st(<span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span> &amp;logger_name, <span class="keyword">const</span> <span class="keyword">filename_t</span> &amp;filename, <span class="keyword">bool</span> truncate = <span class="literal">false</span>)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> Factory::<span class="keyword">template</span> create&lt;sinks::basic_file_sink_st&gt;(logger_name, filename, truncate);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>此时factory可以是<code>synchronous_factory</code>, 也可以是异步版本，但这需要用户自己实现。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Default logger factory-  creates synchronous loggers</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">synchronous_factory</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> Sink, <span class="keyword">typename</span>... SinkArgs&gt;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;spdlog::logger&gt; <span class="title">create</span><span class="params">(<span class="built_in">std</span>::<span class="built_in">string</span> logger_name, SinkArgs &amp;&amp;... args)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">auto</span> sink = <span class="built_in">std</span>::make_shared&lt;Sink&gt;(<span class="built_in">std</span>::forward&lt;SinkArgs&gt;(args)...);</span><br><span class="line">        <span class="keyword">auto</span> new_logger = <span class="built_in">std</span>::make_shared&lt;logger&gt;(<span class="built_in">std</span>::<span class="built_in">move</span>(logger_name), <span class="built_in">std</span>::<span class="built_in">move</span>(sink));</span><br><span class="line">        details::registry::instance().initialize_logger(new_logger);</span><br><span class="line">        <span class="keyword">return</span> new_logger;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> default_factory = synchronous_factory;</span><br></pre></td></tr></table></figure>
+
+<p>简化为下面的demo，固然可以直接使用call_dd的方式，但维度只有一个。而call_dd2则有2个维度了<br>但必须使用<code>T::template</code>消歧义, 因为此时的foo未决名, 不知道是那个类里面的foo。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">struct AA &#123;</span><br><span class="line">  template &lt;typename cc&gt; static void foo() &#123; std::cout &lt;&lt; &quot;dd::foo\n&quot;; &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">struct BB &#123;</span><br><span class="line">  template &lt;typename cc&gt; static void foo() &#123; std::cout &lt;&lt; &quot;dd::foo\n&quot;; &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">template &lt;typename T&gt; void call_dd() &#123; AA::foo&lt;T&gt;(); &#125;</span><br><span class="line">template &lt;typename T, typename K&gt; void call_dd2() &#123; T::template foo&lt;K&gt;(); &#125;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">  call_dd&lt;void&gt;();</span><br><span class="line">  call_dd2&lt;AA&gt;();</span><br><span class="line">  call_dd2&lt;AA, int&gt;();</span><br><span class="line">  call_dd2&lt;BB, long&gt;();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>##模版与宏定义、虚函数的区别</p>
+<ol>
+<li>宏定义在预处理期执行，模板在编译期执行，而虚函数也称动态绑定在运行时执行</li>
+<li>宏和模板都将运行时的工作提前了，用编译时间换取运行效率</li>
+<li>宏定义没有类型检查，这点模板比较好</li>
+<li>模板虽然会延长编译时间，但当编译期实例化类型后，查找模板函数和查找普通函数的速度几乎相同</li>
+</ol>
+<h2 id="待决名dependent-name"><a href="#待决名dependent-name" class="headerlink" title="待决名dependent name"></a>待决名dependent name</h2><ol>
+<li>待决名的意思是在定义的地方，类型还不能决断，需要延后到实例化确定时。而非待决名指类型在定义的地方已经确定。  </li>
+<li>延后将导致此时无法在定义点进行错误检查，以及消除<code>typename</code>和<code>template</code>歧义，这导致需要在调用点加上template</li>
+</ol>
+<p>待决名如:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">template&lt;typename T&gt;</span><br><span class="line">struct X : B&lt;T&gt; &#x2F;&#x2F; &quot;B&lt;T&gt;&quot; 取决于 T</span><br><span class="line">&#123;</span><br><span class="line">    typename T::A* pa; &#x2F;&#x2F; &quot;T::A&quot; 取决于 T</span><br><span class="line">                       &#x2F;&#x2F; （此 &quot;typename&quot; 的使用的目的见下文）</span><br><span class="line">    void f(B&lt;T&gt;* pb)</span><br><span class="line">    &#123;</span><br><span class="line">        static int i &#x3D; B&lt;T&gt;::i; &#x2F;&#x2F; &quot;B&lt;T&gt;::i&quot; 取决于 T</span><br><span class="line">        pb-&gt;j++; &#x2F;&#x2F; &quot;pb-&gt;j&quot; 取决于 T</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>让人吃惊的例子, 这就是非待决名的情况下，立即绑定</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">g</span><span class="params">(<span class="keyword">double</span>)</span> </span>&#123; <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"g(double)\n"</span>; &#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">template</span>&lt;<span class="class"><span class="keyword">class</span> <span class="title">T</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">struct</span> <span class="title">S</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">f</span><span class="params">()</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        g(<span class="number">1</span>); <span class="comment">// "g" 是非待决名，现在绑定</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">g</span><span class="params">(<span class="keyword">int</span>)</span> </span>&#123; <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"g(int)\n"</span>; &#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    g(<span class="number">1</span>);  <span class="comment">// 调用 g(int)</span></span><br><span class="line"> </span><br><span class="line">    S&lt;<span class="keyword">int</span>&gt; s;</span><br><span class="line">    s.f(); <span class="comment">// 调用 g(double)</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="typename消歧义"><a href="#typename消歧义" class="headerlink" title="typename消歧义"></a>typename消歧义</h3><p>在模板（包括别名模版）的声明或定义中，不是当前实例化的成员且取决于某个模板形参的名字不会被认为是类型，<br>除非使用关键词 typename 或它已经被设立为类型名（例如用 typedef 声明或通过用作基类名）。 </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;vector&gt;</span></span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">int</span> p = <span class="number">1</span>;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">foo</span><span class="params">(<span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;T&gt; &amp;v)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// std::vector&lt;T&gt;::const_iterator 是待决名，</span></span><br><span class="line">    <span class="keyword">typename</span> <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;T&gt;::const_iterator it = v.<span class="built_in">begin</span>();</span><br><span class="line"> </span><br><span class="line">    <span class="comment">// 下列内容因为没有 'typename' 而会被解析成</span></span><br><span class="line">    <span class="comment">// 类型待决的成员变量 'const_iterator' 和某变量 'p' 的乘法。</span></span><br><span class="line">    <span class="comment">// 因为在此处有一个可见的全局 'p'，所以此模板定义能编译。</span></span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;T&gt;::const_iterator* p; </span><br><span class="line"> </span><br><span class="line">    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;T&gt;::const_iterator <span class="keyword">iter_t</span>;</span><br><span class="line">    <span class="keyword">iter_t</span> * p2; <span class="comment">// iter_t 是待决名，但已知它是类型名</span></span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">S</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">typedef</span> <span class="keyword">int</span> <span class="keyword">value_t</span>; <span class="comment">// 当前实例化的成员</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">f</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        S&lt;T&gt;::<span class="keyword">value_t</span> n&#123;&#125;; <span class="comment">// S&lt;T&gt; 待决，但不需要 'typename'</span></span><br><span class="line">        <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; n &lt;&lt; <span class="string">'\n'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; v;</span><br><span class="line">    foo(v); <span class="comment">// 模板实例化失败：类型 std::vector&lt;int&gt; 中没有</span></span><br><span class="line">            <span class="comment">// 名字是 'const_iterator' 的成员变量</span></span><br><span class="line">    S&lt;<span class="keyword">int</span>&gt;().f();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="template消歧义"><a href="#template消歧义" class="headerlink" title="template消歧义"></a>template消歧义</h3><p>与此相似，模板定义中不是当前实例化的成员的待决名同样不被认为是模板名，除非使用消歧义关键词 template，或它已被设立为模板名： </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">template&lt;typename T&gt;</span><br><span class="line">struct S</span><br><span class="line">&#123;</span><br><span class="line">    template&lt;typename U&gt; void foo() &#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line">template&lt;typename T&gt;</span><br><span class="line">void bar()</span><br><span class="line">&#123;</span><br><span class="line">    S&lt;T&gt; s;</span><br><span class="line">    s.foo&lt;T&gt;();          &#x2F;&#x2F; 错误：&lt; 被解析为小于运算符</span><br><span class="line">    s.template foo&lt;T&gt;(); &#x2F;&#x2F; OK</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>template 消歧义可以使用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">T::template</span><br><span class="line">s.template</span><br><span class="line">this-&gt;template</span><br></pre></td></tr></table></figure>
+
+<h2 id="std-forward-转发在模版的使用"><a href="#std-forward-转发在模版的使用" class="headerlink" title="std::forward 转发在模版的使用"></a>std::forward 转发在模版的使用</h2><p>为什么完美转发的对象必须是右值引用？</p>
+<h3 id="说明一下右值引用"><a href="#说明一下右值引用" class="headerlink" title="说明一下右值引用"></a>说明一下右值引用</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"> 引用类型 	可以引用的值类型 	使用场景</span><br><span class="line">非常量左值 	常量左值 	非常量右值 	常量右值</span><br><span class="line">非常量左值引用 	Y 	N 	N 	N 	无</span><br><span class="line">常量左值引用 	Y 	Y 	Y 	Y 	常用于类中构建拷贝构造函数</span><br><span class="line">非常量右值引用 	N 	N 	Y 	N 	移动语义、完美转发</span><br><span class="line">常量右值引用 	N 	N 	Y 	Y 	无实际用途</span><br></pre></td></tr></table></figure>
+
+<p>##参考<br><a href="https://en.cppreference.com/w/cpp/language/parameter_pack" target="_blank" rel="noopener">https://en.cppreference.com/w/cpp/language/parameter_pack</a><br><a href="https://en.cppreference.com/w/cpp/language/fold" target="_blank" rel="noopener">https://en.cppreference.com/w/cpp/language/fold</a><br><a href="https://en.cppreference.com/w/cpp/language/overload_resolution#Best_viable_function" target="_blank" rel="noopener">https://en.cppreference.com/w/cpp/language/overload_resolution#Best_viable_function</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://energygreek.github.io/2021/03/04/cpp-template-programing/" data-id="clsbmbv3g0024bwopdva9f908" data-title="cpp-template-programing" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c-c/" rel="tag">c/c++</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/template-programing/" rel="tag">template programing</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <a class="extend prev" rel="prev" href="/page/2/">&laquo; 上一页</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/4/">下一页 &raquo;</a>
+  </nav>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/51%E5%8D%95%E7%89%87%E6%9C%BA/" rel="tag">51单片机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DP/" rel="tag">DP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aarch64/" rel="tag">aarch64</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/admin/" rel="tag">admin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/" rel="tag">algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algoritm/" rel="tag">algoritm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bash/" rel="tag">bash</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/basics/" rel="tag">basics</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/" rel="tag">c++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c-c/" rel="tag">c/c++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cmake/" rel="tag">cmake</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dns/" rel="tag">dns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/email-client/" rel="tag">email_client</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/exam/" rel="tag">exam</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/exception-safe/" rel="tag">exception-safe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ffmpeg/" rel="tag">ffmpeg</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/filesystem/" rel="tag">filesystem</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flask/" rel="tag">flask</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gdb/" rel="tag">gdb</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/" rel="tag">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/grpc/" rel="tag">grpc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/grub/" rel="tag">grub</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hawei/" rel="tag">hawei</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/heapsort/" rel="tag">heapsort</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/" rel="tag">k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linkage/" rel="tag">linkage</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux%E5%9F%BA%E7%A1%80/" rel="tag">linux基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lock/" rel="tag">lock</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lvm/" rel="tag">lvm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maintance/" rel="tag">maintance</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/malloc/" rel="tag">malloc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mdns/" rel="tag">mdns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memory/" rel="tag">memory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mutex/" rel="tag">mutex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mutt/" rel="tag">mutt</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/namespace/" rel="tag">namespace</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/network/" rel="tag">network</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/os-maintain/" rel="tag">os-maintain</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/printer/" rel="tag">printer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/program/" rel="tag">program</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rancher-k8s/" rel="tag">rancher,k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rhce/" rel="tag">rhce</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rtp/" rel="tag">rtp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/safe/" rel="tag">safe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scope/" rel="tag">scope</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/seralize/" rel="tag">seralize</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shared-ptr/" rel="tag">shared_ptr</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/socket/" rel="tag">socket</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/socketopt/" rel="tag">socketopt</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sql/" rel="tag">sql</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/storageduration/" rel="tag">storageduration</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sysemd/" rel="tag">sysemd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/template-programing/" rel="tag">template programing</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/terminal/" rel="tag">terminal</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tool/" rel="tag">tool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/udp/" rel="tag">udp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/unique-ptr/" rel="tag">unique_ptr</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/unit-test/" rel="tag">unit test</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/urxvt/" rel="tag">urxvt</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webcrawler/" rel="tag">webcrawler</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webserver/" rel="tag">webserver</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/weechat/" rel="tag">weechat</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/wordpress/" rel="tag">wordpress</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" rel="tag">二叉树</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E6%A0%B8%E5%8E%9F%E7%90%86/" rel="tag">内核原理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%B7%E6%9C%BA%E6%95%99%E7%A8%8B/" rel="tag">刷机教程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" rel="tag">包管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9F%A5%E6%89%BE/" rel="tag">查找</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/" rel="tag">系统调用</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E8%AF%91/" rel="tag">编译</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%B0%83%E4%BC%98/" rel="tag">调优</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9F%B3%E8%A7%86%E9%A2%91/" rel="tag">音视频</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/51%E5%8D%95%E7%89%87%E6%9C%BA/" style="font-size: 10px;">51单片机</a> <a href="/tags/DP/" style="font-size: 10px;">DP</a> <a href="/tags/Linux/" style="font-size: 10px;">Linux</a> <a href="/tags/aarch64/" style="font-size: 10px;">aarch64</a> <a href="/tags/admin/" style="font-size: 10px;">admin</a> <a href="/tags/algorithm/" style="font-size: 16px;">algorithm</a> <a href="/tags/algoritm/" style="font-size: 10px;">algoritm</a> <a href="/tags/android/" style="font-size: 10px;">android</a> <a href="/tags/bash/" style="font-size: 10px;">bash</a> <a href="/tags/basics/" style="font-size: 10px;">basics</a> <a href="/tags/c/" style="font-size: 12px;">c++</a> <a href="/tags/c-c/" style="font-size: 20px;">c/c++</a> <a href="/tags/cmake/" style="font-size: 10px;">cmake</a> <a href="/tags/dns/" style="font-size: 10px;">dns</a> <a href="/tags/docker/" style="font-size: 18px;">docker</a> <a href="/tags/email-client/" style="font-size: 10px;">email_client</a> <a href="/tags/exam/" style="font-size: 10px;">exam</a> <a href="/tags/exception-safe/" style="font-size: 10px;">exception-safe</a> <a href="/tags/ffmpeg/" style="font-size: 10px;">ffmpeg</a> <a href="/tags/filesystem/" style="font-size: 14px;">filesystem</a> <a href="/tags/flask/" style="font-size: 10px;">flask</a> <a href="/tags/gdb/" style="font-size: 10px;">gdb</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/grpc/" style="font-size: 10px;">grpc</a> <a href="/tags/grub/" style="font-size: 10px;">grub</a> <a href="/tags/hawei/" style="font-size: 10px;">hawei</a> <a href="/tags/heapsort/" style="font-size: 10px;">heapsort</a> <a href="/tags/k8s/" style="font-size: 10px;">k8s</a> <a href="/tags/linkage/" style="font-size: 10px;">linkage</a> <a href="/tags/linux/" style="font-size: 14px;">linux</a> <a href="/tags/linux%E5%9F%BA%E7%A1%80/" style="font-size: 10px;">linux基础</a> <a href="/tags/lock/" style="font-size: 10px;">lock</a> <a href="/tags/lvm/" style="font-size: 10px;">lvm</a> <a href="/tags/maintance/" style="font-size: 10px;">maintance</a> <a href="/tags/malloc/" style="font-size: 10px;">malloc</a> <a href="/tags/mdns/" style="font-size: 10px;">mdns</a> <a href="/tags/memory/" style="font-size: 12px;">memory</a> <a href="/tags/mutex/" style="font-size: 10px;">mutex</a> <a href="/tags/mutt/" style="font-size: 10px;">mutt</a> <a href="/tags/namespace/" style="font-size: 10px;">namespace</a> <a href="/tags/network/" style="font-size: 10px;">network</a> <a href="/tags/os-maintain/" style="font-size: 10px;">os-maintain</a> <a href="/tags/printer/" style="font-size: 10px;">printer</a> <a href="/tags/program/" style="font-size: 10px;">program</a> <a href="/tags/python/" style="font-size: 14px;">python</a> <a href="/tags/rancher-k8s/" style="font-size: 10px;">rancher,k8s</a> <a href="/tags/rhce/" style="font-size: 10px;">rhce</a> <a href="/tags/rtp/" style="font-size: 10px;">rtp</a> <a href="/tags/safe/" style="font-size: 12px;">safe</a> <a href="/tags/scope/" style="font-size: 10px;">scope</a> <a href="/tags/seralize/" style="font-size: 10px;">seralize</a> <a href="/tags/shared-ptr/" style="font-size: 10px;">shared_ptr</a> <a href="/tags/socket/" style="font-size: 10px;">socket</a> <a href="/tags/socketopt/" style="font-size: 10px;">socketopt</a> <a href="/tags/sql/" style="font-size: 12px;">sql</a> <a href="/tags/storageduration/" style="font-size: 10px;">storageduration</a> <a href="/tags/sysemd/" style="font-size: 10px;">sysemd</a> <a href="/tags/template-programing/" style="font-size: 10px;">template programing</a> <a href="/tags/terminal/" style="font-size: 10px;">terminal</a> <a href="/tags/tool/" style="font-size: 18px;">tool</a> <a href="/tags/udp/" style="font-size: 10px;">udp</a> <a href="/tags/unique-ptr/" style="font-size: 10px;">unique_ptr</a> <a href="/tags/unit-test/" style="font-size: 10px;">unit test</a> <a href="/tags/urxvt/" style="font-size: 10px;">urxvt</a> <a href="/tags/webcrawler/" style="font-size: 10px;">webcrawler</a> <a href="/tags/webserver/" style="font-size: 10px;">webserver</a> <a href="/tags/weechat/" style="font-size: 10px;">weechat</a> <a href="/tags/wordpress/" style="font-size: 10px;">wordpress</a> <a href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" style="font-size: 10px;">二叉树</a> <a href="/tags/%E5%86%85%E6%A0%B8%E5%8E%9F%E7%90%86/" style="font-size: 10px;">内核原理</a> <a href="/tags/%E5%88%B7%E6%9C%BA%E6%95%99%E7%A8%8B/" style="font-size: 10px;">刷机教程</a> <a href="/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" style="font-size: 10px;">包管理</a> <a href="/tags/%E6%9F%A5%E6%89%BE/" style="font-size: 10px;">查找</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 10px;">算法</a> <a href="/tags/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/" style="font-size: 10px;">系统调用</a> <a href="/tags/%E7%BC%96%E8%AF%91/" style="font-size: 10px;">编译</a> <a href="/tags/%E8%B0%83%E4%BC%98/" style="font-size: 10px;">调优</a> <a href="/tags/%E9%9F%B3%E8%A7%86%E9%A2%91/" style="font-size: 10px;">音视频</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/02/">二月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/12/">十二月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/05/">五月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">四月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">十二月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/11/">十一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">十月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/08/">八月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">三月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">二月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/02/07/streaming-h264-with-rtp/">streaming h264 with rtp</a>
+          </li>
+        
+          <li>
+            <a href="/2023/09/08/wifi-tool/">随身wifi工具</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/21/docker-network/">docker network</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/18/mail-setup/">mail setup</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/08/install-wordpress/">install wordpress</a>
+          </li>
+        
+          <li>
+            <a href="/2022/12/29/amrnb-and-amrwb/">amrnb和amrwb的编解码</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 greek_soon@hotmail.com<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=z20lYmACQgemxcrzNk1C8Q"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'z20lYmACQgemxcrzNk1C8Q');
+</script>
+<!-- End Google Analytics -->
+
+  
+  <title>网页爬虫入门 | 又是元气满满的一天</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="爬虫如何做一个最简单的爬虫？ 一条bash命令爬深圳7天天气 123456789101112#获取7天的天气wget -q http:&#x2F;&#x2F;www.weather.com.cn&#x2F;weather&#x2F;101280601.shtml -O - \| grep &#39;class&#x3D;&quot;wea&quot;\|^&lt;h1&gt;&#39;  | grep -o &quot;&gt;.*&lt;&quot; | sed &#39;s&#x2F;&gt;&#x2F;&#x2F;;s&#x2F;&lt;&#x2F;&#x2F;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网页爬虫入门">
+<meta property="og:url" content="https://energygreek.github.io/2021/11/07/build-a-spider/index.html">
+<meta property="og:site_name" content="又是元气满满的一天">
+<meta property="og:description" content="爬虫如何做一个最简单的爬虫？ 一条bash命令爬深圳7天天气 123456789101112#获取7天的天气wget -q http:&#x2F;&#x2F;www.weather.com.cn&#x2F;weather&#x2F;101280601.shtml -O - \| grep &#39;class&#x3D;&quot;wea&quot;\|^&lt;h1&gt;&#39;  | grep -o &quot;&gt;.*&lt;&quot; | sed &#39;s&#x2F;&gt;&#x2F;&#x2F;;s&#x2F;&lt;&#x2F;&#x2F;">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-11-07T08:01:53.000Z">
+<meta property="article:modified_time" content="2024-02-07T09:59:29.783Z">
+<meta property="article:author" content="greek_soon@hotmail.com">
+<meta property="article:tag" content="webcrawler">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/" title="又是元气满满的一天">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="又是元气满满的一天" type="application/atom+xml">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">又是元气满满的一天</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">个人博客</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS 订阅"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://energygreek.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-build-a-spider" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/11/07/build-a-spider/" class="article-date">
+  <time class="dt-published" datetime="2021-11-07T08:01:53.000Z" itemprop="datePublished">2021-11-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      网页爬虫入门
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="爬虫"><a href="#爬虫" class="headerlink" title="爬虫"></a>爬虫</h1><p>如何做一个最简单的爬虫？ 一条bash命令爬深圳7天天气</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#获取7天的天气</span></span><br><span class="line">wget -q http://www.weather.com.cn/weather/101280601.shtml -O - \</span><br><span class="line">| grep <span class="string">'class="wea"\|^&lt;h1&gt;'</span>  | grep -o <span class="string">"&gt;.*&lt;"</span> | sed <span class="string">'s/&gt;//;s/&lt;//'</span> \</span><br><span class="line">| awk <span class="string">'ORS=NR%2==1?" ":"\n" &#123;print&#125;'</span>  </span><br><span class="line"></span><br><span class="line">7日（今天） 晴</span><br><span class="line">8日（明天） 晴</span><br><span class="line">9日（后天） 晴</span><br><span class="line">10日（周五） 晴</span><br><span class="line">11日（周六） 晴</span><br><span class="line">12日（周日） 晴</span><br><span class="line">13日（周一） 晴转小雨</span><br></pre></td></tr></table></figure>
+
+<h3 id="这条命令如何写出来的"><a href="#这条命令如何写出来的" class="headerlink" title="这条命令如何写出来的"></a>这条命令如何写出来的</h3><ol>
+<li>定目标，想好要爬什么，如爬深圳天气</li>
+<li>先在浏览器访问天气网站，网址<a href="http://www.weather.com.cn/，" target="_blank" rel="noopener">http://www.weather.com.cn/，</a> 再找到深圳7天天气的网页链接为<a href="http://www.weather.com.cn/weather/101280601.shtml" target="_blank" rel="noopener">http://www.weather.com.cn/weather/101280601.shtml</a></li>
+<li>右键菜单里选择查看网页源码，搜索天气的内容所在位置</li>
+<li>找规律： 日期和天气的行有特定起始内容，日期这行以<code>&lt;h1&gt;</code>开头，天气这行包含<code>class=&quot;wea&quot;</code></li>
+<li>格式化： 清除不要的内容，使用sed和awk</li>
+</ol>
+<h3 id="拓展"><a href="#拓展" class="headerlink" title="拓展"></a>拓展</h3><p>只有这样没有意义， 不如自己在浏览器上看？ 但如果一次性查找武汉、北京、广州的天气，但网页只能查当天的，只有保存到硬盘的数据才能永远回头翻<br>或者如果想每天<code>自动</code>执行一遍呢？ 又或者如何自动发邮件提醒你带伞呢？ –都是可以的， 这需要更多耐心和学习     </p>
+<p>但因为bash处理网页比较麻烦，而且也不是今天的主题语言。</p>
+<h2 id="关键组件"><a href="#关键组件" class="headerlink" title="关键组件"></a>关键组件</h2><ul>
+<li>python</li>
+<li><a href="https://scrapy.org/" target="_blank" rel="noopener">scapy</a></li>
+<li><a href="https://www.crummy.com/software/BeautifulSoup/bs4/doc.zh/" target="_blank" rel="noopener">Beautiful Soup</a></li>
+</ul>
+<h2 id="python"><a href="#python" class="headerlink" title="python"></a>python</h2><p>python简单灵活的语法又有丰富的生态， 适合作为入门爬虫的编程语言</p>
+<h2 id="Beautiful-Soup"><a href="#Beautiful-Soup" class="headerlink" title="Beautiful Soup"></a>Beautiful Soup</h2><p>早期使用python自带的request库， 就能简单地实现一个爬虫软件</p>
+<h2 id="主角scrapy"><a href="#主角scrapy" class="headerlink" title="主角scrapy"></a>主角scrapy</h2><blockquote>
+<p>An open source and collaborative framework for extracting the data you need from websites. In a fast, simple, yet extensible way.</p>
+</blockquote>
+<p>scrapy 是一套完整框架， 实现了爬取网站的许多细节工作，让我们不需要了解代码，就能爬网站。其开发商还提供爬虫托管服务， 可以将你的爬虫做成在线服务， 而bs只是一个库</p>
+<p>简单介绍</p>
+<ul>
+<li>目录结构</li>
+<li>配置</li>
+</ul>
+<h3 id="scrapy选择器"><a href="#scrapy选择器" class="headerlink" title="scrapy选择器"></a>scrapy选择器</h3><p>选择器用来指定网页的位置，scrapy支持的选择器有两种：</p>
+<ul>
+<li>css</li>
+<li>xpath</li>
+</ul>
+<p>自己先在源码上找规律，也可以简单地使用浏览器提供的复制选择器功能  </p>
+<p>先手动验证, 获取列表的所有详情页链接</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">scrapy shell <span class="string">"https://www.douban.com/group/search?cat=1013&amp;q=深圳租房"</span>  </span><br><span class="line"><span class="comment"># xpath方式</span></span><br><span class="line">response.xpath(<span class="string">'//td[has-class("td-subject")]//a/@href'</span>).getall()</span><br><span class="line"><span class="comment"># css方式</span></span><br><span class="line">response.css(<span class="string">'td.td-subject'</span>).css(<span class="string">'a::attr(href)'</span>).getall()</span><br></pre></td></tr></table></figure>
+
+<p>先手动验证, 获得下一页</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">response.css(<span class="string">'span.next'</span>).css(<span class="string">'a::attr(href)'</span>).get()</span><br><span class="line"><span class="comment"># 控制台-&gt;‘Copy CSS Selector’</span></span><br><span class="line"><span class="comment"># .next &gt; a:nth-child(2)</span></span><br><span class="line">response.css(<span class="string">'.next &gt; a::attr(href)'</span>).get()</span><br></pre></td></tr></table></figure>
+
+<p><a href="https://parsel.readthedocs.io/en/latest/usage.html#learning-css-and-xpath" target="_blank" rel="noopener">详细</a></p>
+<h3 id="数据处理"><a href="#数据处理" class="headerlink" title="数据处理"></a>数据处理</h3><p>爬到的数据可能乱和重复， 可以加个<code>清洗</code>的步骤， 在爬到数据后对数据过滤，删除不要的数据</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 删除重复条目</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DuplicatesPipeline</span><span class="params">(object)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.ids_seen = set()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process_item</span><span class="params">(self, item, spider)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> item[<span class="string">'title_digist'</span>] <span class="keyword">in</span> self.ids_seen:</span><br><span class="line">            <span class="keyword">raise</span> DropItem(<span class="string">"Duplicate item found: %s"</span> % item)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            self.ids_seen.add(item[<span class="string">'title_digist'</span>])</span><br><span class="line">            <span class="keyword">return</span> item</span><br></pre></td></tr></table></figure>
+
+<h2 id="具体项目-爬豆瓣租房"><a href="#具体项目-爬豆瓣租房" class="headerlink" title="具体项目 爬豆瓣租房"></a>具体项目 爬豆瓣租房</h2><h2 id="使用爬虫清理百度搜索结果"><a href="#使用爬虫清理百度搜索结果" class="headerlink" title="使用爬虫清理百度搜索结果"></a>使用爬虫清理百度搜索结果</h2><p>百度搜索的有效结果只占少部分，其他是广告，视频和推荐词  </p>
+<p>用爬虫来提取有效结果</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 标题</span></span><br><span class="line">response.css(<span class="string">'#content_left &gt; div.result'</span>).css(<span class="string">'a:nth-child(1)::text'</span>).getall()</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">response.css(<span class="string">'#content_left &gt; div.result'</span>).css(<span class="string">'a:nth-child(1)::attr(href)'</span>).get()</span><br></pre></td></tr></table></figure>
+
+<h2 id="部署成在线服务"><a href="#部署成在线服务" class="headerlink" title="部署成在线服务"></a>部署成在线服务</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">pip install shub</span><br><span class="line"></span><br><span class="line">shub login</span><br><span class="line">Insert your Zyte Scrapy Cloud API Key: &lt;API_KEY&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Deploy the spider to Zyte Scrapy Cloud</span></span><br><span class="line">shub deploy</span><br><span class="line"></span><br><span class="line"><span class="comment"># Schedule the spider for execution</span></span><br><span class="line">shub schedule blogspider </span><br><span class="line">Spider blogspider scheduled, watch it running here:</span><br><span class="line">https://app.zyte.com/p/26731/job/1/8</span><br><span class="line"></span><br><span class="line"><span class="comment"># Retrieve the scraped data</span></span><br><span class="line">shub items 26731/1/8</span><br></pre></td></tr></table></figure>
+
+<h2 id="其他问题"><a href="#其他问题" class="headerlink" title="其他问题"></a>其他问题</h2><h3 id="登录"><a href="#登录" class="headerlink" title="登录"></a>登录</h3><p>不是所有页面都能像豆瓣这样简单直接访问，有的需要登陆，这时需要设置cookie<br>可将浏览器的访问的请求复制为curl请求，再将curl请求转换为scrapy请求, 有工具<a href="https://michael-shub.github.io/curl2scrapy/" target="_blank" rel="noopener">curl2scrapy</a></p>
+<p>爬携程机票，但这样只能看最新或者最便宜的机票，无法自动订票</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl <span class="string">'https://flights.ctrip.com/international/search/api/lowprice/calendar/getCalendarDetailList?v=0.4625948281116462'</span> -H <span class="string">'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101 Firefox/78.0'</span> -H <span class="string">'Accept: application/json'</span> -H <span class="string">'Accept-Language: zh-CN,en-US;q=0.5'</span> --compressed -H <span class="string">'Content-Type: application/json;charset=utf-8'</span> -H <span class="string">'transactionID: 0feb04e3db5648acb409a9efaf68eb99'</span> -H <span class="string">'scope: d'</span> -H <span class="string">'Cache-Control: no-cache'</span> -H <span class="string">'Origin: https://flights.ctrip.com'</span> -H <span class="string">'Connection: keep-alive'</span> -H <span class="string">'Referer: https://flights.ctrip.com/online/list/oneway-wuh0-szx?_=1&amp;depdate=2021-12-08&amp;cabin=y_s&amp;adult=1&amp;searchid=j1043107111-1628648957090-97788Tk-0&amp;containstax=1'</span> -H <span class="string">'Cookie: _bfa=1.1638949895953.3tfx42.1.1638949895953.1638949895953.1.2; _bfs=1.2; FlightIntl=Search=[%22WUH|%E6%AD%A6%E6%B1%89(%E5%A4%A9%E6%B2%B3%E5%9B%BD%E9%99%85%E6%9C%BA%E5%9C%BA)(WUH)|477|WUH|WUH|480%22%2C%22SZX|%E6%B7%B1%E5%9C%B3(SZX)|30|SZX|480%22%2C%222021-12-09%22]; _RF1=116.30.223.163; _RSG=mtaCn0GabiBpwk2uaRD22A; _RDG=28d46524d5c5f727d530fed50e21ed2094; _RGUID=bb259100-3132-4df0-a082-35b9380aeeb3; _bfaStatus=send; MKT_Pagesource=PC; _bfaStatusPVSend=1; _bfi=p1%3D10320673302%26p2%3D10320673302%26v1%3D2%26v2%3D1'</span> -H <span class="string">'Sec-GPC: 1'</span> -H <span class="string">'TE: Trailers'</span> --data-raw <span class="string">'&#123;"cabin":"Y_S","flightWay":"S","flightSegmentList":[&#123;"arrivalCityCode":"SZX","departureCityCode":"WUH","departureDate":"2021-12-08"&#125;]&#125;'</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="代理ip"><a href="#代理ip" class="headerlink" title="代理ip"></a>代理ip</h3><p>爬取的时候莫名其妙 IP 就被网站封掉了，毕竟各大网站也不想自己的数据被轻易地爬走。<br>对于爬虫来说，为了解决封禁 IP 的问题，一个有效的方式就是使用代理，使用代理之后可以让爬虫伪装自己的真实 IP，如果使用大量的随机的代理进行爬取，那么网站就不知道是我们的爬虫一直在爬取了，这样就有效地解决了反爬的问题。</p>
+<p><a href="https://www.abuyun.com/" target="_blank" rel="noopener">阿布云</a></p>
+<h3 id="模拟用户代理useragent"><a href="#模拟用户代理useragent" class="headerlink" title="模拟用户代理useragent"></a>模拟用户代理useragent</h3><p>User Agent中文名为用户代理，简称 UA，它是一个特殊字符串头，使得服务器能够识别客户使用的操作系统及版本、CPU 类型、浏览器及版本、浏览器渲染引擎、浏览器语言、浏览器插件等。</p>
+<p>可以使用自己浏览器的UA，也可以用百度蜘蛛的UA<a href="http://www.webkaka.com/tutorial/zhanzhang/2017/061068/" target="_blank" rel="noopener">列表</a><br>但目标网站是否允许就难说了， 需要多试一试</p>
+<h3 id="模拟浏览器"><a href="#模拟浏览器" class="headerlink" title="模拟浏览器"></a>模拟浏览器</h3><p><a href="https://www.selenium.dev/zh-cn/" target="_blank" rel="noopener">Selenium</a> 是一个用于Web应用程序测试的工具。Selenium测试直接运行在浏览器中，就像真正的用户在操作一样。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd ～&#x2F;github&#x2F;SeleniumLogin</span><br><span class="line">python SeleniumLogin&#x2F;core&#x2F;taobao.py</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">login</span><span class="params">(self, username, password, chromedriverpath, **kwargs)</span>:</span></span><br><span class="line">    <span class="comment"># 基本设置</span></span><br><span class="line">    browser = webdriver.Chrome(options=self.chrome_opts)</span><br><span class="line">    browser.get(self.login_url)</span><br><span class="line">    driver_wait = WebDriverWait(browser, <span class="number">60</span>)</span><br><span class="line">    <span class="comment"># 点击'亲, 请登录', 进入登录界面</span></span><br><span class="line">    button = driver_wait.until(EC.presence_of_element_located((By.CLASS_NAME, <span class="string">'h'</span>)))</span><br><span class="line">    button.click()</span><br><span class="line">    <span class="comment"># 输入用户名密码</span></span><br><span class="line">    username_sender = driver_wait.until(EC.presence_of_element_located((By.ID, <span class="string">'fm-login-id'</span>)))</span><br><span class="line">    username_sender.send_keys(username)</span><br><span class="line">    password_sender = driver_wait.until(EC.presence_of_element_located((By.ID, <span class="string">'fm-login-password'</span>)))</span><br><span class="line">    password_sender.send_keys(password)</span><br><span class="line">    time.sleep(<span class="number">2</span>)</span><br><span class="line">    <span class="comment"># 检查是否出现了滑动验证码</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        slider = browser.find_element_by_xpath(<span class="string">"//span[contains(@class, 'btn_slide')]"</span>)</span><br><span class="line">        <span class="keyword">if</span> slider.is_displayed():</span><br><span class="line">            ActionChains(browser).click_and_hold(on_element=slider).perform()</span><br><span class="line">            ActionChains(browser).move_by_offset(xoffset=<span class="number">258</span>, yoffset=<span class="number">0</span>).perform()</span><br><span class="line">            ActionChains(browser).pause(<span class="number">0.5</span>).release().perform()</span><br><span class="line">    <span class="keyword">except</span>:</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line">    <span class="comment"># 点击登录按钮</span></span><br><span class="line">    <span class="comment">#button = driver_wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'password-login')))</span></span><br><span class="line">    <span class="comment">#button.click()</span></span><br><span class="line">    <span class="comment"># 返回必要的数据</span></span><br><span class="line">    infos_return = &#123;<span class="string">'username'</span>: username&#125;</span><br><span class="line">    <span class="keyword">return</span> infos_return, browser</span><br></pre></td></tr></table></figure>
+<h3 id="headless"><a href="#headless" class="headerlink" title="headless"></a>headless</h3><p><a href="https://splash.readthedocs.io/en/stable/api.html#splash-http-api" target="_blank" rel="noopener">Splash HTTP API</a></p>
+<h2 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h2><p><a href="http://c.biancheng.net/view/2011.html" target="_blank" rel="noopener">http://c.biancheng.net/view/2011.html</a><br><a href="https://github.com/CharlesPikachu/SeleniumLogin" target="_blank" rel="noopener">https://github.com/CharlesPikachu/SeleniumLogin</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://energygreek.github.io/2021/11/07/build-a-spider/" data-id="clsbmbv3b001vbwop6qnphcf4" data-title="网页爬虫入门" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webcrawler/" rel="tag">webcrawler</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2021/11/19/spdlog-learn/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前一篇</strong>
+      <div class="article-nav-title">
+        
+          spdlog learn
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2021/10/14/container-tech/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">容器命名空间</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/51%E5%8D%95%E7%89%87%E6%9C%BA/" rel="tag">51单片机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DP/" rel="tag">DP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aarch64/" rel="tag">aarch64</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/admin/" rel="tag">admin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/" rel="tag">algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algoritm/" rel="tag">algoritm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bash/" rel="tag">bash</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/basics/" rel="tag">basics</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/" rel="tag">c++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c-c/" rel="tag">c/c++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cmake/" rel="tag">cmake</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dns/" rel="tag">dns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/email-client/" rel="tag">email_client</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/exam/" rel="tag">exam</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/exception-safe/" rel="tag">exception-safe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ffmpeg/" rel="tag">ffmpeg</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/filesystem/" rel="tag">filesystem</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flask/" rel="tag">flask</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gdb/" rel="tag">gdb</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/" rel="tag">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/grpc/" rel="tag">grpc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/grub/" rel="tag">grub</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hawei/" rel="tag">hawei</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/heapsort/" rel="tag">heapsort</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/" rel="tag">k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linkage/" rel="tag">linkage</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux%E5%9F%BA%E7%A1%80/" rel="tag">linux基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lock/" rel="tag">lock</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lvm/" rel="tag">lvm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maintance/" rel="tag">maintance</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/malloc/" rel="tag">malloc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mdns/" rel="tag">mdns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memory/" rel="tag">memory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mutex/" rel="tag">mutex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mutt/" rel="tag">mutt</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/namespace/" rel="tag">namespace</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/network/" rel="tag">network</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/os-maintain/" rel="tag">os-maintain</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/printer/" rel="tag">printer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/program/" rel="tag">program</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rancher-k8s/" rel="tag">rancher,k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rhce/" rel="tag">rhce</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rtp/" rel="tag">rtp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/safe/" rel="tag">safe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scope/" rel="tag">scope</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/seralize/" rel="tag">seralize</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shared-ptr/" rel="tag">shared_ptr</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/socket/" rel="tag">socket</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/socketopt/" rel="tag">socketopt</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sql/" rel="tag">sql</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/storageduration/" rel="tag">storageduration</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sysemd/" rel="tag">sysemd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/template-programing/" rel="tag">template programing</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/terminal/" rel="tag">terminal</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tool/" rel="tag">tool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/udp/" rel="tag">udp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/unique-ptr/" rel="tag">unique_ptr</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/unit-test/" rel="tag">unit test</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/urxvt/" rel="tag">urxvt</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webcrawler/" rel="tag">webcrawler</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webserver/" rel="tag">webserver</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/weechat/" rel="tag">weechat</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/wordpress/" rel="tag">wordpress</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" rel="tag">二叉树</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E6%A0%B8%E5%8E%9F%E7%90%86/" rel="tag">内核原理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%B7%E6%9C%BA%E6%95%99%E7%A8%8B/" rel="tag">刷机教程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" rel="tag">包管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9F%A5%E6%89%BE/" rel="tag">查找</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/" rel="tag">系统调用</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E8%AF%91/" rel="tag">编译</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%B0%83%E4%BC%98/" rel="tag">调优</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9F%B3%E8%A7%86%E9%A2%91/" rel="tag">音视频</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/51%E5%8D%95%E7%89%87%E6%9C%BA/" style="font-size: 10px;">51单片机</a> <a href="/tags/DP/" style="font-size: 10px;">DP</a> <a href="/tags/Linux/" style="font-size: 10px;">Linux</a> <a href="/tags/aarch64/" style="font-size: 10px;">aarch64</a> <a href="/tags/admin/" style="font-size: 10px;">admin</a> <a href="/tags/algorithm/" style="font-size: 16px;">algorithm</a> <a href="/tags/algoritm/" style="font-size: 10px;">algoritm</a> <a href="/tags/android/" style="font-size: 10px;">android</a> <a href="/tags/bash/" style="font-size: 10px;">bash</a> <a href="/tags/basics/" style="font-size: 10px;">basics</a> <a href="/tags/c/" style="font-size: 12px;">c++</a> <a href="/tags/c-c/" style="font-size: 20px;">c/c++</a> <a href="/tags/cmake/" style="font-size: 10px;">cmake</a> <a href="/tags/dns/" style="font-size: 10px;">dns</a> <a href="/tags/docker/" style="font-size: 18px;">docker</a> <a href="/tags/email-client/" style="font-size: 10px;">email_client</a> <a href="/tags/exam/" style="font-size: 10px;">exam</a> <a href="/tags/exception-safe/" style="font-size: 10px;">exception-safe</a> <a href="/tags/ffmpeg/" style="font-size: 10px;">ffmpeg</a> <a href="/tags/filesystem/" style="font-size: 14px;">filesystem</a> <a href="/tags/flask/" style="font-size: 10px;">flask</a> <a href="/tags/gdb/" style="font-size: 10px;">gdb</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/grpc/" style="font-size: 10px;">grpc</a> <a href="/tags/grub/" style="font-size: 10px;">grub</a> <a href="/tags/hawei/" style="font-size: 10px;">hawei</a> <a href="/tags/heapsort/" style="font-size: 10px;">heapsort</a> <a href="/tags/k8s/" style="font-size: 10px;">k8s</a> <a href="/tags/linkage/" style="font-size: 10px;">linkage</a> <a href="/tags/linux/" style="font-size: 14px;">linux</a> <a href="/tags/linux%E5%9F%BA%E7%A1%80/" style="font-size: 10px;">linux基础</a> <a href="/tags/lock/" style="font-size: 10px;">lock</a> <a href="/tags/lvm/" style="font-size: 10px;">lvm</a> <a href="/tags/maintance/" style="font-size: 10px;">maintance</a> <a href="/tags/malloc/" style="font-size: 10px;">malloc</a> <a href="/tags/mdns/" style="font-size: 10px;">mdns</a> <a href="/tags/memory/" style="font-size: 12px;">memory</a> <a href="/tags/mutex/" style="font-size: 10px;">mutex</a> <a href="/tags/mutt/" style="font-size: 10px;">mutt</a> <a href="/tags/namespace/" style="font-size: 10px;">namespace</a> <a href="/tags/network/" style="font-size: 10px;">network</a> <a href="/tags/os-maintain/" style="font-size: 10px;">os-maintain</a> <a href="/tags/printer/" style="font-size: 10px;">printer</a> <a href="/tags/program/" style="font-size: 10px;">program</a> <a href="/tags/python/" style="font-size: 14px;">python</a> <a href="/tags/rancher-k8s/" style="font-size: 10px;">rancher,k8s</a> <a href="/tags/rhce/" style="font-size: 10px;">rhce</a> <a href="/tags/rtp/" style="font-size: 10px;">rtp</a> <a href="/tags/safe/" style="font-size: 12px;">safe</a> <a href="/tags/scope/" style="font-size: 10px;">scope</a> <a href="/tags/seralize/" style="font-size: 10px;">seralize</a> <a href="/tags/shared-ptr/" style="font-size: 10px;">shared_ptr</a> <a href="/tags/socket/" style="font-size: 10px;">socket</a> <a href="/tags/socketopt/" style="font-size: 10px;">socketopt</a> <a href="/tags/sql/" style="font-size: 12px;">sql</a> <a href="/tags/storageduration/" style="font-size: 10px;">storageduration</a> <a href="/tags/sysemd/" style="font-size: 10px;">sysemd</a> <a href="/tags/template-programing/" style="font-size: 10px;">template programing</a> <a href="/tags/terminal/" style="font-size: 10px;">terminal</a> <a href="/tags/tool/" style="font-size: 18px;">tool</a> <a href="/tags/udp/" style="font-size: 10px;">udp</a> <a href="/tags/unique-ptr/" style="font-size: 10px;">unique_ptr</a> <a href="/tags/unit-test/" style="font-size: 10px;">unit test</a> <a href="/tags/urxvt/" style="font-size: 10px;">urxvt</a> <a href="/tags/webcrawler/" style="font-size: 10px;">webcrawler</a> <a href="/tags/webserver/" style="font-size: 10px;">webserver</a> <a href="/tags/weechat/" style="font-size: 10px;">weechat</a> <a href="/tags/wordpress/" style="font-size: 10px;">wordpress</a> <a href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" style="font-size: 10px;">二叉树</a> <a href="/tags/%E5%86%85%E6%A0%B8%E5%8E%9F%E7%90%86/" style="font-size: 10px;">内核原理</a> <a href="/tags/%E5%88%B7%E6%9C%BA%E6%95%99%E7%A8%8B/" style="font-size: 10px;">刷机教程</a> <a href="/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" style="font-size: 10px;">包管理</a> <a href="/tags/%E6%9F%A5%E6%89%BE/" style="font-size: 10px;">查找</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 10px;">算法</a> <a href="/tags/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/" style="font-size: 10px;">系统调用</a> <a href="/tags/%E7%BC%96%E8%AF%91/" style="font-size: 10px;">编译</a> <a href="/tags/%E8%B0%83%E4%BC%98/" style="font-size: 10px;">调优</a> <a href="/tags/%E9%9F%B3%E8%A7%86%E9%A2%91/" style="font-size: 10px;">音视频</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/02/">二月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/12/">十二月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/05/">五月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">四月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">十二月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/11/">十一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">十月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/08/">八月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">三月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">二月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/02/07/streaming-h264-with-rtp/">streaming h264 with rtp</a>
+          </li>
+        
+          <li>
+            <a href="/2023/09/08/wifi-tool/">随身wifi工具</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/21/docker-network/">docker network</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/18/mail-setup/">mail setup</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/08/install-wordpress/">install wordpress</a>
+          </li>
+        
+          <li>
+            <a href="/2022/12/29/amrnb-and-amrwb/">amrnb和amrwb的编解码</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 greek_soon@hotmail.com<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

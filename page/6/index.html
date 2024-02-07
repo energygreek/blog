@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=z20lYmACQgemxcrzNk1C8Q"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'z20lYmACQgemxcrzNk1C8Q');
+</script>
+<!-- End Google Analytics -->
+
+  
+  <title>又是元气满满的一天</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="记录总结">
+<meta property="og:type" content="website">
+<meta property="og:title" content="又是元气满满的一天">
+<meta property="og:url" content="https://energygreek.github.io/page/6/index.html">
+<meta property="og:site_name" content="又是元气满满的一天">
+<meta property="og:description" content="记录总结">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="greek_soon@hotmail.com">
+<meta property="article:tag" content="c&#x2F;c++">
+<meta property="article:tag" content=" Linux日常">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/" title="又是元气满满的一天">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="又是元气满满的一天" type="application/atom+xml">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">又是元气满满的一天</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">个人博客</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS 订阅"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://energygreek.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-rhce8-question" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/08/29/rhce8-question/" class="article-date">
+  <time class="dt-published" datetime="2020-08-29T03:40:56.000Z" itemprop="datePublished">2020-08-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/08/29/rhce8-question/">rhce8 question</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="记录一下上课笔记"><a href="#记录一下上课笔记" class="headerlink" title="记录一下上课笔记"></a>记录一下上课笔记</h1><ol>
+<li>进入nfs，autofs目录卡住，如何退出，应该是进入了D状态 </li>
+<li>chrome 需要笔记本插件，js控制插件</li>
+<li>修改root密码时，在linux 选项后面添加 rd.break 然后默认进入内核根目录，然后rw重新挂载系统根目录 /sysroot/ </li>
+<li>fdisk 设置分区类型: 在创建分区结束后，使用<code>t</code>来标记文件类型, 然后使用<code>L</code>查看类型代码，查找到Linux swap 对应的代码是85</li>
+</ol>
+<h2 id="RHCIA"><a href="#RHCIA" class="headerlink" title="RHCIA"></a>RHCIA</h2><h3 id="修改了网络信息之后，必须使用nmcli-connection-down和up-connection才会生效"><a href="#修改了网络信息之后，必须使用nmcli-connection-down和up-connection才会生效" class="headerlink" title="修改了网络信息之后，必须使用nmcli connection down和up connection才会生效"></a>修改了网络信息之后，必须使用nmcli connection down和up connection才会生效</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">nmtui connection down Wired_connection1</span><br><span class="line">nmtui connection up Wired_connection1</span><br></pre></td></tr></table></figure>
+
+<h3 id="配置httpd服务时，修改port后，因为port非标准端口，需要用semanage打tag。否则失败，可以查看journeyctl-e-查看到错误信息和解决办法"><a href="#配置httpd服务时，修改port后，因为port非标准端口，需要用semanage打tag。否则失败，可以查看journeyctl-e-查看到错误信息和解决办法" class="headerlink" title="配置httpd服务时，修改port后，因为port非标准端口，需要用semanage打tag。否则失败，可以查看journeyctl -e 查看到错误信息和解决办法"></a>配置httpd服务时，修改port后，因为port非标准端口，需要用semanage打tag。否则失败，可以查看journeyctl -e 查看到错误信息和解决办法</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">semanage port -a -t http_port_t -p tcp 82</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="创建-home-admins-目录，并设置在目录中创建的文件，其组所有权自动设置为-adminusr。-这里就是设置s位，有数值方法和-法"><a href="#创建-home-admins-目录，并设置在目录中创建的文件，其组所有权自动设置为-adminusr。-这里就是设置s位，有数值方法和-法" class="headerlink" title="创建/home/admins 目录，并设置在目录中创建的文件，其组所有权自动设置为 adminusr。 这里就是设置s位，有数值方法和+-法"></a>创建/home/admins 目录，并设置在目录中创建的文件，其组所有权自动设置为 adminusr。 这里就是设置s位，有数值方法和+-法</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">chmod 2770 &#x2F;home&#x2F;admins</span><br><span class="line"></span><br><span class="line"># 或</span><br><span class="line"></span><br><span class="line">chmod o-x &#x2F;home&#x2F;admins</span><br><span class="line">chmod o-r &#x2F;home&#x2F;admins</span><br><span class="line">chmod g+w &#x2F;home&#x2F;admins</span><br><span class="line">chmod g+s &#x2F;home&#x2F;admins # 这里设置组的s位</span><br></pre></td></tr></table></figure>
+
+<p>验证方法，进入目录创建文件，查看组名</p>
+<h3 id="autofs-挂载有两个关键，第一在-etc-auto-master-d-目录下创建后缀名为autofs的文件，-第二是编辑挂载配置文件"><a href="#autofs-挂载有两个关键，第一在-etc-auto-master-d-目录下创建后缀名为autofs的文件，-第二是编辑挂载配置文件" class="headerlink" title="autofs 挂载有两个关键，第一在/etc/auto.master.d/ 目录下创建后缀名为autofs的文件， 第二是编辑挂载配置文件"></a>autofs 挂载有两个关键，第一在/etc/auto.master.d/ 目录下创建后缀名为autofs的文件， 第二是编辑挂载配置文件</h3><p>内容格式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># cat &#x2F;etc&#x2F;auto.master.d&#x2F;indirect</span><br><span class="line">#主挂载点	挂载配置</span><br><span class="line">&#x2F;internal	&#x2F;etc&#x2F;auto.demo</span><br></pre></td></tr></table></figure>
+
+<p>内容配置，* 表示所有目录（根据nfsserver的情况）， 和&amp;搭配使用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># cat &#x2F;etc&#x2F;auto.demo</span><br><span class="line"># 间接挂载目录	挂载配置	挂载路径（nfs地址）</span><br><span class="line">*	-rw,fstype&#x3D;nfs4,sync	servera:&#x2F;shares&#x2F;indirect&#x2F;&amp;</span><br></pre></td></tr></table></figure>
+
+<h3 id="setfacl-和getfacl-设置和显示文件属性"><a href="#setfacl-和getfacl-设置和显示文件属性" class="headerlink" title="setfacl 和getfacl 设置和显示文件属性"></a>setfacl 和getfacl 设置和显示文件属性</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">设置natash用户读写权限</span><br><span class="line">setfacl u:natasha:rw	&#x2F;var&#x2F;tmp&#x2F;fstab</span><br><span class="line">设置harry用户没有任何权限 </span><br><span class="line">setfacl u:harry:-	&#x2F;var&#x2F;tmp&#x2F;fstab</span><br></pre></td></tr></table></figure>
+
+<h3 id="重置root密码，在linux-行末追加-rd-local-按ctrl-x-启动"><a href="#重置root密码，在linux-行末追加-rd-local-按ctrl-x-启动" class="headerlink" title="重置root密码，在linux 行末追加 rd.local, 按ctrl+x 启动"></a>重置root密码，在linux 行末追加 rd.local, 按ctrl+x 启动</h3><p>重新挂载系统根目录, chroot到根目录和修改密码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mount -orw,remount &#x2F;systemroot&#x2F;</span><br><span class="line">chroot &#x2F;systemroot&#x2F;</span><br><span class="line">passwd</span><br></pre></td></tr></table></figure>
+
+<h3 id="逻辑卷扩容"><a href="#逻辑卷扩容" class="headerlink" title="逻辑卷扩容"></a>逻辑卷扩容</h3><p>设置分区start位置的时候，输入2048s。 s指扇区，一个扇区为512字节， 2048s指1M，这1M的分区为esp分区</p>
+<p>扩容命令lvextrend，这个扩容只是将逻辑卷扩容， 而题目要求对文件系统扩容， 还需要执行文件系统类型对应的扩容命令如resize2fs(ext), xfs_growfs(xfs)。<br>但对lvextend命令添加 -r 参数可以一步到位</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 扩容到300MB</span><br><span class="line">lvextend -r -L 300MB &#x2F;dev&#x2F;new_redhat&#x2F;lv1</span><br></pre></td></tr></table></figure>
+
+<h3 id="创建逻辑分区-注意避免磁盘不够用，尽量共用上一题的磁盘。而且创建卷组的时候不要忘记-s参数"><a href="#创建逻辑分区-注意避免磁盘不够用，尽量共用上一题的磁盘。而且创建卷组的时候不要忘记-s参数" class="headerlink" title="创建逻辑分区, 注意避免磁盘不够用，尽量共用上一题的磁盘。而且创建卷组的时候不要忘记-s参数"></a>创建逻辑分区, 注意避免磁盘不够用，尽量共用上一题的磁盘。而且创建卷组的时候不要忘记-s参数</h3><p>题目可能不是直接给分区大小，而是给出扩展块大小和拓展块个数，其实分区大小=拓展块大小 × 拓展块个数。 在lvcreate -l 来指定块个数 </p>
+<p>这时必须使用msdos分区类型才有主分区和拓展分区，而且为拓展分区分配剩余的所有空间。 最后在拓展分区上创建逻辑分区， 并将创建的逻辑分区加入卷组</p>
+<p>创建分区，大小通过上面的算法计算出来</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">parted </span><br><span class="line">mkpart</span><br><span class="line">print</span><br><span class="line">exit</span><br></pre></td></tr></table></figure>
+
+<p>创建卷组</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vgcreate -s 20MB -n npgroup &#x2F;dev&#x2F;vdb2</span><br></pre></td></tr></table></figure>
+<p>创建逻辑卷, 注意是小写l</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lvcreate -l 45 -n np npgroup</span><br></pre></td></tr></table></figure>
+<p>这样就创建了一个 20×45 = 900MB的逻辑卷</p>
+<h3 id="创建新的swap分区，注意需要修改fstab-而且验证的时候，不需要重启系统，而是执行"><a href="#创建新的swap分区，注意需要修改fstab-而且验证的时候，不需要重启系统，而是执行" class="headerlink" title="创建新的swap分区，注意需要修改fstab, 而且验证的时候，不需要重启系统，而是执行"></a>创建新的swap分区，注意需要修改fstab, 而且验证的时候，不需要重启系统，而是执行</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">systemctl daemon-reload </span><br><span class="line">swapon -a  # 类似mount -a</span><br><span class="line">swapon --show</span><br></pre></td></tr></table></figure>
+
+<h3 id="vdo-–vdoLogicalSize-5G-不能使用GB"><a href="#vdo-–vdoLogicalSize-5G-不能使用GB" class="headerlink" title="vdo  –vdoLogicalSize 5G, 不能使用GB"></a>vdo  –vdoLogicalSize 5G, 不能使用GB</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vdo create --name test --vdoLogicalSize 5G --device &#x2F;dev&#x2F;vdb</span><br></pre></td></tr></table></figure>
+<p><code>blkid</code> 查到 UUID, 最后添加到fstab</p>
+<h3 id="vdo-持久挂载-mount"><a href="#vdo-持久挂载-mount" class="headerlink" title="vdo 持久挂载 mount"></a>vdo 持久挂载 mount</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">default,x-systemd.requires&#x3D;vdo.service</span><br></pre></td></tr></table></figure>
+
+<h2 id="RHCE"><a href="#RHCE" class="headerlink" title="RHCE"></a>RHCE</h2><p>ansible的有用命令<br>ansbile-doc -l | grep  查找模块和介绍<br>ansible-doc 模块 查看模块具体说明</p>
+<h3 id="创建inventory-文件，-子组的写法为"><a href="#创建inventory-文件，-子组的写法为" class="headerlink" title="创建inventory 文件， 子组的写法为"></a>创建inventory 文件， 子组的写法为</h3><p>[webservices:children]<br>prod</p>
+<p>prod 是webserverices组的子组</p>
+<h3 id="创建ansible-cfg-文件，可以复制-etc-ansbile-ansible-cfg-到～-ansbile-目录下"><a href="#创建ansible-cfg-文件，可以复制-etc-ansbile-ansible-cfg-到～-ansbile-目录下" class="headerlink" title="创建ansible.cfg 文件，可以复制 /etc/ansbile/ansible.cfg 到～/ansbile/目录下"></a>创建ansible.cfg 文件，可以复制 /etc/ansbile/ansible.cfg 到～/ansbile/目录下</h3><p>容易忘记的选项是远程登陆身份， 即配置 remote_user = devops<br>如果环境没有配置免密登陆，需要在[defaults] 栏添加 <code>ask_pass = True</code></p>
+<p>验证方法 <code>ansible all -m ping</code></p>
+<h3 id="ansbile-ad-hoc-添加yum-源-ansible-模块的使用方法-ansible-主机名-m-模块-a-‘参数’"><a href="#ansbile-ad-hoc-添加yum-源-ansible-模块的使用方法-ansible-主机名-m-模块-a-‘参数’" class="headerlink" title="ansbile ad-hoc 添加yum 源  ansible 模块的使用方法 ansible 主机名 -m 模块 -a ‘参数’"></a>ansbile ad-hoc 添加yum 源  ansible 模块的使用方法 ansible 主机名 -m 模块 -a ‘参数’</h3><p>脚本要添加可执行权限</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 先要切换到工作目录</span></span><br><span class="line"><span class="built_in">cd</span> /home/devops/ansible/</span><br><span class="line"></span><br><span class="line">ansible all -m yum-repository  -a <span class="string">'name=  description=  baseurl=  enabled= gpgcheck= gpgkey= '</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="安装软件包"><a href="#安装软件包" class="headerlink" title="安装软件包"></a>安装软件包</h3><p>安装软件包如’Development Tools’, 需要在包名前面加‘@’即 ‘@Development Tools’<br>验证yaml 语法格式: <code>ansible-playbook --syntax-check *.yml</code></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">name:</span> <span class="string">install</span>  <span class="string">development</span> <span class="string">tools</span></span><br><span class="line">  <span class="attr">hosts:</span> <span class="string">dev</span></span><br><span class="line">  <span class="attr">tasks:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">install</span> <span class="string">development</span> <span class="string">tools</span></span><br><span class="line">        <span class="attr">yum:</span></span><br><span class="line">          <span class="attr">name:</span> <span class="string">"@Development Tools"</span></span><br><span class="line">          <span class="attr">state:</span> <span class="string">present</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="同步时间依赖角色，安装角色包’rhel-system-roles’-需要在配置文件里添加上roles路径"><a href="#同步时间依赖角色，安装角色包’rhel-system-roles’-需要在配置文件里添加上roles路径" class="headerlink" title="同步时间依赖角色，安装角色包’rhel-system-roles’ 需要在配置文件里添加上roles路径"></a>同步时间依赖角色，安装角色包’rhel-system-roles’ 需要在配置文件里添加上roles路径</h3><p>playbook 示例在/usr/share/ansibe/roles/rhel-system-roles.timesync/Readme.md<br>现成的yml示例在/usr/share/doc/rhel-system-roles/timesync/example-timesync-playbook.yml</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># ansible.cfg</span><br><span class="line">[default]</span><br><span class="line">roles_path &#x3D; &#x2F;home&#x2F;devops&#x2F;ansible&#x2F;roles:&#x2F;usr&#x2F;share&#x2F;ansible&#x2F;roles</span><br></pre></td></tr></table></figure>
+
+<h3 id="使用ansible-galaxy-命令安装角色，安装到本地roles目录"><a href="#使用ansible-galaxy-命令安装角色，安装到本地roles目录" class="headerlink" title="使用ansible-galaxy 命令安装角色，安装到本地roles目录"></a>使用ansible-galaxy 命令安装角色，安装到本地roles目录</h3><p>yml文件很简单, 执行命令 ansible-galaxy install -r roles/requirement.yml -p roles/<br>-p 表示安装路径 </p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">name:</span> <span class="string">balancer</span></span><br><span class="line">  <span class="attr">file:</span> <span class="string">/home/devops/ansible/files/5/haproxy.tar</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="创建apache角色，-角色对应一系列的任务和模板文件"><a href="#创建apache角色，-角色对应一系列的任务和模板文件" class="headerlink" title="创建apache角色， 角色对应一系列的任务和模板文件"></a>创建apache角色， 角色对应一系列的任务和模板文件</h3><p>通过<code>ansible-galaxy init apache</code> 来初始化角色目录，修改角色目录下的tasks/mail.yml 来添加任务，任务所需的模板文件在同级目录templates下<br>通过<code>ansible servera -m setup</code> 来查询环境变量， 在模板文件中使用<code>ansible_facts[&#39;fqdn&#39;]</code> 来引用变量<br>题目说的hostname 是<code>serverc.lab.example.com</code> 对应变量是fqdn, 另外一个是ip即 [‘default_ipv4’][‘address’]</p>
+<p>例如，安装httpd用到yum模块， 启用httpd 用到service模块， 防火墙配置用到firewalld模块</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># home/devops/ansible/role/apache/tasks/main.yml</span></span><br><span class="line"></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">name:</span> <span class="string">install</span> <span class="string">httpd</span></span><br><span class="line">  <span class="attr">yum:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">httpd</span></span><br><span class="line">    <span class="attr">state:</span> <span class="string">present</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">-</span> <span class="attr">name:</span> <span class="string">enable</span> <span class="string">httpd</span></span><br><span class="line">  <span class="attr">service:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">httpd</span></span><br><span class="line">    <span class="attr">state:</span> <span class="string">started</span></span><br><span class="line">    <span class="attr">enabled:</span> <span class="literal">yes</span></span><br><span class="line">    </span><br><span class="line"><span class="bullet">-</span> <span class="attr">name:</span> <span class="string">firewalld</span> <span class="string">config</span></span><br><span class="line">  <span class="attr">firewalld:</span></span><br><span class="line">    <span class="attr">service:</span> <span class="string">httpd</span></span><br><span class="line">    <span class="attr">immediate:</span> <span class="literal">yes</span></span><br><span class="line">    <span class="attr">permanent:</span> <span class="literal">yes</span></span><br><span class="line">    <span class="attr">state:</span> <span class="string">enabled</span></span><br><span class="line">   </span><br><span class="line"><span class="bullet">-</span> <span class="attr">name:</span> <span class="string">install</span> <span class="string">templates</span></span><br><span class="line">  <span class="attr">template:</span></span><br><span class="line">    <span class="attr">src:</span> <span class="string">index.html.j2</span></span><br><span class="line">    <span class="attr">dest:</span> <span class="string">/var/www/html/index.html</span></span><br></pre></td></tr></table></figure>
+
+<p>模块文件放到templates目录下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># home&#x2F;devops&#x2F;ansible&#x2F;role&#x2F;apache&#x2F;templates&#x2F;index.html.j2</span><br><span class="line">Welcome to &#123;&#123; ansible_facts[&#39;fqdn&#39;] &#125;&#125; on &#123;&#123; ansible_facts[&#39;default_ipv4&#39;][&#39;address&#39;] &#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最后还需要创建一个playbook, 如同其他playbook 一样执行</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># newrole.yml</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">name:</span> <span class="string">install</span> <span class="string">new</span> <span class="string">role</span></span><br><span class="line">  <span class="attr">hosts:</span> <span class="string">webservers</span></span><br><span class="line">  <span class="attr">roles:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">apache</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="执行balancer-角色-创建一个负载均衡"><a href="#执行balancer-角色-创建一个负载均衡" class="headerlink" title="执行balancer 角色, 创建一个负载均衡"></a>执行balancer 角色, 创建一个负载均衡</h3><p>验证：<br>ssh到serverd 上，curl localhost, 先是访问的serverb, 然后访问的serverc</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">name:</span> <span class="string">deploy</span> <span class="string">apache</span> <span class="string">on</span> <span class="string">webservers</span></span><br><span class="line">  <span class="attr">hosts:</span> <span class="string">webservers</span></span><br><span class="line">  <span class="attr">roles:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">apache</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">-</span> <span class="attr">name:</span> <span class="string">deploy</span> <span class="string">balancer</span> <span class="string">on</span> <span class="string">balancer</span></span><br><span class="line">  <span class="attr">hosts:</span> <span class="string">balancers</span></span><br><span class="line">  <span class="attr">roles:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">balancer</span></span><br><span class="line">    </span><br><span class="line"><span class="bullet">-</span> <span class="attr">name:</span> <span class="string">deploy</span> <span class="string">phpinfo</span> <span class="string">on</span> <span class="string">webservers</span></span><br><span class="line">  <span class="attr">hosts:</span> <span class="string">webservers</span></span><br><span class="line">  <span class="attr">roles:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">phpinfo</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="可能出现的错误，提示应该使用bind，这是由于balance-role的template-错误"><a href="#可能出现的错误，提示应该使用bind，这是由于balance-role的template-错误" class="headerlink" title="可能出现的错误，提示应该使用bind，这是由于balance role的template 错误"></a>可能出现的错误，提示应该使用bind，这是由于balance role的template 错误</h4><p>修改办法, 将listen行换行并加上bind</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># /home/devops/ansible/roles/balancer/templates/haproxy.cfg.j2</span><br><span class="line"></span><br><span class="line">backend app</span><br><span class="line">  &#123;% for host in groups.balancers %&#125;</span><br><span class="line"><span class="deletion">-  	listen &#123;&#123; daemonname &#125;&#125; 0.0.0.0:&#123;&#123; listenport &#125;&#125;</span></span><br><span class="line"><span class="addition">+  	listen &#123;&#123; daemonname &#125;&#125; </span></span><br><span class="line"><span class="addition">+	bind 0.0.0.0:&#123;&#123; listenport &#125;&#125;</span></span><br><span class="line">  &#123;% endfor %&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="创建逻辑卷，考验block-rescue-always-使用lvol，when-和play对齐"><a href="#创建逻辑卷，考验block-rescue-always-使用lvol，when-和play对齐" class="headerlink" title="创建逻辑卷，考验block/rescue/always, 使用lvol，when 和play对齐"></a>创建逻辑卷，考验block/rescue/always, 使用lvol，<code>when</code> 和play对齐</h3><p>使用了block/rescue/always就不需要tasks关键词</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">name:</span> <span class="string">create</span> <span class="string">a</span> <span class="string">logic</span> <span class="string">volume</span> <span class="string">with</span> <span class="string">size</span> <span class="string">of</span> <span class="number">5000</span> <span class="string">and</span> <span class="string">format</span></span><br><span class="line">  <span class="attr">hosts:</span> <span class="string">all</span></span><br><span class="line">  <span class="attr">block:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">create</span> <span class="string">logic</span> <span class="string">volume</span></span><br><span class="line">	  <span class="attr">lvol:</span></span><br><span class="line">	    <span class="attr">vg:</span> <span class="string">research</span></span><br><span class="line">	    <span class="attr">lv:</span> <span class="string">data</span></span><br><span class="line">	    <span class="attr">size:</span> <span class="number">1500</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">fomat</span> <span class="string">data</span> <span class="string">volume</span></span><br><span class="line">        <span class="attr">filesystem:</span></span><br><span class="line">          <span class="attr">fstype:</span> <span class="string">ext4</span></span><br><span class="line">          <span class="attr">dev:</span> <span class="string">/dev/research/data</span></span><br><span class="line">  <span class="attr">rescue:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">debug</span> <span class="string">message</span></span><br><span class="line">      <span class="attr">debug:</span></span><br><span class="line">        <span class="attr">msg:</span> <span class="string">can't</span> <span class="string">create</span> <span class="string">a</span> <span class="string">size</span> <span class="string">of</span> <span class="number">1800</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">create</span> <span class="string">a</span> <span class="string">logical</span> <span class="string">volume</span> <span class="string">with</span> <span class="string">size</span> <span class="string">of</span> <span class="number">800</span> <span class="string">and</span> <span class="string">format</span></span><br><span class="line">        <span class="attr">lvol:</span></span><br><span class="line">          <span class="attr">vg:</span> <span class="string">research</span></span><br><span class="line">          <span class="attr">lv:</span> <span class="string">data</span></span><br><span class="line">          <span class="attr">size:</span> <span class="number">1500</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">fomat</span> <span class="string">data</span> <span class="string">volume</span></span><br><span class="line">        <span class="attr">filesystem:</span></span><br><span class="line">          <span class="attr">fstype:</span> <span class="string">ext4</span></span><br><span class="line">          <span class="attr">dev:</span> <span class="string">/dev/research/data</span></span><br><span class="line">      <span class="attr">when:</span> <span class="string">ansible_facts['lvm']['vgs']['research']</span> <span class="string">is</span> <span class="string">defined</span></span><br><span class="line">      <span class="attr">ignore_errors:</span> <span class="literal">yes</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">debug</span> <span class="number">2</span> </span><br><span class="line">        <span class="attr">debug:</span></span><br><span class="line">          <span class="attr">msg:</span> <span class="string">volume</span> <span class="string">group</span> <span class="string">does</span> <span class="string">not</span> <span class="string">exist</span></span><br><span class="line">      <span class="attr">when:</span> <span class="string">ansible_facts['lvm']['vgs']['research']</span> <span class="string">is</span> <span class="string">undefined</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="创建hosts文件，-考验jinija-的for循环和读inventory文件"><a href="#创建hosts文件，-考验jinija-的for循环和读inventory文件" class="headerlink" title="创建hosts文件， 考验jinija 的for循环和读inventory文件"></a>创建hosts文件， 考验jinija 的for循环和读inventory文件</h3><p>取facts变量的方法参考balancer的模板：<br>/home/ansible/roles/balancer/roles/template/haproxy.cfg.j2</p>
+<p>基于给的hosts.j2 文件修改, 拼凑出<code>ip url alias</code>格式，分别对应 default_ipv4.address, fqdn, hostname<br>ansible_facts在hostvars[host]中</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 取</span></span><br><span class="line"><span class="string">&#123;%</span> <span class="string">for</span> <span class="string">host</span> <span class="string">in</span> <span class="string">groups.all</span> <span class="string">%&#125;</span></span><br><span class="line"><span class="string">&#123;&#123;</span> <span class="string">hostvars[host]['ansible_facts']</span> <span class="string">*忽露不写了*</span> <span class="string">&#125;&#125;</span> <span class="string">×</span> <span class="string">×</span> </span><br><span class="line"><span class="string">&#123;%</span> <span class="string">endfor</span> <span class="string">%&#125;</span></span><br><span class="line"><span class="string">---</span> </span><br><span class="line"></span><br><span class="line"><span class="string">创建playbook的要小心，题目要求生成所有主机的纪录，所以hosts是all,</span> <span class="string">但只部署在dev组的主机上要加when,</span>   </span><br><span class="line"><span class="string">要加`when:</span> <span class="string">'dev'</span> <span class="string">in</span> <span class="string">group_names`</span></span><br><span class="line"></span><br><span class="line"><span class="string">```yml</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">name:</span> <span class="string">gen</span> <span class="string">hosts</span> <span class="string">and</span> <span class="string">deploy</span> <span class="string">on</span> <span class="string">dev</span> <span class="string">group</span></span><br><span class="line">  <span class="attr">tasks:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">gen</span> <span class="string">hosts</span> <span class="string">and</span> <span class="string">deploy</span></span><br><span class="line">        <span class="attr">template:</span></span><br><span class="line">          <span class="attr">src:</span> <span class="string">hosts.j2</span></span><br><span class="line">          <span class="attr">dest:</span> <span class="string">/etc/myhosts</span></span><br><span class="line">      <span class="attr">when:</span> <span class="string">"'dev' in group_names"</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="创建web-server-注意将文件标注setype为httpd-system-content-t"><a href="#创建web-server-注意将文件标注setype为httpd-system-content-t" class="headerlink" title="创建web server, 注意将文件标注setype为httpd_system_content_t"></a>创建web server, 注意将文件标注setype为httpd_system_content_t</h3><p>通过man semanager-fcontext 查询setype, 或者使用<code>ls -ldZ</code>来查询selinux标签</p>
+<p>创建文件，目录、链接都用file模块，但操作文件内容用copy模块<br>创建组用group模块,创建用户用user模块<br>容易搞反的链接的src是指向的文件，所以是/webdev, 可以看帮助文档</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">---</span></span><br><span class="line"><span class="deletion">- name: create web server</span></span><br><span class="line">  hosts: webservers</span><br><span class="line">  tasks:</span><br><span class="line">    - name: add group</span><br><span class="line">        group:</span><br><span class="line">           name: webdev</span><br><span class="line">           state: present</span><br><span class="line">    - name: create directory</span><br><span class="line">        file:</span><br><span class="line">          path: /webdev</span><br><span class="line">          group: webdev</span><br><span class="line">          state: directory</span><br><span class="line">          mode: u+rwx,g+rwxs,o-rx</span><br><span class="line"> -        setype: httpd_system_content_t</span><br><span class="line">    - name: create a symbolic link</span><br><span class="line">        file:</span><br><span class="line"> -        src: /var/www/html/webdev</span><br><span class="line"> -        dest: /webdev</span><br><span class="line"> +        src: /webdev</span><br><span class="line"> +        dest: /var/www/html/webdev</span><br><span class="line">          state: link</span><br><span class="line">    - name: create index.html</span><br><span class="line">        copy:</span><br><span class="line">          content: Development</span><br><span class="line">          dest: /var/www/html/webdev/index.html</span><br><span class="line"><span class="addition">+         setype: httpd_system_content_t</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="创建硬件报告，用到loops进行数组循环，内置变量item和-regexs匹配，lineinfile-进行文件编辑"><a href="#创建硬件报告，用到loops进行数组循环，内置变量item和-regexs匹配，lineinfile-进行文件编辑" class="headerlink" title="创建硬件报告，用到loops进行数组循环，内置变量item和 regexs匹配，lineinfile 进行文件编辑"></a>创建硬件报告，用到loops进行数组循环，内置变量item和 regexs匹配，lineinfile 进行文件编辑</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">name:</span> <span class="string">generate</span> <span class="string">hw</span> <span class="string">report</span></span><br><span class="line">  <span class="attr">hosts:</span> <span class="string">all</span></span><br><span class="line">  <span class="attr">vars:</span></span><br><span class="line">    <span class="attr">hw_all:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">hw_name:</span> <span class="string">HOST</span></span><br><span class="line">        <span class="attr">hw_content:</span> <span class="string">"<span class="template-variable">&#123;&#123; ansible_facts['hostname'] &#125;&#125;</span>"</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">hw_name:</span> <span class="string">BIOS_version</span></span><br><span class="line">        <span class="attr">hw_content:</span> <span class="string">"<span class="template-variable">&#123;&#123; ansible_facts['bios_version'] &#125;&#125;</span>"</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="创建加密文件，用到ansible-vault命令"><a href="#创建加密文件，用到ansible-vault命令" class="headerlink" title="创建加密文件，用到ansible-vault命令"></a>创建加密文件，用到ansible-vault命令</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ansible-vault encrypt lock.yml --vault-password-file&#x3D;secret.txt</span><br></pre></td></tr></table></figure>
+
+<h3 id="添加用户，-ansible-playbook-通过-–vault-password-file-secret-txt-来传密码文件"><a href="#添加用户，-ansible-playbook-通过-–vault-password-file-secret-txt-来传密码文件" class="headerlink" title="添加用户， ansible-playbook 通过 –vault-password-file=secret.txt 来传密码文件"></a>添加用户， ansible-playbook 通过 –vault-password-file=secret.txt 来传密码文件</h3><p>通过<code>vars_files</code>来读取变量文件， loop 来循环遍历数组变量， 然后模板直接取密码后用’| password_hash(‘sha512’)’ 来加密密码<br>通常情况下在playbook中，开头位置引用一个变量时都需要”“， 但是在when块里，则直接使用 variable。 另外字符串要用“string”  </p>
+<p>创建用户时， 指定附属组用groups, 主要组是group</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- &#123;&#123; variable &#125;&#125; ## 错误</span><br><span class="line">key: &#123;&#123; variable &#125;&#125; ## 错误</span><br><span class="line">- &quot;&#123;&#123; variable&#125;&#125;&quot; ## 正确</span><br><span class="line">key: &quot;&#123;&#123; variable &#125;&#125;&quot; ## 正确</span><br></pre></td></tr></table></figure>
+
+<p>结果</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">---</span></span><br><span class="line"><span class="deletion">- name: create user on dev,test</span></span><br><span class="line">  hosts: dev,test</span><br><span class="line">  vars_files:</span><br><span class="line">    - lock.yml</span><br><span class="line">    - user_list.yml</span><br><span class="line">  tasks:</span><br><span class="line">    - name: create group devops</span><br><span class="line">      group:</span><br><span class="line">        name: devops</span><br><span class="line">        state: present</span><br><span class="line">    - name: create user </span><br><span class="line">      user:</span><br><span class="line">        name: "&#123;&#123; item.name &#125;&#125;"</span><br><span class="line"><span class="deletion">-       group: devops</span></span><br><span class="line"><span class="addition">+       groups: devops        </span></span><br><span class="line">        password: "&#123;&#123; pw_developer | password_hash('sha512') &#125;&#125;"</span><br><span class="line">      loop: "&#123;&#123; user &#125;&#125;"</span><br><span class="line"><span class="deletion">-     when: "&#123;&#123; item.job &#125;&#125;" == developer</span></span><br><span class="line"><span class="addition">+     when: item.job == "developer"</span></span><br><span class="line"><span class="deletion">- name: create user on prod</span></span><br><span class="line">  hosts: prod</span><br><span class="line">  vars_files:</span><br><span class="line">    - lock.yml</span><br><span class="line">    - users_list.yml</span><br><span class="line">  tasks:</span><br><span class="line">    - name: create group manager</span><br><span class="line">      group:</span><br><span class="line">        name: manager</span><br><span class="line">        state: present</span><br><span class="line">    - name: create user</span><br><span class="line">      user:</span><br><span class="line">        name: "&#123;&#123; item.name &#125;&#125;"</span><br><span class="line">        groups: manager</span><br><span class="line">        password: "&#123;&#123; pw_manager | password_hash('sha512') &#125;&#125;"</span><br><span class="line">      loop: "&#123;&#123; user &#125;&#125;"</span><br><span class="line"><span class="deletion">-     when: "&#123;&#123; item.job &#125;&#125;" == manager</span></span><br><span class="line"><span class="addition">+     when: item.job == "manager"</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="修改密码-使用ansible-vault-rekey-修改密码，或者先解密后加密"><a href="#修改密码-使用ansible-vault-rekey-修改密码，或者先解密后加密" class="headerlink" title="修改密码, 使用ansible-vault rekey 修改密码，或者先解密后加密"></a>修改密码, 使用<code>ansible-vault rekey</code> 修改密码，或者先解密后加密</h3><h3 id="修改文件内容-使用copy模块，以及when条件判断"><a href="#修改文件内容-使用copy模块，以及when条件判断" class="headerlink" title="修改文件内容, 使用copy模块，以及when条件判断"></a>修改文件内容, 使用copy模块，以及when条件判断</h3><p>在playbook的内建变量 inventory_hostname 表示定义在inventory里的主机名称<br>也可以使用ansible_facts[‘hostname’],前提是被管理节点的hostname必须如果管理节点定义名称一样。 因为后者是到被管理节点获取。</p>
+<p>使用when 限定条件， 满足条件才能执行这个task</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">name:</span> <span class="string">create</span> <span class="string">issue</span></span><br><span class="line">  <span class="attr">hosts:</span> <span class="string">all</span></span><br><span class="line">  <span class="attr">tasks:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">create</span> <span class="string">issue</span> <span class="string">file</span></span><br><span class="line">      <span class="attr">copy:</span></span><br><span class="line">        <span class="attr">content:</span> <span class="string">"Development"</span></span><br><span class="line">        <span class="attr">dest:</span> <span class="string">/etc/issue</span></span><br><span class="line">      <span class="attr">when:</span> <span class="string">inventory_name</span> <span class="string">in</span> <span class="string">groups.dev</span>  </span><br><span class="line"><span class="string">```</span>      </span><br><span class="line"></span><br><span class="line"><span class="comment">### 第二次排错</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#### ansible-galaxy 安装角色, 指定方法分别是 src/name</span></span><br><span class="line"></span><br><span class="line"><span class="string">```yml</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">src:</span> <span class="string">files/5/balancer.tar</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">balancer</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">src:</span> <span class="string">files/5/phpinfo.tar</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">phpinfo</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="timesync-看doc-示例，-验证方法是看timedatectl-看system-clock-syncronize-为-yes"><a href="#timesync-看doc-示例，-验证方法是看timedatectl-看system-clock-syncronize-为-yes" class="headerlink" title="timesync 看doc 示例， 验证方法是看timedatectl 看system clock syncronize 为 yes"></a>timesync 看doc 示例， 验证方法是看timedatectl 看system clock syncronize 为 yes</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">name:</span> <span class="string">use</span> <span class="string">timesync</span> <span class="string">role</span></span><br><span class="line">  <span class="attr">hosts:</span> <span class="string">all</span></span><br><span class="line">  <span class="attr">vars:</span></span><br><span class="line">    <span class="attr">timesync_ntp_servers:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">hostname:</span> </span><br><span class="line">        <span class="attr">iburst:</span> <span class="literal">yes</span></span><br><span class="line">  <span class="attr">roles:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">rhel_system_roles.timesync</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="创建hosts-要用"><a href="#创建hosts-要用" class="headerlink" title="创建hosts, 要用 "></a>创建hosts, 要用 </h3><h3 id="使用firewalld模块时，需要指定immediate-参数，确保能立即生效"><a href="#使用firewalld模块时，需要指定immediate-参数，确保能立即生效" class="headerlink" title="使用firewalld模块时，需要指定immediate 参数，确保能立即生效"></a>使用firewalld模块时，需要指定immediate 参数，确保能立即生效</h3><h3 id="设置文件的权限时，应使用u-rwx-g-rwxs-o-rw-而不是u-rwx，原因很好理解"><a href="#设置文件的权限时，应使用u-rwx-g-rwxs-o-rw-而不是u-rwx，原因很好理解" class="headerlink" title="设置文件的权限时，应使用u=rwx,g=rwxs,o=rw, 而不是u+rwx，原因很好理解"></a>设置文件的权限时，应使用u=rwx,g=rwxs,o=rw, 而不是u+rwx，原因很好理解</h3>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://energygreek.github.io/2020/08/29/rhce8-question/" data-id="clsbmbv4g003zbwope78gcwra" data-title="rhce8 question" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/exam/" rel="tag">exam</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/rhce/" rel="tag">rhce</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-sql-operator-priority" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/08/28/sql-operator-priority/" class="article-date">
+  <time class="dt-published" datetime="2020-08-28T12:34:26.000Z" itemprop="datePublished">2020-08-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/08/28/sql-operator-priority/">sql operator priority</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="SQL优先级问题"><a href="#SQL优先级问题" class="headerlink" title="SQL优先级问题"></a>SQL优先级问题</h1><p>例如数学中的加减乘除，以及编程里的运算符，在sql里也有优先级，依次是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">FROM clause</span><br><span class="line">WHERE clause</span><br><span class="line">SELECT clause</span><br><span class="line">GROUP BY clause</span><br><span class="line">HAVING clause</span><br><span class="line">ORDER BY clause</span><br></pre></td></tr></table></figure>
+
+<p>优先级依次下降，所以FROM的优先级比WHREE高，这样会有什么影响？ </p>
+<h2 id="优先级的问题"><a href="#优先级的问题" class="headerlink" title="优先级的问题"></a>优先级的问题</h2><p>因为SELECT的优先级比WHERE低，所以在<code>SELECT</code>里面定义的alias别称就不能在<code>WHERE</code> 里面使用<br>但可以在<code>ORDER</code>里面使用，因为ORDER 后执行  </p>
+<h2 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">GROUP BY a, b, c</span><br><span class="line">ORDER BY NULL</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">. . .</span><br><span class="line">GROUP BY a, b, c</span><br><span class="line">ORDER BY a, b, c</span><br></pre></td></tr></table></figure>
+
+<p>在上面的两个例子里的ORDER BY都不会执行，分别解释：</p>
+<ol>
+<li>第一个例子里的ORDER 是删除GROUP的排序</li>
+<li>第二个例子的ORDER是重复了GROUP已经干了的事情</li>
+</ol>
+<h2 id="验证方法"><a href="#验证方法" class="headerlink" title="验证方法"></a>验证方法</h2><p>可以找个在线SQL工具，例如 <code>http://sqlfiddle.com/</code>  </p>
+<p>先执行创建数据库命令 </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> <span class="keyword">if</span> <span class="keyword">exists</span> new_table;</span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`new_table`</span> (</span><br><span class="line"><span class="string">`id`</span> <span class="built_in">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> AUTO_INCREMENT,</span><br><span class="line"><span class="string">`testdecimal`</span> <span class="built_in">decimal</span>(<span class="number">6</span>,<span class="number">2</span>) <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,</span><br><span class="line">PRIMARY <span class="keyword">KEY</span> (<span class="string">`id`</span>));</span><br><span class="line"></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="string">`new_table`</span> (<span class="string">`testdecimal`</span>) <span class="keyword">VALUES</span> (<span class="string">'1234.45'</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="string">`new_table`</span> (<span class="string">`testdecimal`</span>) <span class="keyword">VALUES</span> (<span class="string">'1234.45'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">set</span> @mysqlorder := <span class="string">''</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">select</span> @mysqlorder := <span class="keyword">CONCAT</span>(@mysqlorder,<span class="string">" SELECT "</span>) <span class="keyword">from</span> new_table,(<span class="keyword">select</span> @mysqlorder := <span class="keyword">CONCAT</span>(@mysqlorder,<span class="string">" FROM "</span>)) tt</span><br><span class="line"><span class="keyword">JOIN</span> (<span class="keyword">select</span> @mysqlorder := <span class="keyword">CONCAT</span>(@mysqlorder,<span class="string">" JOIN1 "</span>)) t <span class="keyword">on</span> ((<span class="keyword">select</span> @mysqlorder := <span class="keyword">CONCAT</span>(@mysqlorder,<span class="string">" ON1 "</span>)) <span class="keyword">or</span> <span class="keyword">rand</span>() &lt; <span class="number">1</span>)</span><br><span class="line"><span class="keyword">JOIN</span> (<span class="keyword">select</span> @mysqlorder := <span class="keyword">CONCAT</span>(@mysqlorder,<span class="string">" JOIN2 "</span>)) t2 <span class="keyword">on</span> ((<span class="keyword">select</span> @mysqlorder := <span class="keyword">CONCAT</span>(@mysqlorder,<span class="string">" ON2 "</span>)) <span class="keyword">or</span> <span class="keyword">rand</span>() &lt; <span class="number">1</span>)</span><br><span class="line"><span class="keyword">where</span> ((<span class="keyword">select</span> @mysqlorder := <span class="keyword">CONCAT</span>(@mysqlorder,<span class="string">" WHERE "</span>)) <span class="keyword">or</span> <span class="keyword">IF</span>(new_table.testdecimal = <span class="number">1234.45</span>,<span class="literal">true</span>,<span class="literal">false</span>))</span><br><span class="line"><span class="keyword">group</span> <span class="keyword">by</span> (<span class="keyword">select</span> @mysqlorder := <span class="keyword">CONCAT</span>(@mysqlorder,<span class="string">" GROUPBY "</span>)),<span class="keyword">id</span></span><br><span class="line"><span class="keyword">having</span> (<span class="keyword">select</span> @mysqlorder := <span class="keyword">CONCAT</span>(@mysqlorder,<span class="string">" HAVING "</span>))</span><br><span class="line"><span class="keyword">order</span> <span class="keyword">by</span> (<span class="keyword">select</span> @mysqlorder := <span class="keyword">CONCAT</span>(@mysqlorder,<span class="string">" ORDERBY "</span>));</span><br></pre></td></tr></table></figure>
+
+<p>在执行 <code>select @mysqlorder;</code> 结果如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">@mysqlor&#96;der</span><br><span class="line">(null)</span><br></pre></td></tr></table></figure>
+
+<p>可见其优先级顺序为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FROM JOIN1 JOIN2 WHERE ON2 ON1 ORDERBY GROUPBY SELECT WHERE ON2 ON1 ORDERBY GROUPBY SELECT HAVING HAVING</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://energygreek.github.io/2020/08/28/sql-operator-priority/" data-id="clsbmbv4o004ebwop246k769p" data-title="sql operator priority" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sql/" rel="tag">sql</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-install-k8s-cluster" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/08/23/install-k8s-cluster/" class="article-date">
+  <time class="dt-published" datetime="2020-08-23T08:21:06.000Z" itemprop="datePublished">2020-08-23</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/08/23/install-k8s-cluster/">install k8s cluster</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="搭建k8s集群"><a href="#搭建k8s集群" class="headerlink" title="搭建k8s集群"></a>搭建k8s集群</h1><p>引用 <a href="https://blog.piaoruiqing.com/2019/09/17/kubernetes-1-installation/" target="_blank" rel="noopener">https://blog.piaoruiqing.com/2019/09/17/kubernetes-1-installation/</a><br>照着文章搭建k8s集群，写得挺好，记录一下自己的搭建方法和问题</p>
+<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><ol>
+<li>2个kvm虚拟机, 安装的centos7系统</li>
+<li>两个虚拟机都配置了双网卡，eth0和eth1， eth0桥接宿主机的bridge， eth1 接入libvirt default NAT网络</li>
+<li>官方推荐配置： CPU &gt; 2，内存 &gt; 2G</li>
+<li>eth1 的ip 分别为 192.168.122.61, 192.168.122.161</li>
+</ol>
+<h2 id="Master和Worker-共同步骤"><a href="#Master和Worker-共同步骤" class="headerlink" title="Master和Worker 共同步骤"></a>Master和Worker 共同步骤</h2><p>需要在所有节点执行</p>
+<h3 id="修改hostname"><a href="#修改hostname" class="headerlink" title="修改hostname"></a>修改hostname</h3><p>编辑hostname</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim &#x2F;etc&#x2F;hostname # 修改hostname</span><br></pre></td></tr></table></figure>
+<p>配置host文件， 将所有节点都指定host </p>
+<h3 id="关闭防火墙"><a href="#关闭防火墙" class="headerlink" title="关闭防火墙"></a>关闭防火墙</h3><ol>
+<li>systemctl disable –now firewalld</li>
+<li>修改 /etc/seconfig， 将selinux 配置成disable </li>
+</ol>
+<h3 id="关闭-swap-分区"><a href="#关闭-swap-分区" class="headerlink" title="关闭 swap 分区"></a>关闭 swap 分区</h3><ol>
+<li>swapoff -a </li>
+<li>修改 /etc/fstab， 注释掉swap 记录</li>
+</ol>
+<h3 id="安装docker-配置镜像源"><a href="#安装docker-配置镜像源" class="headerlink" title="安装docker 配置镜像源"></a>安装docker 配置镜像源</h3><p>修改 /etc/docker/daemon.json 文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;registry-mirrors&quot;: [&quot;https:&#x2F;&#x2F;xxxxxxxx.mirror.aliyuncs.com&quot;],</span><br><span class="line">  &quot;exec-opts&quot;: [&quot;native.cgroupdriver&#x3D;systemd&quot;],</span><br><span class="line">  &quot;log-driver&quot;: &quot;json-file&quot;,</span><br><span class="line">  &quot;log-opts&quot;: &#123;</span><br><span class="line">    &quot;max-size&quot;: &quot;100m&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;storage-driver&quot;: &quot;overlay2&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="添加k8s-软件源"><a href="#添加k8s-软件源" class="headerlink" title="添加k8s 软件源"></a>添加k8s 软件源</h3><p> 如下添加的aliyun的镜像源</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"> cat &lt;&lt;EOF &gt; &#x2F;etc&#x2F;yum.repos.d&#x2F;kubernetes.repo</span><br><span class="line">[kubernetes]</span><br><span class="line">name&#x3D;Kubernetes</span><br><span class="line">baseurl&#x3D;http:&#x2F;&#x2F;mirrors.aliyun.com&#x2F;kubernetes&#x2F;yum&#x2F;repos&#x2F;kubernetes-el7-x86_64</span><br><span class="line">enabled&#x3D;1</span><br><span class="line">gpgcheck&#x3D;1</span><br><span class="line">repo_gpgcheck&#x3D;1</span><br><span class="line">gpgkey&#x3D;http:&#x2F;&#x2F;mirrors.aliyun.com&#x2F;kubernetes&#x2F;yum&#x2F;doc&#x2F;yum-key.gpg http:&#x2F;&#x2F;mirrors.aliyun.com&#x2F;kubernetes&#x2F;yum&#x2F;doc&#x2F;rpm-package-key.gpg</span><br><span class="line">exclude&#x3D;kube*</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<h3 id="安装k8s"><a href="#安装k8s" class="headerlink" title="安装k8s"></a>安装k8s</h3><p>安装组件 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">yum install -y kubelet kubeadm kubectl --disableexcludes&#x3D;kubernetes</span><br><span class="line">systemctl enable kubelet &amp;&amp; systemctl start kubelet</span><br><span class="line">&#96;&#96;&#96; </span><br><span class="line"></span><br><span class="line">### 配置网络</span><br></pre></td></tr></table></figure>
+<p>cat &lt;<EOF >  /etc/sysctl.d/k8s.conf<br>net.bridge.bridge-nf-call-ip6tables = 1<br>net.bridge.bridge-nf-call-iptables = 1<br>EOF<br>sysctl –system</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">上面的步骤需要在主备上执行</span><br><span class="line"></span><br><span class="line">## Master 操作 </span><br><span class="line"></span><br><span class="line">下面的步骤只在Master节点运行</span><br><span class="line"></span><br><span class="line">### 生成k8s初始化配置文件</span><br></pre></td></tr></table></figure>
+<p>[root@k8s-master ~]$ kubeadm config print init-defaults &gt; kubeadm-init.yaml</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">得到 kubeadm-init.yaml 文件</span><br><span class="line"></span><br><span class="line">修改kubeadm-init.yaml 文件</span><br><span class="line">1. 修改 &#96;advertiseAddress: 1.2.3.4&#96; 为本机地址 192.168.122.61</span><br><span class="line">2. 修改 &#96;imageRepository: k8s.gcr.io &#96; 为 imageRepository: registry.cn-hangzhou.aliyuncs.com&#x2F;google_containers </span><br><span class="line"></span><br><span class="line">修改镜像地址，这样就避免下载k8s 镜像超时</span><br><span class="line"></span><br><span class="line">修改后的kubeadm-init.yaml</span><br><span class="line"></span><br><span class="line">&#96;&#96;&#96;yaml</span><br><span class="line">apiVersion: kubeadm.k8s.io&#x2F;v1beta2</span><br><span class="line">bootstrapTokens:</span><br><span class="line">- groups:</span><br><span class="line">  - system:bootstrappers:kubeadm:default-node-token</span><br><span class="line">  token: abcdef.0123456789abcdef</span><br><span class="line">  ttl: 24h0m0s</span><br><span class="line">  usages:</span><br><span class="line">  - signing</span><br><span class="line">  - authentication</span><br><span class="line">kind: InitConfiguration</span><br><span class="line">localAPIEndpoint:</span><br><span class="line">  advertiseAddress: 10.33.30.92</span><br><span class="line">  bindPort: 6443</span><br><span class="line">nodeRegistration:</span><br><span class="line">  criSocket: &#x2F;var&#x2F;run&#x2F;dockershim.sock</span><br><span class="line">  name: k8s-master</span><br><span class="line">  taints:</span><br><span class="line">  - effect: NoSchedule</span><br><span class="line">    key: node-role.kubernetes.io&#x2F;master</span><br><span class="line">---</span><br><span class="line">apiServer:</span><br><span class="line">  timeoutForControlPlane: 4m0s</span><br><span class="line">apiVersion: kubeadm.k8s.io&#x2F;v1beta2</span><br><span class="line">certificatesDir: &#x2F;etc&#x2F;kubernetes&#x2F;pki</span><br><span class="line">clusterName: kubernetes</span><br><span class="line">controllerManager: &#123;&#125;</span><br><span class="line">dns:</span><br><span class="line">  type: CoreDNS</span><br><span class="line">etcd:</span><br><span class="line">  local:</span><br><span class="line">    dataDir: &#x2F;var&#x2F;lib&#x2F;etcd</span><br><span class="line">imageRepository: registry.cn-hangzhou.aliyuncs.com&#x2F;google_containers</span><br><span class="line">kind: ClusterConfiguration</span><br><span class="line">kubernetesVersion: v1.15.0</span><br><span class="line">networking:</span><br><span class="line">  dnsDomain: cluster.local</span><br><span class="line">  serviceSubnet: 10.96.0.0&#x2F;12</span><br><span class="line">scheduler: &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="下载k8s的组件镜像"><a href="#下载k8s的组件镜像" class="headerlink" title="下载k8s的组件镜像"></a>下载k8s的组件镜像</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubeadm config images pull --config kubeadm-init.yaml</span><br></pre></td></tr></table></figure>
+
+<h3 id="初始化-k8s"><a href="#初始化-k8s" class="headerlink" title="初始化 k8s"></a>初始化 k8s</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubeadm init --config kubeadm-init.yaml</span><br></pre></td></tr></table></figure>
+<p>执行无误后，得到worker 节点加入集群的命令 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">Your Kubernetes control-plane has initialized successfully!</span><br><span class="line">...</span><br><span class="line">Then you can join any number of worker nodes by running the following on each as root:</span><br><span class="line"></span><br><span class="line">kubeadm join 10.33.30.92:6443 --token abcdef.0123456789abcdef \</span><br><span class="line">    --discovery-token-ca-cert-hash sha256:2883b1961db36593fb67ab5cd024f451b934fc0e72e2fa3858dda3ad3b225837</span><br></pre></td></tr></table></figure>
+
+<p>记录这个命令， 丢失的话也可以重新执行 <code>kubeadmin create token</code> 找回</p>
+<h3 id="配置普通用户执行kubectl-命令"><a href="#配置普通用户执行kubectl-命令" class="headerlink" title="配置普通用户执行kubectl 命令"></a>配置普通用户执行kubectl 命令</h3><p>用普通用户执行一下命令， 这样普通用户也能管理集群 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p $HOME&#x2F;.kube</span><br><span class="line">sudo cp -i &#x2F;etc&#x2F;kubernetes&#x2F;admin.conf $HOME&#x2F;.kube&#x2F;config</span><br><span class="line">sudo chown $(id -u):$(id -g) $HOME&#x2F;.kube&#x2F;config</span><br></pre></td></tr></table></figure>
+
+<h3 id="查看Master-节点状态"><a href="#查看Master-节点状态" class="headerlink" title="查看Master 节点状态"></a>查看Master 节点状态</h3><p>可见，Master节点未就绪，这是因为还没安装网络组件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master kubernetes]$ kubectl get node</span><br><span class="line">NAME         STATUS     ROLES    AGE     VERSION</span><br><span class="line">k8s-master   NotReady   master   3m25s   v1.15.3</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="配置网络"><a href="#配置网络" class="headerlink" title="配置网络"></a>配置网络</h3><ol>
+<li><p>下载calico 描述文件<br>wget <a href="https://docs.projectcalico.org/v3.8/manifests/calico.yaml" target="_blank" rel="noopener">https://docs.projectcalico.org/v3.8/manifests/calico.yaml</a></p>
+</li>
+<li><p>修改calico 描述文件里的serviceSubnet，修改为跟kubeadmin-init.yaml一致</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cat kubeadm-init.yaml | grep serviceSubnet:</span><br><span class="line">serviceSubnet: 10.96.0.0&#x2F;12</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p><strong><em>注意</em></strong>   </p>
+<ol>
+<li>calico 的地址必须和 kubeadm-init.yaml 保持一致， kubeadm-init.yaml 默认为 <code>serviceSubnet: 10.96.0.0/12</code>， 而calico的默认地址为<code>192.168.0.0/16</code>, 所以要么修改kubeadmin-init.yaml, 要么修改calico.yaml。</li>
+<li>这里的<code>Subnet</code> 不能涵盖到主机的地址范围即不能包含 <code>192.168.122.0/24</code> </li>
+</ol>
+<h3 id="安装calico"><a href="#安装calico" class="headerlink" title="安装calico"></a>安装calico</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f calico.yaml</span><br></pre></td></tr></table></figure>
+
+<h3 id="查看Master节点"><a href="#查看Master节点" class="headerlink" title="查看Master节点"></a>查看Master节点</h3><p>当calico 安装好了， 可以发现Master 节点变为就绪， 至此Master 节点就配置好了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master ~]$ kubectl get node</span><br><span class="line">NAME         STATUS   ROLES    AGE   VERSION</span><br><span class="line">k8s-master   Ready    master   15m   v1.15.3</span><br></pre></td></tr></table></figure>
+
+<h2 id="安装dashboard"><a href="#安装dashboard" class="headerlink" title="安装dashboard"></a>安装dashboard</h2><p>之前的步骤安装好了Master节点， 可选择安装dashboard，通过网页来管理集群 </p>
+<p>步骤很简单， 先下载dashboard， 再安装 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master ~]$ wget https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;kubernetes&#x2F;dashboard&#x2F;v2.0.0-beta4&#x2F;aio&#x2F;deploy&#x2F;recommended.yaml</span><br><span class="line">[root@k8s-master ~]$ kubectl apply -f recommended.yaml</span><br></pre></td></tr></table></figure>
+
+<h3 id="创建dashboard-用户"><a href="#创建dashboard-用户" class="headerlink" title="创建dashboard 用户"></a>创建dashboard 用户</h3><p>必须创建用户，然后获取token，才能在集群外访问， 否则必须在Master 的localhost 访问dashboard。<br>以下是创建用户的描述文件， 注意namespace， 例如官方的例子是 dashboard， 这样生成的token 不一样</p>
+<p>执行安装用户 <code>kubectl apply -f dashboard-adminuser.yaml</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"># dashboard-adminuser.yaml</span><br><span class="line"></span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: ServiceAccount</span><br><span class="line">metadata:</span><br><span class="line">  name: admin-user</span><br><span class="line">  namespace: kube-system</span><br><span class="line">---</span><br><span class="line">apiVersion: rbac.authorization.k8s.io&#x2F;v1</span><br><span class="line">kind: ClusterRoleBinding</span><br><span class="line">metadata:</span><br><span class="line">  name: admin-user</span><br><span class="line">roleRef:</span><br><span class="line">  apiGroup: rbac.authorization.k8s.io</span><br><span class="line">  kind: ClusterRole</span><br><span class="line">  name: cluster-admin</span><br><span class="line">subjects:</span><br><span class="line">- kind: ServiceAccount</span><br><span class="line">  name: admin-user</span><br><span class="line">  namespace: kube-system</span><br></pre></td></tr></table></figure>
+
+<p>创建证书， k8s 不允许远程使用http，所以需要用证书访问dashboard </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master ~]$ grep &#39;client-certificate-data&#39; ~&#x2F;.kube&#x2F;config | head -n 1 | awk &#39;&#123;print $2&#125;&#39; | base64 -d &gt;&gt; kubecfg.crt</span><br><span class="line">[root@k8s-master ~]$ grep &#39;client-key-data&#39; ~&#x2F;.kube&#x2F;config | head -n 1 | awk &#39;&#123;print $2&#125;&#39; | base64 -d &gt;&gt; kubecfg.key</span><br><span class="line">[root@k8s-master ~]$ openssl pkcs12 -export -clcerts -inkey kubecfg.key -in kubecfg.crt -out kubecfg.p12 -name &quot;kubernetes-client&quot;</span><br></pre></td></tr></table></figure>
+
+<p>将生成的 <code>kubecfg.p12</code> 文件导入到集群外的主机，即kvm宿主机上</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp root@10.33.30.92:&#x2F;root&#x2F;.kube&#x2F;kubecfg.p12 .&#x2F;</span><br></pre></td></tr></table></figure>
+
+<p>在宿主机上使用chrome 的高级功能里可以导入证书  </p>
+<p>重启chrome 登录后登录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:&#x2F;&#x2F;192.168.122.61:6443&#x2F;api&#x2F;v1&#x2F;namespaces&#x2F;kubernetes-dashboard&#x2F;services&#x2F;https:kubernetes-dashboard:&#x2F;proxy&#x2F;#&#x2F;login</span><br></pre></td></tr></table></figure>
+
+<p>打开网页后选择输入token， token通过在Master 节点执行一下命令生成， 注意参数 -n kube-system， 需要跟创建用户时的namespace保持一致 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep admin-user | awk &#39;&#123;print $1&#125;&#39;)</span><br></pre></td></tr></table></figure>
+
+<p>复制token 到网页上，就能登录Dashboard </p>
+<h2 id="Worker节点加入集群"><a href="#Worker节点加入集群" class="headerlink" title="Worker节点加入集群"></a>Worker节点加入集群</h2><p>直接在worker节点执行 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kubeadm join 10.33.30.92:6443 --token abcdef.0123456789abcdef \</span><br><span class="line">    --discovery-token-ca-cert-hash sha256:2883b1961db36593fb67ab5cd024f451b934fc0e72e2fa3858dda3ad3b225837</span><br></pre></td></tr></table></figure>
+
+<p>然后到Master 节点执行以下命令， 这里Name 显示了k8s-worker是因为我们在Hosts文件里指定了ip，所以k8s自动识别到了，否则会显示节点ip</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master ~]$ kubectl get node</span><br><span class="line">NAME         STATUS   ROLES    AGE   VERSION</span><br><span class="line">k8s-master   Ready    master   10h   v1.15.3</span><br><span class="line">k8s-worker   Ready    &lt;none&gt;   96s   v1.15.3</span><br></pre></td></tr></table></figure>
+
+<p>至此集群搭建完毕</p>
+<h2 id="遇到问题"><a href="#遇到问题" class="headerlink" title="遇到问题"></a>遇到问题</h2><ol>
+<li>因为我的虚拟机配置的双网卡， 需要在calico.yaml 配网卡interface<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># Cluster type to identify the deployment type</span><br><span class="line">            - name: CLUSTER_TYPE</span><br><span class="line">              value: &quot;k8s,bgp&quot;</span><br><span class="line">            - name: IP_AUTODETECTION_METHOD</span><br><span class="line">              value: &quot;interface&#x3D;eth1&quot;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://energygreek.github.io/2020/08/23/install-k8s-cluster/" data-id="clsbmbv3s002vbwop99rzdbv0" data-title="install k8s cluster" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/" rel="tag">k8s</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-python-wraper" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/08/11/python-wraper/" class="article-date">
+  <time class="dt-published" datetime="2020-08-11T11:15:52.000Z" itemprop="datePublished">2020-08-11</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/08/11/python-wraper/">python wraper</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="decoder-介绍"><a href="#decoder-介绍" class="headerlink" title="decoder 介绍"></a>decoder 介绍</h1><p>python decoder（装饰器）是python的高级用法，用来拓展函数或类的功能。不过也增加初学者<br>阅读代码的难度</p>
+<p>例如flask可以在需要验证用户登录的请求函数上添加装饰器，只有当用户登录了才可以调用该&gt;页面，非常方便</p>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>decoder 其实也是一个函数，装饰器函数会返回真实函数，并会增加额外的代码，如</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 定义wraper</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">log</span><span class="params">(func)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">wrapper</span><span class="params">(*arg)</span>:</span></span><br><span class="line">        print(<span class="string">'func called'</span>)</span><br><span class="line">        <span class="keyword">return</span> func(*arg)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> wrapper</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">hello</span><span class="params">(Name=None)</span>:</span></span><br><span class="line">    print(<span class="string">'Hello %s'</span>%Name)</span><br><span class="line"></span><br><span class="line">new_hello = log(hello)</span><br><span class="line"></span><br><span class="line">new_hello(<span class="string">'bob'</span>)</span><br></pre></td></tr></table></figure>
+<p>输出<br>func called<br>Hello bob</p>
+<h2 id="使用wraper-的原因"><a href="#使用wraper-的原因" class="headerlink" title="使用wraper 的原因"></a>使用wraper 的原因</h2><p>提供额外的功能，例如计时，日志等。 另外wraper还有更多强大的功能</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fib</span><span class="params">(n)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> n &lt;= <span class="number">1</span>: <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> fib(n<span class="number">-1</span>) + fib(n<span class="number">-2</span>)</span><br></pre></td></tr></table></figure>
+
+<p>这种递归调用非常费时，而使用wraper 可以提供一个缓存器</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">memory</span><span class="params">(func)</span>:</span></span><br><span class="line">    cache = &#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">wrapper</span><span class="params">(*args)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> args <span class="keyword">not</span> <span class="keyword">in</span> cache:</span><br><span class="line">            cache[args] = func(*args)</span><br><span class="line">        <span class="keyword">return</span> cache[args]</span><br><span class="line">    <span class="keyword">return</span> wrapper</span><br><span class="line"></span><br><span class="line"><span class="meta">@memory</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fib</span><span class="params">(n)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> n &lt;= <span class="number">1</span>: <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> fib(n<span class="number">-1</span>) + fib(n<span class="number">-2</span>)</span><br><span class="line"> </span><br><span class="line"></span><br><span class="line"><span class="comment">## 给类wraper</span></span><br><span class="line"></span><br><span class="line">上面是函数wraper， 类也可以作为wraper， 但需要类支持（）调用，类似c++的类函数。</span><br><span class="line">在python里需要实现 `__call__` 方法</span><br><span class="line"></span><br><span class="line">```python</span><br><span class="line"><span class="keyword">import</span> functools</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MemoryClass</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, is_logging, func)</span>:</span></span><br><span class="line">        self.is_logging = is_logging</span><br><span class="line">        self.func = func</span><br><span class="line">        <span class="keyword">if</span> self.is_logging:</span><br><span class="line">            print(<span class="string">'logging'</span>)</span><br><span class="line">        self.cache = &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__call__</span><span class="params">(self, *args)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> args <span class="keyword">not</span> <span class="keyword">in</span> self.cache:</span><br><span class="line">            self.cache[args] = self.func(*args)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> self.cache[args]</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">memory</span><span class="params">(is_logging)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> functools.partitial(MemoryClass, is_logging)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@memory(is_loging=True)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fib</span><span class="params">(n)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> n &lt;= <span class="number">1</span>: <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> fib(n<span class="number">-1</span>) + fib(n<span class="number">-2</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">print(fib(<span class="number">5</span>))</span><br></pre></td></tr></table></figure>
+<p>类wrapr 可以增加参数，相比函数装饰器，类装饰器具有更加灵活，封装性更好等优点~</p>
+<h2 id="wraper-带来的问题"><a href="#wraper-带来的问题" class="headerlink" title="wraper 带来的问题"></a>wraper 带来的问题</h2><ol>
+<li>改变原来的函数属性，例如函数名， 因为装饰器用新函数替换了原来的旧函数。 所以新函&gt;数少了旧函数的属性<br>解决办法</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> functools</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">advertising</span><span class="params">(func)</span>:</span></span><br><span class="line"><span class="meta">    @functools.wraps(func)</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">wrapper</span><span class="params">(*args)</span>:</span></span><br><span class="line">        print(<span class="string">'欢迎关注微信公众号: Charles的皮卡丘'</span>)</span><br><span class="line">        <span class="keyword">return</span> func(*args)</span><br><span class="line">    <span class="keyword">return</span> wrapper</span><br><span class="line"></span><br><span class="line"><span class="meta">@advertising</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">add_1</span><span class="params">(a, b)</span>:</span></span><br><span class="line">    <span class="string">'''加法运算'''</span></span><br><span class="line">    <span class="keyword">return</span> a + b</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>获取参数</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> inspect</span><br><span class="line"><span class="keyword">import</span> functools</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">check</span><span class="params">(func)</span>:</span></span><br><span class="line">    a = <span class="number">0</span></span><br><span class="line"><span class="meta">    @functools.wraps(func)</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">wraper</span><span class="params">(*args, **kwargs)</span>:</span></span><br><span class="line">        a += <span class="number">1</span></span><br><span class="line">        print(a)</span><br><span class="line">        <span class="comment"># 在wraper里检查参数</span></span><br><span class="line">        getcallargs = inspect.getcallargs(func, *args, **kwargs)</span><br><span class="line">        <span class="keyword">if</span> getcallargs.get(<span class="string">'divisor'</span>) &lt;= <span class="number">1e-6</span> <span class="keyword">and</span> getcallargs.get(<span class="string">'divisor'</span>) &gt;= <span class="number">-1e-6</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">        <span class="keyword">return</span> func(*args, **kwargs)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> wraper</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@check</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">dowork</span><span class="params">(arg1, arg2)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> arg1 + arg2</span><br><span class="line"></span><br><span class="line">dowork(<span class="number">1</span>,<span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+
+<p>此时会报错，a在赋值之前引用了。 需要将a声明为 <code>nonlocal</code></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://energygreek.github.io/2020/08/11/python-wraper/" data-id="clsbmbv4a003lbwopd40qgx8o" data-title="python wraper" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/" rel="tag">python</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-entrypointandcmdindockerfile" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/08/10/entrypointandcmdindockerfile/" class="article-date">
+  <time class="dt-published" datetime="2020-08-10T07:27:21.000Z" itemprop="datePublished">2020-08-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/08/10/entrypointandcmdindockerfile/">Dockerfile 中的ENTRYPOINT和CMD的区别</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h1><p>Dockerfile 中，ENTRYPOINT和CMD来都可以用来设置默认命令，而代替<code>docker run</code>时的命令，也可以一起使用  </p>
+<p>单独使用ENTRYPOINT或CMD时，其区别在于对<code>docker run</code>的参数处理:<br>CMD的命令会被<code>docker run</code>的参数覆盖，而ENTRYPOINT是追加</p>
+<p>例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># image1</span><br><span class="line">FROM ubuntu</span><br><span class="line">ENTRYPOINT [&quot;echo&quot;, &quot;hello world&quot;]</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># image2</span><br><span class="line">FROM ubuntu</span><br><span class="line">CMD [&quot;echo&quot;, &quot;hello world&quot;]</span><br></pre></td></tr></table></figure>
+
+<p>执行结果</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># docker run image1</span><br><span class="line">hello world</span><br><span class="line"></span><br><span class="line"># docker run image1 hostname</span><br><span class="line">0c33ff9af81c</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># docker run image2</span><br><span class="line">hello world</span><br><span class="line"></span><br><span class="line"># docker run image2 hostname</span><br><span class="line">hello world 0c33ff9af81c</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="实际情况多是entrypoint与cmd组合使用"><a href="#实际情况多是entrypoint与cmd组合使用" class="headerlink" title="实际情况多是entrypoint与cmd组合使用"></a>实际情况多是entrypoint与cmd组合使用</h2><p>cmd 为entrypoint 提供默认参数， 即如果’docker run’给了参数时，覆盖CMD参数，否则使用CMD提供的参数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">FROM ubuntu</span><br><span class="line">ENTRYPOINT [&quot;top&quot;, &quot;-b&quot;]</span><br><span class="line">CMD [&quot;-c&quot;]</span><br></pre></td></tr></table></figure>
+
+<h2 id="首先说cmd和entrypoint-都有两种模式"><a href="#首先说cmd和entrypoint-都有两种模式" class="headerlink" title="首先说cmd和entrypoint 都有两种模式"></a>首先说cmd和entrypoint 都有两种模式</h2><ol>
+<li>shell模式， 即没有用数组来传递参数, 直接接命令如 CMD top -p 或者 entrypoint top -p </li>
+<li>exec 模式， 即使用数组表示如 CMD [“top”, “-p”]， 注意必须用双引号，因为这个是用json来传递的</li>
+</ol>
+<p>两者区别:<br>shell模式不会接受命令行参数，而且1号进程是sh，而非如上的top。 这样的话top不能接受到<code>docker stop container</code>时的信号。<br>而一般我们写的程序都是捕捉SIGTERM来进行peaceful exit，那么就一定不能使用shell模式</p>
+<p>exec模式时， 可以接受docker run image param， 这个param会传递给top作为参数。 而且top 是1号进程，能接收信号。</p>
+<p>细微区别： 由于shell模式是先启动sh， 符号解析由shell执行，例如<code>$HOME</code>的展开由shell进行， 而用exec模式时，由docker 进行</p>
+<p>总之，推荐使用exec 模式</p>
+<h2 id="额外话-减小镜像体积"><a href="#额外话-减小镜像体积" class="headerlink" title="额外话, 减小镜像体积"></a>额外话, 减小镜像体积</h2><p>使用’&#39; 或者 ‘&amp;&amp;’ 将命令连起来可以减小镜像层数，从而减小体积。另外build时，单独一行的命令会在新的layer 层执行。有些命令产生的cache，会持续影响到下一层<br>例如<code>RUN apt-get dist-upgrade -y</code>，如果不想保留cache，需要在build时加入参数<code>docker build --no-cache.</code> </p>
+<p>还有最有效减小镜像体积的方式，也常见的是最后用空白镜像，’FROM SCRATCH’, 这样把其他的层都干掉了, 只保留一层镜像</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://energygreek.github.io/2020/08/10/entrypointandcmdindockerfile/" data-id="clsbmbv3l002ebwop4dr4dwdf" data-title="Dockerfile 中的ENTRYPOINT和CMD的区别" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/" rel="tag">docker</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-create-loop-block" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/08/05/create-loop-block/" class="article-date">
+  <time class="dt-published" datetime="2020-08-05T05:59:43.000Z" itemprop="datePublished">2020-08-05</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/08/05/create-loop-block/">create_loop_block</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="问题，-如果在文件系统之上再创一个文件系统？"><a href="#问题，-如果在文件系统之上再创一个文件系统？" class="headerlink" title="问题， 如果在文件系统之上再创一个文件系统？"></a>问题， 如果在文件系统之上再创一个文件系统？</h1><p>例如在ext3的文件系统上创建一个xfs的文件系统，可以通过回环设备loop， 我们经常通过 <code>mount -o loop</code> 来 mount一个iso文件<br>但mount 的选项总是ro的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mount: &#x2F;mnt: WARNING: device write-protected, mounted read-only.</span><br></pre></td></tr></table></figure>
+
+
+<p>不仅如此， 先在当前文件系统dd出一个文件， 再绑定到loop设备上，然后mount 到某个目录后， 可以进行<code>读写</code>访问</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">[root@ha1 ~]# dd if&#x3D;&#x2F;dev&#x2F;urandom of&#x3D;file bs&#x3D;1M count&#x3D;2</span><br><span class="line">2+0 records in</span><br><span class="line">2+0 records out</span><br><span class="line">2097152 bytes (2.1 MB, 2.0 MiB) copied, 0.0164121 s, 128 MB&#x2F;s</span><br><span class="line"></span><br><span class="line">[root@ha1 ~]# mkfs.ext3  file </span><br><span class="line">mke2fs 1.44.6 (5-Mar-2019)</span><br><span class="line">Discarding device blocks: done                            </span><br><span class="line">Creating filesystem with 2048 1k blocks and 256 inodes</span><br><span class="line"></span><br><span class="line">Allocating group tables: done                            </span><br><span class="line">Writing inode tables: done                            </span><br><span class="line">Creating journal (1024 blocks): done</span><br><span class="line">Writing superblocks and filesystem accounting information: done</span><br><span class="line"></span><br><span class="line">[root@ha1 ~]# mount -o loop file  &#x2F;mnt</span><br><span class="line">[root@ha1 ~]# ls &#x2F;mnt&#x2F;</span><br><span class="line">lost+found</span><br><span class="line"></span><br><span class="line">[root@ha1 mnt]# echo abc &gt; abc</span><br><span class="line">[root@ha1 mnt]# ls</span><br><span class="line">abc  lost+found</span><br></pre></td></tr></table></figure>
+<p>绑定loop设备和挂载是由mount 一个命令完成的。</p>
+<h2 id="手动绑定loop"><a href="#手动绑定loop" class="headerlink" title="手动绑定loop"></a>手动绑定loop</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@ha1 ~]# losetup -f</span><br><span class="line">&#x2F;dev&#x2F;loop1</span><br><span class="line"></span><br><span class="line">[root@ha1 ~]# losetup -f file</span><br></pre></td></tr></table></figure>
+<p>这样只是将文件绑定了loop设备，需要再挂载到文件目录<code>mount /dev/loop0 /mnt</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@ha1 ~]# ls &#x2F;mnt&#x2F;</span><br><span class="line">abc  lost+found</span><br><span class="line">[root@ha1 ~]#</span><br></pre></td></tr></table></figure>
+
+<p>losetup -f 可以返回第一个未被使用的loop设备名</p>
+<h2 id="创建loop设备"><a href="#创建loop设备" class="headerlink" title="创建loop设备"></a>创建loop设备</h2><p>有的系统默认创建了 loop0 .. loop7 的块设备，有的则是在需要的时候创建，比如mount iso的时候发现没有loop设备，则会创建</p>
+<ol>
+<li>手动创建loop设备通过 <code>mknode</code> 创建</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mknode  &#x2F;dev&#x2F;loop0 b 7 0</span><br><span class="line">mknode  &#x2F;dev&#x2F;loop1 b 7 0</span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">mknode &#x2F;dev&#x2F;loop7 b 7 0</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>如果8个loop0 .. loop8 设备都占用了， 可以再创建loop8</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$sudo mknod &#x2F;dev&#x2F;loop8 b 7 8 </span><br><span class="line"></span><br><span class="line">$ls -l &#x2F;dev&#x2F;loop8</span><br><span class="line">brw-r--r-- 1 root root 7, 8 Jun 11 19:16 &#x2F;dev&#x2F;loop8</span><br></pre></td></tr></table></figure>
+<p>ps： /dev/loop* 是块设备</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://energygreek.github.io/2020/08/05/create-loop-block/" data-id="clsbmbv3f0021bwop15gj5t99" data-title="create_loop_block" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/filesystem/" rel="tag">filesystem</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-bash-safe" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/08/03/bash-safe/" class="article-date">
+  <time class="dt-published" datetime="2020-08-03T11:13:16.000Z" itemprop="datePublished">2020-08-03</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/08/03/bash-safe/">bash-safe</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="bash-脚本安全"><a href="#bash-脚本安全" class="headerlink" title="bash 脚本安全"></a>bash 脚本安全</h1><p>不管是大厂还是小厂，总能听到一些误操作新闻<br>那避免误操作就办法就是写脚本， 然后也有很多脚本出事的新闻, 通常有以下</p>
+<h2 id="引用了不存在的变量"><a href="#引用了不存在的变量" class="headerlink" title="引用了不存在的变量"></a>引用了不存在的变量</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line">ABC_PATH=abc</span><br><span class="line"></span><br><span class="line">/bin/rm <span class="variable">$&#123;ABC_PATH&#125;</span>/</span><br></pre></td></tr></table></figure>
+
+<p>如果ABC_PATH变量被unset了， 那么就是删除系统了<br>不过听说<code>/bin/rm /</code> 的操作会可能被系统禁止， 但是<code>/bin/rm /*</code>则肯定能执行成功</p>
+<h2 id="脚本没有输出"><a href="#脚本没有输出" class="headerlink" title="脚本没有输出"></a>脚本没有输出</h2><p>有很多公司用堡垒机来审计操作记录， 但是如果脚本没有输出，那么就不知道执行了什么命令， 再如果脚本也被删除死无对证，那就无法分析了</p>
+<h2 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h2><h3 id="在bash-脚本前面加上-set-xeu"><a href="#在bash-脚本前面加上-set-xeu" class="headerlink" title="在bash 脚本前面加上   set -xeu"></a>在bash 脚本前面加上   <code>set -xeu</code></h3><p>-x 调试模式，bash会输出所有命令<br>-e 遇到错误就退出<br>-u 引用了不存在的变量就退出</p>
+<h3 id="添加默认值"><a href="#添加默认值" class="headerlink" title="添加默认值"></a>添加默认值</h3><p>path=${ABC_PATH-/} #default /</p>
+<p>这样，当ABC_PATH不存在时，就使用默认值’/‘</p>
+<h2 id="最好的办法"><a href="#最好的办法" class="headerlink" title="最好的办法"></a>最好的办法</h2><p>使用ansible， 可以对脚本进行版本管理和review， 可以避免脚本难以维护的问题<br>使用ide + bash 插件， 可以有提示</p>
+<h2 id="良好的脚本习惯"><a href="#良好的脚本习惯" class="headerlink" title="良好的脚本习惯"></a>良好的脚本习惯</h2><p>除了在脚本前面加上 <code>set -xeu</code>外， 有一些建议 </p>
+<ol>
+<li>多用<code>&amp;&amp;</code>,<code>||</code> ，少用 <code>;</code> ，如果前面的命令出错，后面就不会执行， 而<code>;</code> 不管  </li>
+<li>善用 date， 例如将日志文件加上日期 <code>bash test.sh &gt; log_</code>date +%m_%d_%H_%M_%S``  </li>
+<li>脚本放在指定目录，不要与工作目录放在一起， 避免脚本自己被删， 死无对证</li>
+<li>定期备份</li>
+</ol>
+<h1 id="bash-的条件判断"><a href="#bash-的条件判断" class="headerlink" title="bash 的条件判断"></a>bash 的条件判断</h1><p>有以下脚本,当TMP 不为空的时候，才进行判断值是否大于2</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">if [ -n &quot;$TMP&quot; -a $&#123;TMP&#125; -gt 2 ];then</span><br><span class="line">        echo &quot;aaaa&quot;</span><br><span class="line">else</span><br><span class="line">        echo &quot;bbbbbbbb&quot;</span><br><span class="line">fi</span><br><span class="line">&#96;&#96;&#96; </span><br><span class="line"></span><br><span class="line">而当TMP 为空的时候，就会出现 &#96;too many arguement&#96;。这就说明了bash的执行流程，是先进行整行替换再执行（起码是整行，也许还是全文替换）。</span><br><span class="line">替换后&#96;[-n &quot;&quot; -a -gt 2]&#96;。导致了报错。</span><br><span class="line">解决这样的问题可以用默认值 TMP&#x3D;$&#123;TMP:&#x3D;2&#125;, 这样当TMP为空的时候就会自动赋值为2</span><br></pre></td></tr></table></figure>
+<p>if [ -n “$TMP” -a ${TMP:=2} -gt 2 ];then<br>        echo “aaaa”<br>else<br>        echo “bbbbbbbb”<br>fi</p>
+<pre><code></code></pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://energygreek.github.io/2020/08/03/bash-safe/" data-id="clsbmbv37001nbwopdxncd7iw" data-title="bash-safe" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/bash/" rel="tag">bash</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/safe/" rel="tag">safe</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-register" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/08/03/register/" class="article-date">
+  <time class="dt-published" datetime="2020-08-03T05:39:58.000Z" itemprop="datePublished">2020-08-03</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/08/03/register/">register</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="register-关键字"><a href="#register-关键字" class="headerlink" title="register 关键字"></a>register 关键字</h1><p>register 关键字是c/c++ 里面唯一能操作寄存器的指令，强制将数据存放在寄存器里，而不是放在堆栈里，这样读写速度最快。</p>
+<p>而汇编语言强大之处是能直接操作寄存器，且可以指定使用哪些寄存器。 </p>
+<p>通过汇编一段代码来演示register的作用  </p>
+<p>先是c语言代码</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">register</span> <span class="keyword">int</span> i;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span>(i = <span class="number">0</span> ;i&lt;<span class="number">10</span>;i++)&#123;</span><br><span class="line">		<span class="keyword">int</span> j = i;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>对应的汇编</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">main:</span><br><span class="line">.LFB0:</span><br><span class="line">        .cfi_startproc</span><br><span class="line">        pushq   %rbp</span><br><span class="line">        .cfi_def_cfa_offset 16</span><br><span class="line">        .cfi_offset 6, -16</span><br><span class="line">        movq    %rsp, %rbp</span><br><span class="line">        .cfi_def_cfa_register 6</span><br><span class="line">        pushq   %rbx</span><br><span class="line">        .cfi_offset 3, -24</span><br><span class="line">        movl    $0, %ebx</span><br><span class="line">        jmp     .L2</span><br><span class="line">.L3:</span><br><span class="line">        movl    %ebx, -12(%rbp)</span><br><span class="line">        addl    $1, %ebx</span><br><span class="line">.L2:</span><br><span class="line">        cmpl    $9, %ebx</span><br><span class="line">        jle     .L3</span><br><span class="line">        movl    $0, %eax</span><br><span class="line">        movq    -8(%rbp), %rbx</span><br><span class="line">        leave</span><br><span class="line">        .cfi_def_cfa 7, 8</span><br><span class="line">        ret</span><br></pre></td></tr></table></figure>
+
+<p>没有register关键字的时候 </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">int</span> i;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span>(i = <span class="number">0</span> ;i&lt;<span class="number">10</span>;i++)&#123;</span><br><span class="line">		<span class="keyword">int</span> j = i;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">main:</span><br><span class="line">.LFB0:</span><br><span class="line">	.cfi_startproc</span><br><span class="line">	pushq	%rbp</span><br><span class="line">	.cfi_def_cfa_offset 16</span><br><span class="line">	.cfi_offset 6, -16</span><br><span class="line">	movq	%rsp, %rbp</span><br><span class="line">	.cfi_def_cfa_register 6</span><br><span class="line">	movl	$0, -8(%rbp)</span><br><span class="line">	jmp	.L2</span><br><span class="line">.L3:</span><br><span class="line">	movl	-8(%rbp), %eax</span><br><span class="line">	movl	%eax, -4(%rbp)</span><br><span class="line">	addl	$1, -8(%rbp)</span><br><span class="line">.L2:</span><br><span class="line">	cmpl	$9, -8(%rbp)</span><br><span class="line">	jle	.L3</span><br><span class="line">	movl	$0, %eax</span><br><span class="line">	popq	%rbp</span><br><span class="line">	.cfi_def_cfa 7, 8</span><br><span class="line">	ret</span><br></pre></td></tr></table></figure>
+
+<p>可见，当register修饰int i时， i的值存放在%ebx里，当没有register修饰时，i的值放在栈里<code>%rbp -8</code>的位置<br><code>movl    %ebx, -12(%rbp)</code> 可见当register时， j的值复用了ebx的高32位。 此时的内存如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">--- 栈底</span><br><span class="line">旧的rbp 64位</span><br><span class="line">---</span><br><span class="line">旧的rbx 高32位</span><br><span class="line">---  j</span><br><span class="line">旧的rbx 低32位</span><br><span class="line">---栈顶</span><br></pre></td></tr></table></figure>
+
+<p>rbp表示基地址指针，指向的是函数栈的起始地址，这个起始地址只是对于当前函数而言的<br>rsp表示栈顶指针，指向当前的栈顶<br>每次函数调用时(main 函数被内核<code>_start_main__</code>调用):</p>
+<ol>
+<li>将调用者的函数栈基地址保存起来   </li>
+<li>参数压栈, 可能由调用者压栈，可能由被调用者压栈，影响的是当前的栈顶，继而栈顶影响rbp</li>
+<li>将被调用函数当前的栈顶复制给基地址寄存器。新的rbp == rsp即当前的栈顶。相当于构造了新的函数运行环境</li>
+</ol>
+<p>附录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">General-Purpose Registers</span><br><span class="line"></span><br><span class="line">The 64-bit versions of the &#39;original&#39; x86 registers are named:</span><br><span class="line"></span><br><span class="line">    rax - register a extended</span><br><span class="line">    rbx - register b extended</span><br><span class="line">    rcx - register c extended</span><br><span class="line">    rdx - register d extended</span><br><span class="line">    rbp - register base pointer (start of stack)</span><br><span class="line">    rsp - register stack pointer (current location in stack, growing downwards)</span><br><span class="line">    rsi - register source index (source for data copies)</span><br><span class="line">    rdi - register destination index (destination for data copies)</span><br><span class="line"></span><br><span class="line">The registers added for 64-bit mode are named:</span><br><span class="line"></span><br><span class="line">    r8 - register 8</span><br><span class="line">    r9 - register 9</span><br><span class="line">    r10 - register 10</span><br><span class="line">    r11 - register 11</span><br><span class="line">    r12 - register 12</span><br><span class="line">    r13 - register 13</span><br><span class="line">    r14 - register 14</span><br><span class="line">    r15 - register 15</span><br><span class="line"></span><br><span class="line">These may be accessed as:</span><br><span class="line"></span><br><span class="line">    64-bit registers using the &#39;r&#39; prefix: rax, r15</span><br><span class="line">    32-bit registers using the &#39;e&#39; prefix (original registers: e_x) or &#39;d&#39; suffix (added registers: r__d): eax, r15d</span><br><span class="line">    16-bit registers using no prefix (original registers: _x) or a &#39;w&#39; suffix (added registers: r__w): ax, r15w</span><br><span class="line">    8-bit registers using &#39;h&#39; (&quot;high byte&quot; of 16 bits) suffix (original registers - bits 8-15: _h): ah, bh</span><br><span class="line">    8-bit registers using &#39;l&#39; (&quot;low byte&quot; of 16 bits) suffix (original registers - bits 0-7: _l) or &#39;b&#39; suffix (added registers: r__b): al, bl, r15b</span><br><span class="line"></span><br><span class="line">Usage during syscall&#x2F;function call:</span><br><span class="line"></span><br><span class="line">    First six arguments are in rdi, rsi, rdx, rcx, r8d, r9d; remaining arguments are on the stack.</span><br><span class="line">    For syscalls, the syscall number is in rax.</span><br><span class="line">    Return value is in rax.</span><br><span class="line">    The called routine is expected to preserve rsp,rbp, rbx, r12, r13, r14, and r15 but may trample any other registers.</span><br></pre></td></tr></table></figure>
+
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://energygreek.github.io/2020/08/03/register/" data-id="clsbmbv4e003vbwopal4b38qc" data-title="register" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c-c/" rel="tag">c/c++</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-pessimistic-lock-optimistic-lock" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/07/28/pessimistic-lock-optimistic-lock/" class="article-date">
+  <time class="dt-published" datetime="2020-07-28T10:10:31.000Z" itemprop="datePublished">2020-07-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/07/28/pessimistic-lock-optimistic-lock/">pessimistic_lock_optimistic_lock</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="乐观锁悲观锁"><a href="#乐观锁悲观锁" class="headerlink" title="乐观锁悲观锁"></a>乐观锁悲观锁</h1><p>先说这两种锁都不是编程里面用到的锁， 而是一种策略。 在数据库中用的多。<br>而且在java里面有个原子bool AtomicBoolean 的实现也用到乐观锁的策略， <code>AtomicBoolean::compareandswap</code> </p>
+<p>这里以数据库管理服务（DBMS）来说明这两种锁的区别，在并发的情况下</p>
+<h2 id="悲观锁"><a href="#悲观锁" class="headerlink" title="悲观锁"></a>悲观锁</h2><p>悲观锁策略预期是多个请求会操作同一个数据，导致数据不可靠。 悲观锁的策略就是上锁，不让其它请求修改， 即排他锁。</p>
+<p>这种排他锁与我们平常编程用的互斥锁道理相同， 是性能比较低的一种锁，但能保证数据准确。</p>
+<h2 id="乐观锁"><a href="#乐观锁" class="headerlink" title="乐观锁"></a>乐观锁</h2><p>乐观锁实际是不上锁， 预期多个请求不会修改同一分数据。而是在最后提交的时候再去确认数据是否一致，如果一致则提交，如果不一致则报错，需要认为干涉</p>
+<p>所以乐观锁的数据也是可靠的， 且性能较好。 这里关键是如何确认数据一致  </p>
+<h2 id="乐观锁的确认并提交"><a href="#乐观锁的确认并提交" class="headerlink" title="乐观锁的确认并提交"></a>乐观锁的确认并提交</h2><p>这里举例sql的来说明 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">select quanity from items where id &#x3D;1;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;得到quanity&#x3D;3，然后更新</span><br><span class="line"></span><br><span class="line">update items set quantity&#x3D;2 where id&#x3D;2 and quantity&#x3D;3</span><br></pre></td></tr></table></figure>
+<p>更新时，会确认quantity为预期的3，否则不执行或者报错。</p>
+<p>这样有个问题， 虽然单条语句是原子的，但是两条语句不是， 会出现ABA的情况</p>
+<p>例如当一个请求1执行到select后，得知<code>quantity=3</code>， 然后请求2先更新quantity=2，然后又更新为quantity=3<br>然后请求1继续执行update，这会成功，虽然quantity=3是一致的，但是不能保证其它数据是一致的或者完全没有引起安全问题</p>
+<p>因此另一种办法是判断只增version或者timestamp，每次请求时去更新。这两种办法都能确保数据一致。<br>但是因为数据库同时只允许一个请求修改version，那么就出现了竞争情况，会导致其它请求失败</p>
+<p>例如多个请求同时记录了version=1, 则当一个请求完成的时候，version=2， 那么其它请求提交时发现verison变了，只能报告失败<br>虽然这样能保证数据正确，但是会导致其它请求失败</p>
+<p>而电商平台中， 则采用另一种方式确认</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">select quanity from items where id &#x3D;1;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;得到quanity&#x3D;3，然后更新</span><br><span class="line"></span><br><span class="line">update items set quantity&#x3D;2 where id&#x3D;2 and quantity &gt; 0</span><br></pre></td></tr></table></figure>
+
+<p>这样就规避了上面两个方法的缺点</p>
+<h2 id="compareandswap"><a href="#compareandswap" class="headerlink" title="compareandswap"></a>compareandswap</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">compareAndSet(expect_val, new_val)</span><br></pre></td></tr></table></figure>
+
+<p>上面的乐观锁就是compareandswap的解释：</p>
+<p>先对比，如果一致则更新</p>
+<p>再说一下java的实现,</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">UNSAFE_ENTRY(jboolean, Unsafe_CompareAndSwapInt(JNIEnv *env, jobject unsafe, jobject obj, jlong offset, jint e, jint x))  </span><br><span class="line">  UnsafeWrapper(&quot;Unsafe_CompareAndSwapInt&quot;);  </span><br><span class="line">  oop p &#x3D; JNIHandles::resolve(obj);  </span><br><span class="line">  jint* addr &#x3D; (jint *) index_oop_from_field_offset_long(p, offset);  </span><br><span class="line">  return (jint)(Atomic::cmpxchg(x, addr, e)) &#x3D;&#x3D; e;  </span><br><span class="line">UNSAFE_END</span><br></pre></td></tr></table></figure>
+
+<p>在unsafe.cpp 找到实现如下</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> LOCK_IF_MP(mp) __asm cmp mp, 0 \</span></span><br><span class="line">__asm je L0 \</span><br><span class="line">__asm _emit <span class="number">0xF0</span> \</span><br><span class="line">__asm L0:</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> mp = os::is_MP();</span><br><span class="line">__asm &#123;</span><br><span class="line">mov edx, dest</span><br><span class="line">mov ecx, exchange_value</span><br><span class="line">mov eax, compare_value</span><br><span class="line">LOCK_IF_MP(mp)</span><br><span class="line">cmpxchg dword ptr [edx], ecx</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>_emit 是用于生成指令的， 生成锁的指令，有cpu提供锁机制<br>从上下文看， 这个指令应该是上锁， 如果mp != 0 则上锁。 </p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://energygreek.github.io/2020/07/28/pessimistic-lock-optimistic-lock/" data-id="clsbmbv47003fbwopcictegqj" data-title="pessimistic_lock_optimistic_lock" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/lock/" rel="tag">lock</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/program/" rel="tag">program</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-nginx-fails-to-connect-to-unix-socket" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/07/25/nginx-fails-to-connect-to-unix-socket/" class="article-date">
+  <time class="dt-published" datetime="2020-07-25T09:23:26.000Z" itemprop="datePublished">2020-07-25</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/07/25/nginx-fails-to-connect-to-unix-socket/">nginx fails to connect to unix socket</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="记录在部署一个nginx-fastcgi-项目时失败，-fastcgi-通过unix-socket-通讯"><a href="#记录在部署一个nginx-fastcgi-项目时失败，-fastcgi-通过unix-socket-通讯" class="headerlink" title="记录在部署一个nginx fastcgi 项目时失败， fastcgi 通过unix socket 通讯"></a>记录在部署一个nginx fastcgi 项目时失败， fastcgi 通过unix socket 通讯</h1><p>这是一个flask 项目， 使用flup创建的fastcgi</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="keyword">from</span> flup.server.fcgi <span class="keyword">import</span> WSGIServer</span><br><span class="line"><span class="keyword">from</span> main <span class="keyword">import</span> app</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    <span class="comment"># for apache</span></span><br><span class="line">    <span class="comment"># WSGIServer(app).run()</span></span><br><span class="line">    <span class="comment"># for nginx, need to set conmunication sock between nginx and the cgiserver</span></span><br><span class="line">    WSGIServer(app, bindAddress=<span class="string">'/tmp/myflask-fcgi.sock'</span>).run()</span><br></pre></td></tr></table></figure>
+
+<p>这里直接说明结果， socket 文件不能创建在/tmp/ 或者 /vat/tmp 目录。</p>
+<p>nginx 错误配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">    location &#x2F; &#123; try_files $uri @myflask; &#125;</span><br><span class="line">    location @myflask &#123;</span><br><span class="line">        include fastcgi_params;</span><br><span class="line">        fastcgi_param PATH_INFO $fastcgi_script_name;</span><br><span class="line">        fastcgi_param SCRIPT_NAME &quot;&quot;;</span><br><span class="line">        fastcgi_pass unix:&#x2F;tmp&#x2F;fcgi.sock;</span><br><span class="line">    &#125;</span><br><span class="line">&#96;&#96;&#96;	</span><br><span class="line"></span><br><span class="line">nginx 错误提示</span><br></pre></td></tr></table></figure>
+<p> connect() to unix:/tmp/fcgi.sock failed (2: No such file or directory) while connecting to upstream</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">## 原因</span><br><span class="line"></span><br><span class="line">如果socket创建在&#x2F;tmp 或者 &#x2F;var&#x2F;tmp 目录， 只能被socket的进程发现。 意思是只有cgi程序能发现，所以nginx 无法连接了</span><br><span class="line"></span><br><span class="line">正确配置是创建到&#x2F;var&#x2F;sockets 目录，并注意权限问题</span><br></pre></td></tr></table></figure>
+<pre><code>location / { try_files $uri @myflask; }
+location @myflask {
+    include fastcgi_params;
+    fastcgi_param PATH_INFO $fastcgi_script_name;
+    fastcgi_param SCRIPT_NAME &quot;&quot;;
+    fastcgi_pass unix:/var/sockets/myflask-fcgi.sock;
+}</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">## 关于unix socket</span><br><span class="line"></span><br><span class="line">以上是一种解决办法，当然使用ip来连接nginx和cgi也是可以的，但是unix socket 有不少好处。 </span><br><span class="line"></span><br><span class="line">## 关于cgi</span><br><span class="line"></span><br><span class="line">上面无论使用unix socket 还是 ip 来访问cgi， 这两种方式都是通过cgi来提供web服务。  </span><br><span class="line">而nginx 不支持cgi， 所以需要自己来通过python的 flup 来实现fastcgi。 nginx 只不过是一个代理的作用。而apache和tomcat 都能支持cgi</span><br></pre></td></tr></table></figure>
+<p>cgi 的定义是 common gateway interface， 是一个协议。 fastcgi，uwcgi都是升级版或者变种。<br>flup实现了cgi的服务程序，也就是可以用来解析脚本（python php 等等），提供web服务。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">另外除了以上方式， nginx也可以使用pypass proxy 来转发请求，由应用自己来实现网络处理。</span><br></pre></td></tr></table></figure>
+<p>location / {<br>        proxy_pass <a href="https://localhost:8080" target="_blank" rel="noopener">https://localhost:8080</a><br>        proxy_set_header Host            $host;<br>        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;<br>        proxy_set_header X-Real-IP       $remote_addr;<br>        proxy_set_header X-Scheme        $scheme;<br>        access_log /var/log/nginx/access.log my_tracking;<br>    }</p>
+<pre><code>
+如过是python 就需要监听某个端口，这种是不稳定的。 不适合生产模式下使用。 </code></pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://energygreek.github.io/2020/07/25/nginx-fails-to-connect-to-unix-socket/" data-id="clsbmbv45003bbwop5rq5h676" data-title="nginx fails to connect to unix socket" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/flask/" rel="tag">flask</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webserver/" rel="tag">webserver</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <a class="extend prev" rel="prev" href="/page/5/">&laquo; 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/7/">下一页 &raquo;</a>
+  </nav>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/51%E5%8D%95%E7%89%87%E6%9C%BA/" rel="tag">51单片机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DP/" rel="tag">DP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aarch64/" rel="tag">aarch64</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/admin/" rel="tag">admin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/" rel="tag">algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algoritm/" rel="tag">algoritm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bash/" rel="tag">bash</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/basics/" rel="tag">basics</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/" rel="tag">c++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c-c/" rel="tag">c/c++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cmake/" rel="tag">cmake</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dns/" rel="tag">dns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/email-client/" rel="tag">email_client</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/exam/" rel="tag">exam</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/exception-safe/" rel="tag">exception-safe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ffmpeg/" rel="tag">ffmpeg</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/filesystem/" rel="tag">filesystem</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flask/" rel="tag">flask</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gdb/" rel="tag">gdb</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/" rel="tag">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/grpc/" rel="tag">grpc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/grub/" rel="tag">grub</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hawei/" rel="tag">hawei</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/heapsort/" rel="tag">heapsort</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/" rel="tag">k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linkage/" rel="tag">linkage</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux%E5%9F%BA%E7%A1%80/" rel="tag">linux基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lock/" rel="tag">lock</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lvm/" rel="tag">lvm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maintance/" rel="tag">maintance</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/malloc/" rel="tag">malloc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mdns/" rel="tag">mdns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memory/" rel="tag">memory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mutex/" rel="tag">mutex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mutt/" rel="tag">mutt</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/namespace/" rel="tag">namespace</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/network/" rel="tag">network</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/os-maintain/" rel="tag">os-maintain</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/printer/" rel="tag">printer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/program/" rel="tag">program</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rancher-k8s/" rel="tag">rancher,k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rhce/" rel="tag">rhce</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rtp/" rel="tag">rtp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/safe/" rel="tag">safe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scope/" rel="tag">scope</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/seralize/" rel="tag">seralize</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shared-ptr/" rel="tag">shared_ptr</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/socket/" rel="tag">socket</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/socketopt/" rel="tag">socketopt</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sql/" rel="tag">sql</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/storageduration/" rel="tag">storageduration</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sysemd/" rel="tag">sysemd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/template-programing/" rel="tag">template programing</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/terminal/" rel="tag">terminal</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tool/" rel="tag">tool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/udp/" rel="tag">udp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/unique-ptr/" rel="tag">unique_ptr</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/unit-test/" rel="tag">unit test</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/urxvt/" rel="tag">urxvt</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webcrawler/" rel="tag">webcrawler</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webserver/" rel="tag">webserver</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/weechat/" rel="tag">weechat</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/wordpress/" rel="tag">wordpress</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" rel="tag">二叉树</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E6%A0%B8%E5%8E%9F%E7%90%86/" rel="tag">内核原理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%B7%E6%9C%BA%E6%95%99%E7%A8%8B/" rel="tag">刷机教程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" rel="tag">包管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9F%A5%E6%89%BE/" rel="tag">查找</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/" rel="tag">系统调用</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E8%AF%91/" rel="tag">编译</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%B0%83%E4%BC%98/" rel="tag">调优</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9F%B3%E8%A7%86%E9%A2%91/" rel="tag">音视频</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/51%E5%8D%95%E7%89%87%E6%9C%BA/" style="font-size: 10px;">51单片机</a> <a href="/tags/DP/" style="font-size: 10px;">DP</a> <a href="/tags/Linux/" style="font-size: 10px;">Linux</a> <a href="/tags/aarch64/" style="font-size: 10px;">aarch64</a> <a href="/tags/admin/" style="font-size: 10px;">admin</a> <a href="/tags/algorithm/" style="font-size: 16px;">algorithm</a> <a href="/tags/algoritm/" style="font-size: 10px;">algoritm</a> <a href="/tags/android/" style="font-size: 10px;">android</a> <a href="/tags/bash/" style="font-size: 10px;">bash</a> <a href="/tags/basics/" style="font-size: 10px;">basics</a> <a href="/tags/c/" style="font-size: 12px;">c++</a> <a href="/tags/c-c/" style="font-size: 20px;">c/c++</a> <a href="/tags/cmake/" style="font-size: 10px;">cmake</a> <a href="/tags/dns/" style="font-size: 10px;">dns</a> <a href="/tags/docker/" style="font-size: 18px;">docker</a> <a href="/tags/email-client/" style="font-size: 10px;">email_client</a> <a href="/tags/exam/" style="font-size: 10px;">exam</a> <a href="/tags/exception-safe/" style="font-size: 10px;">exception-safe</a> <a href="/tags/ffmpeg/" style="font-size: 10px;">ffmpeg</a> <a href="/tags/filesystem/" style="font-size: 14px;">filesystem</a> <a href="/tags/flask/" style="font-size: 10px;">flask</a> <a href="/tags/gdb/" style="font-size: 10px;">gdb</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/grpc/" style="font-size: 10px;">grpc</a> <a href="/tags/grub/" style="font-size: 10px;">grub</a> <a href="/tags/hawei/" style="font-size: 10px;">hawei</a> <a href="/tags/heapsort/" style="font-size: 10px;">heapsort</a> <a href="/tags/k8s/" style="font-size: 10px;">k8s</a> <a href="/tags/linkage/" style="font-size: 10px;">linkage</a> <a href="/tags/linux/" style="font-size: 14px;">linux</a> <a href="/tags/linux%E5%9F%BA%E7%A1%80/" style="font-size: 10px;">linux基础</a> <a href="/tags/lock/" style="font-size: 10px;">lock</a> <a href="/tags/lvm/" style="font-size: 10px;">lvm</a> <a href="/tags/maintance/" style="font-size: 10px;">maintance</a> <a href="/tags/malloc/" style="font-size: 10px;">malloc</a> <a href="/tags/mdns/" style="font-size: 10px;">mdns</a> <a href="/tags/memory/" style="font-size: 12px;">memory</a> <a href="/tags/mutex/" style="font-size: 10px;">mutex</a> <a href="/tags/mutt/" style="font-size: 10px;">mutt</a> <a href="/tags/namespace/" style="font-size: 10px;">namespace</a> <a href="/tags/network/" style="font-size: 10px;">network</a> <a href="/tags/os-maintain/" style="font-size: 10px;">os-maintain</a> <a href="/tags/printer/" style="font-size: 10px;">printer</a> <a href="/tags/program/" style="font-size: 10px;">program</a> <a href="/tags/python/" style="font-size: 14px;">python</a> <a href="/tags/rancher-k8s/" style="font-size: 10px;">rancher,k8s</a> <a href="/tags/rhce/" style="font-size: 10px;">rhce</a> <a href="/tags/rtp/" style="font-size: 10px;">rtp</a> <a href="/tags/safe/" style="font-size: 12px;">safe</a> <a href="/tags/scope/" style="font-size: 10px;">scope</a> <a href="/tags/seralize/" style="font-size: 10px;">seralize</a> <a href="/tags/shared-ptr/" style="font-size: 10px;">shared_ptr</a> <a href="/tags/socket/" style="font-size: 10px;">socket</a> <a href="/tags/socketopt/" style="font-size: 10px;">socketopt</a> <a href="/tags/sql/" style="font-size: 12px;">sql</a> <a href="/tags/storageduration/" style="font-size: 10px;">storageduration</a> <a href="/tags/sysemd/" style="font-size: 10px;">sysemd</a> <a href="/tags/template-programing/" style="font-size: 10px;">template programing</a> <a href="/tags/terminal/" style="font-size: 10px;">terminal</a> <a href="/tags/tool/" style="font-size: 18px;">tool</a> <a href="/tags/udp/" style="font-size: 10px;">udp</a> <a href="/tags/unique-ptr/" style="font-size: 10px;">unique_ptr</a> <a href="/tags/unit-test/" style="font-size: 10px;">unit test</a> <a href="/tags/urxvt/" style="font-size: 10px;">urxvt</a> <a href="/tags/webcrawler/" style="font-size: 10px;">webcrawler</a> <a href="/tags/webserver/" style="font-size: 10px;">webserver</a> <a href="/tags/weechat/" style="font-size: 10px;">weechat</a> <a href="/tags/wordpress/" style="font-size: 10px;">wordpress</a> <a href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" style="font-size: 10px;">二叉树</a> <a href="/tags/%E5%86%85%E6%A0%B8%E5%8E%9F%E7%90%86/" style="font-size: 10px;">内核原理</a> <a href="/tags/%E5%88%B7%E6%9C%BA%E6%95%99%E7%A8%8B/" style="font-size: 10px;">刷机教程</a> <a href="/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" style="font-size: 10px;">包管理</a> <a href="/tags/%E6%9F%A5%E6%89%BE/" style="font-size: 10px;">查找</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 10px;">算法</a> <a href="/tags/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/" style="font-size: 10px;">系统调用</a> <a href="/tags/%E7%BC%96%E8%AF%91/" style="font-size: 10px;">编译</a> <a href="/tags/%E8%B0%83%E4%BC%98/" style="font-size: 10px;">调优</a> <a href="/tags/%E9%9F%B3%E8%A7%86%E9%A2%91/" style="font-size: 10px;">音视频</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/02/">二月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/12/">十二月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/05/">五月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">四月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">十二月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/11/">十一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">十月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/08/">八月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">三月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">二月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/02/07/streaming-h264-with-rtp/">streaming h264 with rtp</a>
+          </li>
+        
+          <li>
+            <a href="/2023/09/08/wifi-tool/">随身wifi工具</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/21/docker-network/">docker network</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/18/mail-setup/">mail setup</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/08/install-wordpress/">install wordpress</a>
+          </li>
+        
+          <li>
+            <a href="/2022/12/29/amrnb-and-amrwb/">amrnb和amrwb的编解码</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 greek_soon@hotmail.com<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

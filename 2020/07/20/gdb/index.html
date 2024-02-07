@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=z20lYmACQgemxcrzNk1C8Q"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'z20lYmACQgemxcrzNk1C8Q');
+</script>
+<!-- End Google Analytics -->
+
+  
+  <title>gdb调试容器内的进程 | 又是元气满满的一天</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="gdb先来个gdb手册链接这里记录一下自己常用的技巧 恢复debug符号通常上线的程序要strip符号表来减少内存占用和硬盘占用，会执行以下命令 12345## 1. 只保留debug表的内容（可选），为以后调试用，生产时不用objcopy --only-keep-debug foo foo.dbg## 2. 将foo的debug表删除，不要任何调试信息，用于生产使用objcopy --strip">
+<meta property="og:type" content="article">
+<meta property="og:title" content="gdb调试容器内的进程">
+<meta property="og:url" content="https://energygreek.github.io/2020/07/20/gdb/index.html">
+<meta property="og:site_name" content="又是元气满满的一天">
+<meta property="og:description" content="gdb先来个gdb手册链接这里记录一下自己常用的技巧 恢复debug符号通常上线的程序要strip符号表来减少内存占用和硬盘占用，会执行以下命令 12345## 1. 只保留debug表的内容（可选），为以后调试用，生产时不用objcopy --only-keep-debug foo foo.dbg## 2. 将foo的debug表删除，不要任何调试信息，用于生产使用objcopy --strip">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-07-20T11:24:39.000Z">
+<meta property="article:modified_time" content="2024-02-07T09:59:29.787Z">
+<meta property="article:author" content="greek_soon@hotmail.com">
+<meta property="article:tag" content="c&#x2F;c++">
+<meta property="article:tag" content="gdb">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/" title="又是元气满满的一天">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="又是元气满满的一天" type="application/atom+xml">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">又是元气满满的一天</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">个人博客</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS 订阅"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://energygreek.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-gdb" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/07/20/gdb/" class="article-date">
+  <time class="dt-published" datetime="2020-07-20T11:24:39.000Z" itemprop="datePublished">2020-07-20</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      gdb调试容器内的进程
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="gdb"><a href="#gdb" class="headerlink" title="gdb"></a>gdb</h1><p>先来个<a href="https://undo.io/resources/cppcon-2015-greg-law-give-me-15-minutes-ill-change/" target="_blank" rel="noopener">gdb手册链接</a><br>这里记录一下自己常用的技巧</p>
+<h2 id="恢复debug符号"><a href="#恢复debug符号" class="headerlink" title="恢复debug符号"></a>恢复debug符号</h2><p>通常上线的程序要strip符号表来减少<strong>内存占用</strong>和硬盘占用，会执行以下命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## 1. 只保留debug表的内容（可选），为以后调试用，生产时不用</span></span><br><span class="line">objcopy --only-keep-debug foo foo.dbg</span><br><span class="line"></span><br><span class="line"><span class="comment">## 2. 将foo的debug表删除，不要任何调试信息，用于生产使用</span></span><br><span class="line">objcopy --strip-debug  foo</span><br></pre></td></tr></table></figure>
+
+<p>如果生产出问题了，就需要恢复debug信息，add-gnu-debuglink参数可以是foo.dbg, 也可以就是strip之前的foo文件<br>所以第一步是可选的 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">## 3. 恢复debug信息</span><br><span class="line">objcopy --add-gnu-debuglink&#x3D;foo.dbg foo</span><br></pre></td></tr></table></figure>
+
+<p>但其实第三步也是可选的，只要把foo.dbg放到foo相同位置时，gdb就可以读取到debug信息</p>
+<h2 id="使用-gdbinit"><a href="#使用-gdbinit" class="headerlink" title="使用.gdbinit"></a>使用.gdbinit</h2><p>.gdbinit 文件是类似.bash_profile的文件，一般在home目录或者项目根目录, gdb 自动读取<br>也可以手动读取其他位置的, 在gdb执行<code>source /somedir/.gdbinit</code></p>
+<p>通常可以在这个文件里定义一些设置例如<code>set pagination off</code> 关闭输出分页, 就不用每次交互确定<br>还可以定义命令 如pvector可以打印vector内的所有成员, 非常比较方便</p>
+<h2 id="gdb-调试容器内的进程"><a href="#gdb-调试容器内的进程" class="headerlink" title="gdb 调试容器内的进程"></a>gdb 调试容器内的进程</h2><p>因为容器内运行的程序都是strip了debug符号的，所以之前调试都是先将debug文件复制到容器对应位置，然后将源码也映射到容器内，而且还要安装gdb和重新开启priveledge模式， 非常繁琐。<br>所以尝试如下操作：  </p>
+<ol>
+<li>能不能单独一个容器安装gdb和符号和代码文件， 跨容器去调试另一个容器的进程呢？ </li>
+<li>能不能在宿主机上直接调试容器进程呢？   </li>
+</ol>
+<p>经过一番搜索，没有第一种方案的实践办法，但第二种方案亲测可行！</p>
+<h2 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h2><ol>
+<li>先启动容器，一般业务主进程的pid为1  </li>
+<li>在容器外面执行<code>ps aux | grep xxx</code>，因为在很多情况是多个容器跑同一个程序，所以<code>ps aux</code> 通过参数名来确定进程的pid， 当然最好的方式是通过进程namespace了 </li>
+<li>使用sudo gdb -p pid， 提示缺少<code>Missing separate debuginfo for target</code></li>
+<li>将debug符号文件复制到容器对应容器的目录</li>
+<li>再次attach，提示缺少源文件<code>/builds/project/src/aaa.cpp</code>，这是cmake编译时的目录，需要替换</li>
+<li>在gdb里执行命令 set substitute-path /builds/ /home/my-home/  # from -&gt; to</li>
+<li>然后使用l可以查看对应的源代码了</li>
+</ol>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>可以直接在宿主机上运行gdb来调试容器进程，并替换代码路径为宿主机的目录。 </p>
+<p>ps: gdb 启动时默认会读取~/.gdbinit 文件, 但是gdb会提示, 这是由于调试docker需要sudo权限，而我的gdbinit在非root目录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">warning: File &quot;&#x2F;home&#x2F;h&#x2F;.gdbinit&quot; auto-loading has been declined by your &#96;auto-load safe-path&#39; set to &quot;$debugdir:$datadir&#x2F;auto-load&quot;.                                                        </span><br><span class="line">To enable execution of this file add                                                                                                                                                          </span><br><span class="line">        add-auto-load-safe-path &#x2F;home&#x2F;h&#x2F;.gdbinit                                                                                                                                            </span><br><span class="line">line to your configuration file &quot;&#x2F;root&#x2F;.gdbinit&quot;.                                                                                                                                             </span><br><span class="line">To completely disable this security protection add                                                                                                                                            </span><br><span class="line">        set auto-load safe-path &#x2F;                                                                                                                                                             </span><br><span class="line">line to your configuration file &quot;&#x2F;root&#x2F;.gdbinit&quot;.</span><br></pre></td></tr></table></figure>
+
+<p>也就是需要手动执行<code>set auto-load safe-path /</code> 或者将 <code>add-auto-load-safe-path /home/h/.gdbinit</code>写入/root/.gdbinit </p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://energygreek.github.io/2020/07/20/gdb/" data-id="clsbmbv3n002jbwopa703djeg" data-title="gdb调试容器内的进程" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c-c/" rel="tag">c/c++</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gdb/" rel="tag">gdb</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/07/20/cpp/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前一篇</strong>
+      <div class="article-nav-title">
+        
+          cpp
+        
+      </div>
+    </a>
+  
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/51%E5%8D%95%E7%89%87%E6%9C%BA/" rel="tag">51单片机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DP/" rel="tag">DP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aarch64/" rel="tag">aarch64</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/admin/" rel="tag">admin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/" rel="tag">algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algoritm/" rel="tag">algoritm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bash/" rel="tag">bash</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/basics/" rel="tag">basics</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/" rel="tag">c++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c-c/" rel="tag">c/c++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cmake/" rel="tag">cmake</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dns/" rel="tag">dns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/email-client/" rel="tag">email_client</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/exam/" rel="tag">exam</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/exception-safe/" rel="tag">exception-safe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ffmpeg/" rel="tag">ffmpeg</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/filesystem/" rel="tag">filesystem</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flask/" rel="tag">flask</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gdb/" rel="tag">gdb</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/" rel="tag">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/grpc/" rel="tag">grpc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/grub/" rel="tag">grub</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hawei/" rel="tag">hawei</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/heapsort/" rel="tag">heapsort</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/" rel="tag">k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linkage/" rel="tag">linkage</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux%E5%9F%BA%E7%A1%80/" rel="tag">linux基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lock/" rel="tag">lock</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lvm/" rel="tag">lvm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maintance/" rel="tag">maintance</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/malloc/" rel="tag">malloc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mdns/" rel="tag">mdns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memory/" rel="tag">memory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mutex/" rel="tag">mutex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mutt/" rel="tag">mutt</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/namespace/" rel="tag">namespace</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/network/" rel="tag">network</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/os-maintain/" rel="tag">os-maintain</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/printer/" rel="tag">printer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/program/" rel="tag">program</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rancher-k8s/" rel="tag">rancher,k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rhce/" rel="tag">rhce</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rtp/" rel="tag">rtp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/safe/" rel="tag">safe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scope/" rel="tag">scope</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/seralize/" rel="tag">seralize</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shared-ptr/" rel="tag">shared_ptr</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/socket/" rel="tag">socket</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/socketopt/" rel="tag">socketopt</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sql/" rel="tag">sql</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/storageduration/" rel="tag">storageduration</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sysemd/" rel="tag">sysemd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/template-programing/" rel="tag">template programing</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/terminal/" rel="tag">terminal</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tool/" rel="tag">tool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/udp/" rel="tag">udp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/unique-ptr/" rel="tag">unique_ptr</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/unit-test/" rel="tag">unit test</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/urxvt/" rel="tag">urxvt</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webcrawler/" rel="tag">webcrawler</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webserver/" rel="tag">webserver</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/weechat/" rel="tag">weechat</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/wordpress/" rel="tag">wordpress</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" rel="tag">二叉树</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E6%A0%B8%E5%8E%9F%E7%90%86/" rel="tag">内核原理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%B7%E6%9C%BA%E6%95%99%E7%A8%8B/" rel="tag">刷机教程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" rel="tag">包管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9F%A5%E6%89%BE/" rel="tag">查找</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/" rel="tag">系统调用</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E8%AF%91/" rel="tag">编译</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%B0%83%E4%BC%98/" rel="tag">调优</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9F%B3%E8%A7%86%E9%A2%91/" rel="tag">音视频</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/51%E5%8D%95%E7%89%87%E6%9C%BA/" style="font-size: 10px;">51单片机</a> <a href="/tags/DP/" style="font-size: 10px;">DP</a> <a href="/tags/Linux/" style="font-size: 10px;">Linux</a> <a href="/tags/aarch64/" style="font-size: 10px;">aarch64</a> <a href="/tags/admin/" style="font-size: 10px;">admin</a> <a href="/tags/algorithm/" style="font-size: 16px;">algorithm</a> <a href="/tags/algoritm/" style="font-size: 10px;">algoritm</a> <a href="/tags/android/" style="font-size: 10px;">android</a> <a href="/tags/bash/" style="font-size: 10px;">bash</a> <a href="/tags/basics/" style="font-size: 10px;">basics</a> <a href="/tags/c/" style="font-size: 12px;">c++</a> <a href="/tags/c-c/" style="font-size: 20px;">c/c++</a> <a href="/tags/cmake/" style="font-size: 10px;">cmake</a> <a href="/tags/dns/" style="font-size: 10px;">dns</a> <a href="/tags/docker/" style="font-size: 18px;">docker</a> <a href="/tags/email-client/" style="font-size: 10px;">email_client</a> <a href="/tags/exam/" style="font-size: 10px;">exam</a> <a href="/tags/exception-safe/" style="font-size: 10px;">exception-safe</a> <a href="/tags/ffmpeg/" style="font-size: 10px;">ffmpeg</a> <a href="/tags/filesystem/" style="font-size: 14px;">filesystem</a> <a href="/tags/flask/" style="font-size: 10px;">flask</a> <a href="/tags/gdb/" style="font-size: 10px;">gdb</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/grpc/" style="font-size: 10px;">grpc</a> <a href="/tags/grub/" style="font-size: 10px;">grub</a> <a href="/tags/hawei/" style="font-size: 10px;">hawei</a> <a href="/tags/heapsort/" style="font-size: 10px;">heapsort</a> <a href="/tags/k8s/" style="font-size: 10px;">k8s</a> <a href="/tags/linkage/" style="font-size: 10px;">linkage</a> <a href="/tags/linux/" style="font-size: 14px;">linux</a> <a href="/tags/linux%E5%9F%BA%E7%A1%80/" style="font-size: 10px;">linux基础</a> <a href="/tags/lock/" style="font-size: 10px;">lock</a> <a href="/tags/lvm/" style="font-size: 10px;">lvm</a> <a href="/tags/maintance/" style="font-size: 10px;">maintance</a> <a href="/tags/malloc/" style="font-size: 10px;">malloc</a> <a href="/tags/mdns/" style="font-size: 10px;">mdns</a> <a href="/tags/memory/" style="font-size: 12px;">memory</a> <a href="/tags/mutex/" style="font-size: 10px;">mutex</a> <a href="/tags/mutt/" style="font-size: 10px;">mutt</a> <a href="/tags/namespace/" style="font-size: 10px;">namespace</a> <a href="/tags/network/" style="font-size: 10px;">network</a> <a href="/tags/os-maintain/" style="font-size: 10px;">os-maintain</a> <a href="/tags/printer/" style="font-size: 10px;">printer</a> <a href="/tags/program/" style="font-size: 10px;">program</a> <a href="/tags/python/" style="font-size: 14px;">python</a> <a href="/tags/rancher-k8s/" style="font-size: 10px;">rancher,k8s</a> <a href="/tags/rhce/" style="font-size: 10px;">rhce</a> <a href="/tags/rtp/" style="font-size: 10px;">rtp</a> <a href="/tags/safe/" style="font-size: 12px;">safe</a> <a href="/tags/scope/" style="font-size: 10px;">scope</a> <a href="/tags/seralize/" style="font-size: 10px;">seralize</a> <a href="/tags/shared-ptr/" style="font-size: 10px;">shared_ptr</a> <a href="/tags/socket/" style="font-size: 10px;">socket</a> <a href="/tags/socketopt/" style="font-size: 10px;">socketopt</a> <a href="/tags/sql/" style="font-size: 12px;">sql</a> <a href="/tags/storageduration/" style="font-size: 10px;">storageduration</a> <a href="/tags/sysemd/" style="font-size: 10px;">sysemd</a> <a href="/tags/template-programing/" style="font-size: 10px;">template programing</a> <a href="/tags/terminal/" style="font-size: 10px;">terminal</a> <a href="/tags/tool/" style="font-size: 18px;">tool</a> <a href="/tags/udp/" style="font-size: 10px;">udp</a> <a href="/tags/unique-ptr/" style="font-size: 10px;">unique_ptr</a> <a href="/tags/unit-test/" style="font-size: 10px;">unit test</a> <a href="/tags/urxvt/" style="font-size: 10px;">urxvt</a> <a href="/tags/webcrawler/" style="font-size: 10px;">webcrawler</a> <a href="/tags/webserver/" style="font-size: 10px;">webserver</a> <a href="/tags/weechat/" style="font-size: 10px;">weechat</a> <a href="/tags/wordpress/" style="font-size: 10px;">wordpress</a> <a href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" style="font-size: 10px;">二叉树</a> <a href="/tags/%E5%86%85%E6%A0%B8%E5%8E%9F%E7%90%86/" style="font-size: 10px;">内核原理</a> <a href="/tags/%E5%88%B7%E6%9C%BA%E6%95%99%E7%A8%8B/" style="font-size: 10px;">刷机教程</a> <a href="/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" style="font-size: 10px;">包管理</a> <a href="/tags/%E6%9F%A5%E6%89%BE/" style="font-size: 10px;">查找</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 10px;">算法</a> <a href="/tags/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/" style="font-size: 10px;">系统调用</a> <a href="/tags/%E7%BC%96%E8%AF%91/" style="font-size: 10px;">编译</a> <a href="/tags/%E8%B0%83%E4%BC%98/" style="font-size: 10px;">调优</a> <a href="/tags/%E9%9F%B3%E8%A7%86%E9%A2%91/" style="font-size: 10px;">音视频</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/02/">二月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/12/">十二月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/05/">五月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">四月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">十二月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/11/">十一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">十月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/08/">八月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">三月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">二月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/02/07/streaming-h264-with-rtp/">streaming h264 with rtp</a>
+          </li>
+        
+          <li>
+            <a href="/2023/09/08/wifi-tool/">随身wifi工具</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/21/docker-network/">docker network</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/18/mail-setup/">mail setup</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/08/install-wordpress/">install wordpress</a>
+          </li>
+        
+          <li>
+            <a href="/2022/12/29/amrnb-and-amrwb/">amrnb和amrwb的编解码</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 greek_soon@hotmail.com<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=z20lYmACQgemxcrzNk1C8Q"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'z20lYmACQgemxcrzNk1C8Q');
+</script>
+<!-- End Google Analytics -->
+
+  
+  <title>sql learning | 又是元气满满的一天</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="数据库优化总结这里总结了从数据库设计和sql结构两个方面的优化 数据库设计范式 Normal Form范式是在数据库的设计时总结出来的一套规范，通常满足3范式就足够了。但由于3范式也存在问题，所以有了3.5范式 范式从1到3是越来越严格，所以满足1NF不一定满足2NF，但满足2NF就肯定满足1NF     满足所有范式的表没有冗余数据，但也有问题，比如效率不高。这就有了反范式做法，即允许数据冗余，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="sql learning">
+<meta property="og:url" content="https://energygreek.github.io/2022/03/21/sql-learning/index.html">
+<meta property="og:site_name" content="又是元气满满的一天">
+<meta property="og:description" content="数据库优化总结这里总结了从数据库设计和sql结构两个方面的优化 数据库设计范式 Normal Form范式是在数据库的设计时总结出来的一套规范，通常满足3范式就足够了。但由于3范式也存在问题，所以有了3.5范式 范式从1到3是越来越严格，所以满足1NF不一定满足2NF，但满足2NF就肯定满足1NF     满足所有范式的表没有冗余数据，但也有问题，比如效率不高。这就有了反范式做法，即允许数据冗余，">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-03-21T08:29:09.000Z">
+<meta property="article:modified_time" content="2024-02-07T09:59:29.787Z">
+<meta property="article:author" content="greek_soon@hotmail.com">
+<meta property="article:tag" content="sql">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/" title="又是元气满满的一天">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="又是元气满满的一天" type="application/atom+xml">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">又是元气满满的一天</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">个人博客</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS 订阅"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://energygreek.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-sql-learning" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/03/21/sql-learning/" class="article-date">
+  <time class="dt-published" datetime="2022-03-21T08:29:09.000Z" itemprop="datePublished">2022-03-21</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      sql learning
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="数据库优化总结"><a href="#数据库优化总结" class="headerlink" title="数据库优化总结"></a>数据库优化总结</h1><p>这里总结了从数据库设计和sql结构两个方面的优化</p>
+<h2 id="数据库设计范式-Normal-Form"><a href="#数据库设计范式-Normal-Form" class="headerlink" title="数据库设计范式 Normal Form"></a>数据库设计范式 Normal Form</h2><p>范式是在数据库的设计时总结出来的一套规范，通常满足3范式就足够了。但由于3范式也存在问题，所以有了3.5范式</p>
+<p>范式从1到3是越来越严格，所以满足1NF不一定满足2NF，但满足2NF就肯定满足1NF    </p>
+<p>满足所有范式的表没有冗余数据，但也有问题，比如效率不高。这就有了反范式做法，即允许数据冗余，用空间换时间</p>
+<h3 id="1NF：原子化，单元格里的值不能被分割"><a href="#1NF：原子化，单元格里的值不能被分割" class="headerlink" title="1NF：原子化，单元格里的值不能被分割"></a>1NF：原子化，单元格里的值不能被分割</h3><table>
+<thead>
+<tr>
+<th>Employee Id</th>
+<th>Employee Name</th>
+<th>Phone Number</th>
+<th>Salary</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1EDU001</td>
+<td>Alex</td>
+<td>+91 85532065 <br> +91 85532066</td>
+<td>60,131</td>
+</tr>
+<tr>
+<td>1EDU002</td>
+<td>Alex</td>
+<td>+91 85532066</td>
+<td>75,331</td>
+</tr>
+<tr>
+<td>1EDU003</td>
+<td>Alex</td>
+<td>+91 85532068</td>
+<td>63,231</td>
+</tr>
+<tr>
+<td>1EDU004</td>
+<td>Alex</td>
+<td>+91 85532069</td>
+<td>70,231</td>
+</tr>
+<tr>
+<td>1EDU005</td>
+<td>Alex</td>
+<td>+91 85543065 <br> +91 85543075</td>
+<td>60,531</td>
+</tr>
+</tbody></table>
+<p>可见，有条目的电话格里有两个号码，是可以分割的， 所以不满足1NF。应改为</p>
+<table>
+<thead>
+<tr>
+<th>Employee Id</th>
+<th>Employee Name</th>
+<th>Phone Number</th>
+<th>Salary</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1EDU001</td>
+<td>Alex</td>
+<td>+91 85532065</td>
+<td>60,131</td>
+</tr>
+<tr>
+<td>1EDU001</td>
+<td>Alex</td>
+<td>+91 85532066</td>
+<td>60,131</td>
+</tr>
+<tr>
+<td>1EDU002</td>
+<td>Alex</td>
+<td>+91 85532066</td>
+<td>75,331</td>
+</tr>
+<tr>
+<td>1EDU003</td>
+<td>Alex</td>
+<td>+91 85532068</td>
+<td>63,231</td>
+</tr>
+<tr>
+<td>1EDU004</td>
+<td>Alex</td>
+<td>+91 85532069</td>
+<td>70,231</td>
+</tr>
+<tr>
+<td>1EDU005</td>
+<td>Alex</td>
+<td>+91 85543065</td>
+<td>60,531</td>
+</tr>
+<tr>
+<td>1EDU005</td>
+<td>Alex</td>
+<td>+91 85543075</td>
+<td>60,531</td>
+</tr>
+</tbody></table>
+<p>当所有单元格都无法分割了，就满足了第一范式</p>
+<h3 id="2NF：属性不允许部分依赖（复合）主键"><a href="#2NF：属性不允许部分依赖（复合）主键" class="headerlink" title="2NF：属性不允许部分依赖（复合）主键"></a>2NF：属性不允许部分依赖（复合）主键</h3><p>满足2NF前提要满足1NF, 范式2要求非主属性必须依赖完整复合主键或者主键。  </p>
+<p>下表<code>Employee Id</code>和<code>Department Id</code>组成复合主键<br>|Employee Id|Department Id |Office Location |<br>|—|—|—|<br>|1EDUO01 | ED-T1 | Pune |<br>|1EDUO02 | ED-S2 |Bengaluru |<br>|1EDUO03 | ED-M1 | Delhi |<br>|1EDUO04 | ED-T3 | Mumbai |<br>|1EDUO05 | ED-T1 | Pune |</p>
+<p>但<code>Office Location</code>只依赖主键的<code>Employee Id</code>部分。或者说只需<code>Department Id</code>就能保证<code>Office Location</code>唯一， 所以是部分依赖。这样不满足2NF了，应改成两个表</p>
+<table>
+<thead>
+<tr>
+<th>Employee Id</th>
+<th>Department Id</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1EDUO01</td>
+<td>ED-T1</td>
+</tr>
+<tr>
+<td>1EDUO02</td>
+<td>ED-S2</td>
+</tr>
+<tr>
+<td>1EDUO03</td>
+<td>ED-M1</td>
+</tr>
+<tr>
+<td>1EDUO04</td>
+<td>ED-T3</td>
+</tr>
+<tr>
+<td>1EDUO05</td>
+<td>ED-T1</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>Department Id</th>
+<th>Office Location</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ED-T1</td>
+<td>Pune</td>
+</tr>
+<tr>
+<td>ED-S2</td>
+<td>Bengaluru</td>
+</tr>
+<tr>
+<td>ED-M1</td>
+<td>Delhi</td>
+</tr>
+<tr>
+<td>ED-T3</td>
+<td>Mumbai</td>
+</tr>
+</tbody></table>
+<h3 id="3NF：-依赖不能传递"><a href="#3NF：-依赖不能传递" class="headerlink" title="3NF： 依赖不能传递"></a>3NF： 依赖不能传递</h3><p>满足3NF前提要满足2NF, 还有非主属性必须依赖主键/复合主键，不能依赖其他非主属性</p>
+<table>
+<thead>
+<tr>
+<th>Student Id</th>
+<th>Student name</th>
+<th>Subject Id</th>
+<th>Subject</th>
+<th>Adress</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1DT1SENGO1</td>
+<td>Alex</td>
+<td>15CS11</td>
+<td>SQL</td>
+<td>Goa</td>
+</tr>
+<tr>
+<td>1DT1SENGO2</td>
+<td>Barry</td>
+<td>15CS13</td>
+<td>JAVA</td>
+<td>Bengaluru</td>
+</tr>
+<tr>
+<td>1DT15ENGO3</td>
+<td>Clair</td>
+<td>15CS12</td>
+<td>C++</td>
+<td>Delhi</td>
+</tr>
+<tr>
+<td>1DT15ENG04</td>
+<td>DavId</td>
+<td>15CS13</td>
+<td>JAVA</td>
+<td>Kochi</td>
+</tr>
+</tbody></table>
+<p>上表的<code>Subject</code>依赖非主属性<code>Subject Id</code>，而不是依赖<code>Student Id</code>， 这就不满足3NF了。应改成</p>
+<table>
+<thead>
+<tr>
+<th>Student Id</th>
+<th>Student name</th>
+<th>Subject Id</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1DT1SENGO1</td>
+<td>Alex</td>
+<td>15CS11</td>
+</tr>
+<tr>
+<td>1DT1SENGO2</td>
+<td>Barry</td>
+<td>15CS13</td>
+</tr>
+<tr>
+<td>1DT15ENGO3</td>
+<td>Clair</td>
+<td>15CS12</td>
+</tr>
+<tr>
+<td>1DT15ENG04</td>
+<td>DavId</td>
+<td>15CS13</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>Subject Id</th>
+<th>Subject</th>
+<th>Adress</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>15CS11</td>
+<td>SQL</td>
+<td>Goa</td>
+</tr>
+<tr>
+<td>15CS13</td>
+<td>JAVA</td>
+<td>Bengaluru</td>
+</tr>
+<tr>
+<td>15CS12</td>
+<td>C++</td>
+<td>Delhi</td>
+</tr>
+<tr>
+<td>15CS13</td>
+<td>JAVA</td>
+<td>Kochi</td>
+</tr>
+</tbody></table>
+<h4 id="不满足3范式的问题"><a href="#不满足3范式的问题" class="headerlink" title="不满足3范式的问题"></a>不满足3范式的问题</h4><p>不满足3范式的数据库会存在以下问题:</p>
+<ul>
+<li>插入问题： 插入数据时，如果只有部分数据，可能导致插入失败（若某列为NOT NULL）。举例2NF里原来的表，若只有<code>Department Id</code>和<code>Office Location</code>，就无法插入</li>
+<li>更新问题： 当更新某个字段时，需要更新其它列。举例2NF的表，当更新Pune时， 第1列和第4列都要更新</li>
+<li>删除问题： 当删除某些属性时，其他属性也要删除， 举例3NF原来的表，当删除SQL课程时，学生Alex的信息也会丢失</li>
+</ul>
+<h3 id="3-5NF：-BCNF"><a href="#3-5NF：-BCNF" class="headerlink" title="3.5NF： BCNF"></a>3.5NF： BCNF</h3><p>3.5范式用于解决3范式遗留问题<br>例如</p>
+<table>
+<thead>
+<tr>
+<th>Student Id</th>
+<th>Subject</th>
+<th>Professor</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1DT15ENG01</td>
+<td>SQL</td>
+<td>Prof. Mishra</td>
+</tr>
+<tr>
+<td>1DT15ENG02</td>
+<td>JAVA</td>
+<td>Prof. Anand</td>
+</tr>
+<tr>
+<td>1DT15ENG02</td>
+<td>C++</td>
+<td>Prof. Kanthi</td>
+</tr>
+<tr>
+<td>1DT15ENG03</td>
+<td>JAVA</td>
+<td>Prof. Anand</td>
+</tr>
+<tr>
+<td>1DT15ENG04</td>
+<td>DBMS</td>
+<td>Prof. Lokesh</td>
+</tr>
+</tbody></table>
+<p>说明：</p>
+<ul>
+<li>一个学生可以登记多个科目</li>
+<li>多个老师可以教授同一个科目</li>
+<li>每个科目会有一个老师分配给一个学生</li>
+</ul>
+<p>所以这个表满足3范式，因为<code>Student Id</code>和<code>Subject</code>组成了复合主键，决定了<code>Professor</code>。  </p>
+<p>但是不满足3.5NF，因为<code>Student Id</code>和<code>Subject</code>组成了复合主键，所以<code>Subject</code>是主属性， 而存在<code>Professor</code>依赖<code>Subject</code>， 虽然<code>Subject</code>是主属性，但<code>Professor</code>是非主属性，所以不满足BCNF。</p>
+<p>此表应改成</p>
+<table>
+<thead>
+<tr>
+<th>Student Id</th>
+<th>Professor Id</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1DT15ENG01</td>
+<td>1DTPF01</td>
+</tr>
+<tr>
+<td>1DT15ENG02</td>
+<td>1DTPF02</td>
+</tr>
+<tr>
+<td>1DT15ENG02</td>
+<td>1DTPF03</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>Professor ID</th>
+<th>Professor</th>
+<th>Subject</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1DTPF01</td>
+<td>Prof. Mishra</td>
+<td>SQL</td>
+</tr>
+<tr>
+<td>1DTPF02</td>
+<td>Prof. Anand</td>
+<td>JAVA</td>
+</tr>
+<tr>
+<td>1DTPF03</td>
+<td>Prof. Kanthi</td>
+<td>C++</td>
+</tr>
+</tbody></table>
+<h3 id="反范式"><a href="#反范式" class="headerlink" title="反范式"></a>反范式</h3><p>没有冗余数据的设计未必是好设计，有时为了效率，必须降低范式标准，适当允许保留冗余数据，以达到用空间换时间的目的。</p>
+<p>例如订单表存在<code>商品</code>，<code>单价</code>，<code>数量</code>，<code>总价</code>， 这里总价是冗余的，因为可以通过单价和数量来求得，但总价经常需要，所以冗余可以提高效率。</p>
+<h2 id="HAVING-和查询语句优先级"><a href="#HAVING-和查询语句优先级" class="headerlink" title="HAVING 和查询语句优先级"></a>HAVING 和查询语句优先级</h2><p>SQL查询字句类似C语言的运算符优先级， 虽然标准里没有定义优先级，但大致为以下</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FROM &gt; WHERE &gt; SELECT &gt; GROUP BY &gt; HAVING &gt; ORDER BY</span><br></pre></td></tr></table></figure>
+<p>这个顺序可以帮忙理解查询语句是如何执行的，比如因为SELECT优先级低于FROM, 所有只能在FROM中定义alais在SELECT中使用，而不能在SELECT中定义alias并在FROM中使用</p>
+<p>HAVING指令通常和GROUP一起用，因为优先级比GROUP低，所以HAVING可以计算出GROUP的值并进行筛选。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> Sno <span class="keyword">FROM</span> Grade <span class="keyword">GROUP</span> <span class="keyword">BY</span> Sno <span class="keyword">HAVING</span> <span class="keyword">COUNT</span>(Cno) &gt; <span class="number">3</span>;</span><br></pre></td></tr></table></figure>
+<p>这个语句筛选出相同Sno记录的个数&gt;3的集合</p>
+<h2 id="VIEW和数据冗余"><a href="#VIEW和数据冗余" class="headerlink" title="VIEW和数据冗余"></a>VIEW和数据冗余</h2><p>View是一种虚拟表，可以将多表的数据关联在一起，也可以做一些冗余数据，如计算平均值</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">VIEW</span> Cl_avg_age <span class="keyword">AS</span> <span class="keyword">SELECT</span> Clno, <span class="keyword">AVG</span>(Sage) <span class="keyword">AS</span> avg_age <span class="keyword">FROM</span> Student;</span><br></pre></td></tr></table></figure>
+
+<h2 id="事物，存储过程和触发器"><a href="#事物，存储过程和触发器" class="headerlink" title="事物，存储过程和触发器"></a>事物，存储过程和触发器</h2><p>存储过程需要提前创建再使用。 因为存储过程中定义变量， 输入输出明确，所以让数据库操作更安全。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">PROCEDURE</span> ap_returncount @Sno <span class="built_in">char</span>(<span class="number">7</span>) <span class="keyword">AS</span> <span class="keyword">DECLARE</span> @<span class="keyword">count</span> <span class="built_in">int</span> <span class="keyword">SELECT</span> @<span class="keyword">count</span> = <span class="built_in">Number</span> <span class="keyword">FROM</span> <span class="keyword">Class</span> <span class="keyword">WHERE</span> Clno = (<span class="keyword">SELECT</span> Clno <span class="keyword">FROM</span> Student <span class="keyword">WHERE</span> Sno = @Sno) <span class="keyword">RETURN</span> @<span class="keyword">count</span>;</span><br></pre></td></tr></table></figure>
+
+<p>触发器是当触发条件时自动执行的命令，如当插入和更新满足条件时自动执行事物回撤。这是基于事物机制的。<br>事物可以保证多个操作的原子性， 当莫个操作不满足条件则全部<code>ROLLBACK</code>，回撤所有的操作，例如典型的转账场景，必须要扣除和增加都成功时才能成功。</p>
+<p>但事物导致效率比较低。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TRIGGER</span> tri_ins_upd_student <span class="keyword">ON</span> Student <span class="keyword">AFTER</span> <span class="keyword">INSERT</span>, <span class="keyword">UPDATE</span> <span class="keyword">AS</span> <span class="keyword">IF</span> <span class="number">40</span> &lt; (<span class="keyword">SELECT</span> <span class="built_in">Number</span> <span class="keyword">FROM</span> <span class="keyword">Class</span> <span class="keyword">WHERE</span> Clno = (<span class="keyword">SELECT</span> Clno <span class="keyword">FROM</span> inserted )) <span class="keyword">ROLLBACK</span> <span class="keyword">TRANSACTION</span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://www.edureka.co/blog/normalization-in-sql/" target="_blank" rel="noopener">https://www.edureka.co/blog/normalization-in-sql/</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://energygreek.github.io/2022/03/21/sql-learning/" data-id="clsbmbv4n004cbwop71e6da7x" data-title="sql learning" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sql/" rel="tag">sql</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2022/04/10/sdcc-compile-for-51/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前一篇</strong>
+      <div class="article-nav-title">
+        
+          sdcc compiler for 51
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2022/01/25/mutex-error/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">mutex error</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/51%E5%8D%95%E7%89%87%E6%9C%BA/" rel="tag">51单片机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DP/" rel="tag">DP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aarch64/" rel="tag">aarch64</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/admin/" rel="tag">admin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/" rel="tag">algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algoritm/" rel="tag">algoritm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bash/" rel="tag">bash</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/basics/" rel="tag">basics</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/" rel="tag">c++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c-c/" rel="tag">c/c++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cmake/" rel="tag">cmake</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dns/" rel="tag">dns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/email-client/" rel="tag">email_client</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/exam/" rel="tag">exam</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/exception-safe/" rel="tag">exception-safe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ffmpeg/" rel="tag">ffmpeg</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/filesystem/" rel="tag">filesystem</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flask/" rel="tag">flask</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gdb/" rel="tag">gdb</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/" rel="tag">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/grpc/" rel="tag">grpc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/grub/" rel="tag">grub</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hawei/" rel="tag">hawei</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/heapsort/" rel="tag">heapsort</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/" rel="tag">k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linkage/" rel="tag">linkage</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux%E5%9F%BA%E7%A1%80/" rel="tag">linux基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lock/" rel="tag">lock</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lvm/" rel="tag">lvm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maintance/" rel="tag">maintance</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/malloc/" rel="tag">malloc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mdns/" rel="tag">mdns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memory/" rel="tag">memory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mutex/" rel="tag">mutex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mutt/" rel="tag">mutt</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/namespace/" rel="tag">namespace</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/network/" rel="tag">network</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/os-maintain/" rel="tag">os-maintain</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/printer/" rel="tag">printer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/program/" rel="tag">program</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rancher-k8s/" rel="tag">rancher,k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rhce/" rel="tag">rhce</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rtp/" rel="tag">rtp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/safe/" rel="tag">safe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scope/" rel="tag">scope</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/seralize/" rel="tag">seralize</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shared-ptr/" rel="tag">shared_ptr</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/socket/" rel="tag">socket</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/socketopt/" rel="tag">socketopt</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sql/" rel="tag">sql</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/storageduration/" rel="tag">storageduration</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sysemd/" rel="tag">sysemd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/template-programing/" rel="tag">template programing</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/terminal/" rel="tag">terminal</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tool/" rel="tag">tool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/udp/" rel="tag">udp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/unique-ptr/" rel="tag">unique_ptr</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/unit-test/" rel="tag">unit test</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/urxvt/" rel="tag">urxvt</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webcrawler/" rel="tag">webcrawler</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webserver/" rel="tag">webserver</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/weechat/" rel="tag">weechat</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/wordpress/" rel="tag">wordpress</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" rel="tag">二叉树</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E6%A0%B8%E5%8E%9F%E7%90%86/" rel="tag">内核原理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%B7%E6%9C%BA%E6%95%99%E7%A8%8B/" rel="tag">刷机教程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" rel="tag">包管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9F%A5%E6%89%BE/" rel="tag">查找</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/" rel="tag">系统调用</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E8%AF%91/" rel="tag">编译</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%B0%83%E4%BC%98/" rel="tag">调优</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9F%B3%E8%A7%86%E9%A2%91/" rel="tag">音视频</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/51%E5%8D%95%E7%89%87%E6%9C%BA/" style="font-size: 10px;">51单片机</a> <a href="/tags/DP/" style="font-size: 10px;">DP</a> <a href="/tags/Linux/" style="font-size: 10px;">Linux</a> <a href="/tags/aarch64/" style="font-size: 10px;">aarch64</a> <a href="/tags/admin/" style="font-size: 10px;">admin</a> <a href="/tags/algorithm/" style="font-size: 16px;">algorithm</a> <a href="/tags/algoritm/" style="font-size: 10px;">algoritm</a> <a href="/tags/android/" style="font-size: 10px;">android</a> <a href="/tags/bash/" style="font-size: 10px;">bash</a> <a href="/tags/basics/" style="font-size: 10px;">basics</a> <a href="/tags/c/" style="font-size: 12px;">c++</a> <a href="/tags/c-c/" style="font-size: 20px;">c/c++</a> <a href="/tags/cmake/" style="font-size: 10px;">cmake</a> <a href="/tags/dns/" style="font-size: 10px;">dns</a> <a href="/tags/docker/" style="font-size: 18px;">docker</a> <a href="/tags/email-client/" style="font-size: 10px;">email_client</a> <a href="/tags/exam/" style="font-size: 10px;">exam</a> <a href="/tags/exception-safe/" style="font-size: 10px;">exception-safe</a> <a href="/tags/ffmpeg/" style="font-size: 10px;">ffmpeg</a> <a href="/tags/filesystem/" style="font-size: 14px;">filesystem</a> <a href="/tags/flask/" style="font-size: 10px;">flask</a> <a href="/tags/gdb/" style="font-size: 10px;">gdb</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/grpc/" style="font-size: 10px;">grpc</a> <a href="/tags/grub/" style="font-size: 10px;">grub</a> <a href="/tags/hawei/" style="font-size: 10px;">hawei</a> <a href="/tags/heapsort/" style="font-size: 10px;">heapsort</a> <a href="/tags/k8s/" style="font-size: 10px;">k8s</a> <a href="/tags/linkage/" style="font-size: 10px;">linkage</a> <a href="/tags/linux/" style="font-size: 14px;">linux</a> <a href="/tags/linux%E5%9F%BA%E7%A1%80/" style="font-size: 10px;">linux基础</a> <a href="/tags/lock/" style="font-size: 10px;">lock</a> <a href="/tags/lvm/" style="font-size: 10px;">lvm</a> <a href="/tags/maintance/" style="font-size: 10px;">maintance</a> <a href="/tags/malloc/" style="font-size: 10px;">malloc</a> <a href="/tags/mdns/" style="font-size: 10px;">mdns</a> <a href="/tags/memory/" style="font-size: 12px;">memory</a> <a href="/tags/mutex/" style="font-size: 10px;">mutex</a> <a href="/tags/mutt/" style="font-size: 10px;">mutt</a> <a href="/tags/namespace/" style="font-size: 10px;">namespace</a> <a href="/tags/network/" style="font-size: 10px;">network</a> <a href="/tags/os-maintain/" style="font-size: 10px;">os-maintain</a> <a href="/tags/printer/" style="font-size: 10px;">printer</a> <a href="/tags/program/" style="font-size: 10px;">program</a> <a href="/tags/python/" style="font-size: 14px;">python</a> <a href="/tags/rancher-k8s/" style="font-size: 10px;">rancher,k8s</a> <a href="/tags/rhce/" style="font-size: 10px;">rhce</a> <a href="/tags/rtp/" style="font-size: 10px;">rtp</a> <a href="/tags/safe/" style="font-size: 12px;">safe</a> <a href="/tags/scope/" style="font-size: 10px;">scope</a> <a href="/tags/seralize/" style="font-size: 10px;">seralize</a> <a href="/tags/shared-ptr/" style="font-size: 10px;">shared_ptr</a> <a href="/tags/socket/" style="font-size: 10px;">socket</a> <a href="/tags/socketopt/" style="font-size: 10px;">socketopt</a> <a href="/tags/sql/" style="font-size: 12px;">sql</a> <a href="/tags/storageduration/" style="font-size: 10px;">storageduration</a> <a href="/tags/sysemd/" style="font-size: 10px;">sysemd</a> <a href="/tags/template-programing/" style="font-size: 10px;">template programing</a> <a href="/tags/terminal/" style="font-size: 10px;">terminal</a> <a href="/tags/tool/" style="font-size: 18px;">tool</a> <a href="/tags/udp/" style="font-size: 10px;">udp</a> <a href="/tags/unique-ptr/" style="font-size: 10px;">unique_ptr</a> <a href="/tags/unit-test/" style="font-size: 10px;">unit test</a> <a href="/tags/urxvt/" style="font-size: 10px;">urxvt</a> <a href="/tags/webcrawler/" style="font-size: 10px;">webcrawler</a> <a href="/tags/webserver/" style="font-size: 10px;">webserver</a> <a href="/tags/weechat/" style="font-size: 10px;">weechat</a> <a href="/tags/wordpress/" style="font-size: 10px;">wordpress</a> <a href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" style="font-size: 10px;">二叉树</a> <a href="/tags/%E5%86%85%E6%A0%B8%E5%8E%9F%E7%90%86/" style="font-size: 10px;">内核原理</a> <a href="/tags/%E5%88%B7%E6%9C%BA%E6%95%99%E7%A8%8B/" style="font-size: 10px;">刷机教程</a> <a href="/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" style="font-size: 10px;">包管理</a> <a href="/tags/%E6%9F%A5%E6%89%BE/" style="font-size: 10px;">查找</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 10px;">算法</a> <a href="/tags/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/" style="font-size: 10px;">系统调用</a> <a href="/tags/%E7%BC%96%E8%AF%91/" style="font-size: 10px;">编译</a> <a href="/tags/%E8%B0%83%E4%BC%98/" style="font-size: 10px;">调优</a> <a href="/tags/%E9%9F%B3%E8%A7%86%E9%A2%91/" style="font-size: 10px;">音视频</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/02/">二月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/12/">十二月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/05/">五月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">四月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">十二月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/11/">十一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">十月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/08/">八月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">三月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">二月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/02/07/streaming-h264-with-rtp/">streaming h264 with rtp</a>
+          </li>
+        
+          <li>
+            <a href="/2023/09/08/wifi-tool/">随身wifi工具</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/21/docker-network/">docker network</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/18/mail-setup/">mail setup</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/08/install-wordpress/">install wordpress</a>
+          </li>
+        
+          <li>
+            <a href="/2022/12/29/amrnb-and-amrwb/">amrnb和amrwb的编解码</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 greek_soon@hotmail.com<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=z20lYmACQgemxcrzNk1C8Q"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'z20lYmACQgemxcrzNk1C8Q');
+</script>
+<!-- End Google Analytics -->
+
+  
+  <title>随身wifi工具 | 又是元气满满的一天</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="本文记录了淘宝卖的随身wifi刷机成Debian，还能收发短信。还有救砖的艰辛过程，不过结局美满。 依赖 edl备份恢复工具，https:&#x2F;&#x2F;github.com&#x2F;bkerler&#x2F;edl, 下载源代码后执行git submodule update --init --recursive和 pip install -r requirements.txt openstick编译好的debian http">
+<meta property="og:type" content="article">
+<meta property="og:title" content="随身wifi工具">
+<meta property="og:url" content="https://energygreek.github.io/2023/09/08/wifi-tool/index.html">
+<meta property="og:site_name" content="又是元气满满的一天">
+<meta property="og:description" content="本文记录了淘宝卖的随身wifi刷机成Debian，还能收发短信。还有救砖的艰辛过程，不过结局美满。 依赖 edl备份恢复工具，https:&#x2F;&#x2F;github.com&#x2F;bkerler&#x2F;edl, 下载源代码后执行git submodule update --init --recursive和 pip install -r requirements.txt openstick编译好的debian http">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-09-08T07:34:43.000Z">
+<meta property="article:modified_time" content="2024-02-07T09:59:29.791Z">
+<meta property="article:author" content="greek_soon@hotmail.com">
+<meta property="article:tag" content="c&#x2F;c++">
+<meta property="article:tag" content=" Linux日常">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/" title="又是元气满满的一天">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="又是元气满满的一天" type="application/atom+xml">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">又是元气满满的一天</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">个人博客</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS 订阅"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://energygreek.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-wifi-tool" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2023/09/08/wifi-tool/" class="article-date">
+  <time class="dt-published" datetime="2023-09-08T07:34:43.000Z" itemprop="datePublished">2023-09-08</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      随身wifi工具
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>本文记录了淘宝卖的随身wifi刷机成Debian，还能收发短信。还有救砖的艰辛过程，不过结局美满。</p>
+<h2 id="依赖"><a href="#依赖" class="headerlink" title="依赖"></a>依赖</h2><ul>
+<li>edl备份恢复工具，<a href="https://github.com/bkerler/edl" target="_blank" rel="noopener">https://github.com/bkerler/edl</a>, 下载源代码后执行<code>git submodule update --init --recursive</code>和 <code>pip install -r requirements.txt</code></li>
+<li>openstick编译好的debian <a href="https://github.com/OpenStick/OpenStick。" target="_blank" rel="noopener">https://github.com/OpenStick/OpenStick。</a> 在release页面下载 base.zip, debian.zip, firmware-ufi001c.zip，boot-ufi001c.img</li>
+<li>apt 安装 adb fastboot</li>
+</ul>
+<h2 id="切卡"><a href="#切卡" class="headerlink" title="切卡"></a>切卡</h2><p>刚接触时看网上的都是在后台页面切卡，但是刷机了没有后台页面如何切卡呢？ 为了切卡又重刷安卓，导致变砖了。参考网上资料发现，Debian下可以直接切。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">debian默认卡槽位1:</span><br><span class="line"></span><br><span class="line">echo 1 &gt; &#x2F;sys&#x2F;class&#x2F;leds&#x2F;sim:sel&#x2F;brightness</span><br><span class="line">echo 0 &gt; &#x2F;sys&#x2F;class&#x2F;leds&#x2F;sim:en&#x2F;brightness</span><br><span class="line">echo 0 &gt; &#x2F;sys&#x2F;class&#x2F;leds&#x2F;sim:sel2&#x2F;brightness</span><br><span class="line">echo 0 &gt; &#x2F;sys&#x2F;class&#x2F;leds&#x2F;sim:en2&#x2F;brightnessR</span><br><span class="line">modprobe -r qcom-q6v5-mss</span><br><span class="line">modprobe qcom-q6v5-mss</span><br><span class="line">systemctl restart rmtfs</span><br><span class="line">systemctl restart dbus-org.freedesktop.ModemManager1.service</span><br><span class="line"></span><br><span class="line">esim槽位3:</span><br><span class="line"></span><br><span class="line">echo 0 &gt; &#x2F;sys&#x2F;class&#x2F;leds&#x2F;sim:sel&#x2F;brightness</span><br><span class="line">echo 0 &gt; &#x2F;sys&#x2F;class&#x2F;leds&#x2F;sim:en&#x2F;brightness</span><br><span class="line">echo 1 &gt; &#x2F;sys&#x2F;class&#x2F;leds&#x2F;sim:sel2&#x2F;brightness</span><br><span class="line">echo 0 &gt; &#x2F;sys&#x2F;class&#x2F;leds&#x2F;sim:en2&#x2F;brightness</span><br><span class="line">modprobe -r qcom-q6v5-mss</span><br><span class="line">modprobe qcom-q6v5-mss</span><br><span class="line">systemctl restart rmtfs</span><br><span class="line">systemctl restart dbus-org.freedesktop.ModemManager1.service</span><br><span class="line"></span><br><span class="line">其他两个槽位</span><br><span class="line"></span><br><span class="line">槽位2:</span><br><span class="line"></span><br><span class="line">echo 0 &gt; &#x2F;sys&#x2F;class&#x2F;leds&#x2F;sim:sel&#x2F;brightness</span><br><span class="line">echo 1 &gt; &#x2F;sys&#x2F;class&#x2F;leds&#x2F;sim:en&#x2F;brightness</span><br><span class="line">echo 0 &gt; &#x2F;sys&#x2F;class&#x2F;leds&#x2F;sim:sel2&#x2F;brightness</span><br><span class="line">echo 0 &gt; &#x2F;sys&#x2F;class&#x2F;leds&#x2F;sim:en2&#x2F;brightness</span><br><span class="line">modprobe -r qcom-q6v5-mss</span><br><span class="line">modprobe qcom-q6v5-mss</span><br><span class="line">systemctl restart rmtfs</span><br><span class="line">systemctl restart dbus-org.freedesktop.ModemManager1.service</span><br><span class="line"></span><br><span class="line">槽位4:</span><br><span class="line">echo 0 &gt; &#x2F;sys&#x2F;class&#x2F;leds&#x2F;sim:sel&#x2F;brightness</span><br><span class="line">echo 0 &gt; &#x2F;sys&#x2F;class&#x2F;leds&#x2F;sim:en&#x2F;brightness</span><br><span class="line">echo 0 &gt; &#x2F;sys&#x2F;class&#x2F;leds&#x2F;sim:sel2&#x2F;brightness</span><br><span class="line">echo 1 &gt; &#x2F;sys&#x2F;class&#x2F;leds&#x2F;sim:en2&#x2F;brightness</span><br><span class="line">modprobe -r qcom-q6v5-mss</span><br><span class="line">modprobe qcom-q6v5-mss</span><br><span class="line">systemctl restart rmtfs</span><br><span class="line">systemctl restart dbus-org.freedesktop.ModemManager1.service</span><br><span class="line"></span><br><span class="line">有些棒子esim槽位不一样槽位3不行自行试试槽位2 4</span><br></pre></td></tr></table></figure>
+<p><a href="https://github.com/OpenStick/OpenStick/issues/49#issuecomment-1568202001" target="_blank" rel="noopener">https://github.com/OpenStick/OpenStick/issues/49#issuecomment-1568202001</a></p>
+<h2 id="刷机"><a href="#刷机" class="headerlink" title="刷机"></a>刷机</h2><p>先使用edl全量备份，方法在最下面。先刷base包，解压base.zip后执行里面的<code>flash.sh</code>。然后刷debian包，解压debian.zip后执行里面的<code>flash.sh</code>。这时进入系统发现可能出现问题（我也没明显感觉到问题），因为他们是ufi001b的。<br>所以再刷适配ufi001c的包，解压firmware-ufi001c.zip。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cd firmware-ufi001c</span><br><span class="line">adb push .&#x2F;* &#x2F;lib&#x2F;firmware</span><br><span class="line">adb reboot bootloader</span><br><span class="line">fastboot flash boot boot-ufi001c.img</span><br><span class="line">fastboot reboot</span><br></pre></td></tr></table></figure>
+<p>但是在刷ufi001c的包之前我能找到modem网络，刷完就没了，所以有了下面基带恢复的步骤。</p>
+<h2 id="基带"><a href="#基带" class="headerlink" title="基带"></a>基带</h2><p>基带文件在随身wifi的modem分区，先用edl备份modem分区。当然下面介绍了edl全量备份，跳过了userdata，估计是root和home目录。</p>
+<h3 id="恢复基带文件"><a href="#恢复基带文件" class="headerlink" title="恢复基带文件"></a>恢复基带文件</h3><p>我在安装debian系统时，发现移动网络不可用，于是参考网上说的，将原始基带恢复后正常。 基带文件名为”modem.bin”, edl全量备份后在dumps目录下。直接mount该文件，然后将modem.*和mba.mbn取出来，当发现刷机后发现移动网络不能使用时，重新拷回去就能用了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo mount modem.bin &#x2F;mnt</span><br></pre></td></tr></table></figure>
+<p>复制到firmware-ufi001c目录，覆盖之前的文件。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cp &#x2F;mnt&#x2F;modem.* .</span><br><span class="line">cp &#x2F;mnt&#x2F;mba.mbn .</span><br></pre></td></tr></table></figure>
+
+<p>再次拷贝到wifi棒子的/lib/firmware目录, 配合再刷一次适配001C的boot文件。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">adb push .&#x2F;* &#x2F;lib&#x2F;firmware</span><br><span class="line">adb reboot bootloader</span><br><span class="line">fastboot flash boot boot-ufi001c.img</span><br><span class="line">fastboot reboot #重启</span><br></pre></td></tr></table></figure>
+
+<p>然后就能找到modem网卡了。</p>
+<h2 id="重启modem"><a href="#重启modem" class="headerlink" title="重启modem"></a>重启modem</h2><p>有时重刷了firmware，还是出现没有modem网卡的情况，也就是<code>mmcli -m 0</code>提示找不到modem设备的时候，需要执行下面的命令。或者直接等一会重启ModemManager</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">systemctl stop ModemManager</span><br><span class="line">qmicli -d &#x2F;dev&#x2F;wwan0qmi0 --uim-sim-power-off&#x3D;1 &amp;&amp; qmicli -d &#x2F;dev&#x2F;wwan0qmi0 --uim-sim-power-on&#x3D;1</span><br><span class="line">systemctl start ModemManager</span><br></pre></td></tr></table></figure>
+
+<h2 id="短信收发和转发邮件"><a href="#短信收发和转发邮件" class="headerlink" title="短信收发和转发邮件"></a>短信收发和转发邮件</h2><p>下载两个python文件，地址 <a href="https://gitee.com/jiu-xiao/ufi-message。配置smtp.py中的邮箱信息，我使用的QQ邮箱登录，然后转发到另一个邮箱。开始发送不成功，修改后能发送了，内容如下。" target="_blank" rel="noopener">https://gitee.com/jiu-xiao/ufi-message。配置smtp.py中的邮箱信息，我使用的QQ邮箱登录，然后转发到另一个邮箱。开始发送不成功，修改后能发送了，内容如下。</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">#!python3</span><br><span class="line"></span><br><span class="line">my_sender&#x3D;&#39;@qq.com&#39;</span><br><span class="line">my_user&#x3D;&#39;@hotmail.com&#39;</span><br><span class="line">server_address&#x3D;&#39;smtp.qq.com&#39;</span><br><span class="line">server_port&#x3D;465</span><br><span class="line">server_passwd&#x3D;&#39;&#39; #填写qq邮箱授权码</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">import smtplib</span><br><span class="line">from email.mime.text import MIMEText</span><br><span class="line">from email.utils import formataddr</span><br><span class="line">import datetime</span><br><span class="line">import time</span><br><span class="line"></span><br><span class="line">def mail(text):</span><br><span class="line">    msg&#x3D;MIMEText(text,&#39;plain&#39;,&#39;utf-8&#39;)</span><br><span class="line">    msg[&#39;From&#39;]&#x3D;formataddr([&quot;随身Wifi&quot;,my_sender])</span><br><span class="line">    msg[&#39;To&#39;]&#x3D;formataddr([my_user,my_user])</span><br><span class="line">    msg[&#39;Subject&#39;]&#x3D;&quot;转发 &quot;+time.strftime(&quot;%H:%%M:%S %m&#x2F;%d&quot;)</span><br><span class="line"></span><br><span class="line">    server&#x3D;smtplib.SMTP_SSL(server_address,server_port)</span><br><span class="line"></span><br><span class="line">    server.login(my_sender,server_passwd)</span><br><span class="line">    server.auth_plain()</span><br><span class="line">    server.sendmail(my_sender,[my_user,],msg.as_string())</span><br><span class="line">    server.quit()</span><br></pre></td></tr></table></figure>
+
+<p>然后就能写进crontab自动跑了。</p>
+<h2 id="救砖"><a href="#救砖" class="headerlink" title="救砖"></a>救砖</h2><h3 id="edl使用"><a href="#edl使用" class="headerlink" title="edl使用"></a>edl使用</h3><p>github上的开源工具，可以替代Windows那些高通工具，Miko，星海啥的。是我这Linux用户的福音，并且简单，windows常常失败。<br>使用edl工具之前要先重启到edl也就是9008模式，使用命令<code>adb reboot edl</code>，不需要按RST键。</p>
+<p>备份：推荐第一种方式，第二种方式生成的一个文件刷到另一个设备失败，但是可以刷MiKo导出的单文件。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">edl rl dumps --skip&#x3D;userdata --genxml</span><br><span class="line">or</span><br><span class="line">edl rf flash.bin #单文件</span><br></pre></td></tr></table></figure>
+
+<p>恢复:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">edl qfil rawprogram0.xml patch0.xml .</span><br></pre></td></tr></table></figure>
+
+<h3 id="恢复分区"><a href="#恢复分区" class="headerlink" title="恢复分区"></a>恢复分区</h3><p>刷了debian后，分区会变，这样导致有些分区不存在所以无法刷回去。这里介绍下恢复分区的方法。不过上面的edl恢复应该不需要这个操作。</p>
+<p>备份分区</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;edl gpt . --genxml</span><br></pre></td></tr></table></figure>
+<p>备份后有两个文件，恢复时只用gpt_main0.bin文件，恢复分区命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;edl w gpt gpt_main0.bin</span><br></pre></td></tr></table></figure>
+<p>打印分区来验证下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;edl printgpt</span><br></pre></td></tr></table></figure>
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://forum.openwrt.org/t/uf896-qualcomm-msm8916-lte-router-384mib-ram-2-4gib-flash-android-openwrt/131712/160" target="_blank" rel="noopener">https://forum.openwrt.org/t/uf896-qualcomm-msm8916-lte-router-384mib-ram-2-4gib-flash-android-openwrt/131712/160</a><br><a href="https://www.kancloud.cn/handsomehacker/openstick/2636505" target="_blank" rel="noopener">https://www.kancloud.cn/handsomehacker/openstick/2636505</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://energygreek.github.io/2023/09/08/wifi-tool/" data-id="clsbmbv580051bwop7k2n1qn8" data-title="随身wifi工具" class="article-share-link">分享</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2024/02/07/streaming-h264-with-rtp/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前一篇</strong>
+      <div class="article-nav-title">
+        
+          streaming h264 with rtp
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2023/07/21/docker-network/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">docker network</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/51%E5%8D%95%E7%89%87%E6%9C%BA/" rel="tag">51单片机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DP/" rel="tag">DP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aarch64/" rel="tag">aarch64</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/admin/" rel="tag">admin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/" rel="tag">algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algoritm/" rel="tag">algoritm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bash/" rel="tag">bash</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/basics/" rel="tag">basics</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/" rel="tag">c++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c-c/" rel="tag">c/c++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cmake/" rel="tag">cmake</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dns/" rel="tag">dns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/email-client/" rel="tag">email_client</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/exam/" rel="tag">exam</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/exception-safe/" rel="tag">exception-safe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ffmpeg/" rel="tag">ffmpeg</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/filesystem/" rel="tag">filesystem</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flask/" rel="tag">flask</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gdb/" rel="tag">gdb</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/" rel="tag">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/grpc/" rel="tag">grpc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/grub/" rel="tag">grub</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hawei/" rel="tag">hawei</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/heapsort/" rel="tag">heapsort</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/" rel="tag">k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linkage/" rel="tag">linkage</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux%E5%9F%BA%E7%A1%80/" rel="tag">linux基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lock/" rel="tag">lock</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lvm/" rel="tag">lvm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maintance/" rel="tag">maintance</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/malloc/" rel="tag">malloc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mdns/" rel="tag">mdns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memory/" rel="tag">memory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mutex/" rel="tag">mutex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mutt/" rel="tag">mutt</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/namespace/" rel="tag">namespace</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/network/" rel="tag">network</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/os-maintain/" rel="tag">os-maintain</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/printer/" rel="tag">printer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/program/" rel="tag">program</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rancher-k8s/" rel="tag">rancher,k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rhce/" rel="tag">rhce</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rtp/" rel="tag">rtp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/safe/" rel="tag">safe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scope/" rel="tag">scope</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/seralize/" rel="tag">seralize</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shared-ptr/" rel="tag">shared_ptr</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/socket/" rel="tag">socket</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/socketopt/" rel="tag">socketopt</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sql/" rel="tag">sql</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/storageduration/" rel="tag">storageduration</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sysemd/" rel="tag">sysemd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/template-programing/" rel="tag">template programing</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/terminal/" rel="tag">terminal</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tool/" rel="tag">tool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/udp/" rel="tag">udp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/unique-ptr/" rel="tag">unique_ptr</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/unit-test/" rel="tag">unit test</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/urxvt/" rel="tag">urxvt</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webcrawler/" rel="tag">webcrawler</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webserver/" rel="tag">webserver</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/weechat/" rel="tag">weechat</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/wordpress/" rel="tag">wordpress</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" rel="tag">二叉树</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E6%A0%B8%E5%8E%9F%E7%90%86/" rel="tag">内核原理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%B7%E6%9C%BA%E6%95%99%E7%A8%8B/" rel="tag">刷机教程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" rel="tag">包管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9F%A5%E6%89%BE/" rel="tag">查找</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/" rel="tag">系统调用</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E8%AF%91/" rel="tag">编译</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%B0%83%E4%BC%98/" rel="tag">调优</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9F%B3%E8%A7%86%E9%A2%91/" rel="tag">音视频</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/51%E5%8D%95%E7%89%87%E6%9C%BA/" style="font-size: 10px;">51单片机</a> <a href="/tags/DP/" style="font-size: 10px;">DP</a> <a href="/tags/Linux/" style="font-size: 10px;">Linux</a> <a href="/tags/aarch64/" style="font-size: 10px;">aarch64</a> <a href="/tags/admin/" style="font-size: 10px;">admin</a> <a href="/tags/algorithm/" style="font-size: 16px;">algorithm</a> <a href="/tags/algoritm/" style="font-size: 10px;">algoritm</a> <a href="/tags/android/" style="font-size: 10px;">android</a> <a href="/tags/bash/" style="font-size: 10px;">bash</a> <a href="/tags/basics/" style="font-size: 10px;">basics</a> <a href="/tags/c/" style="font-size: 12px;">c++</a> <a href="/tags/c-c/" style="font-size: 20px;">c/c++</a> <a href="/tags/cmake/" style="font-size: 10px;">cmake</a> <a href="/tags/dns/" style="font-size: 10px;">dns</a> <a href="/tags/docker/" style="font-size: 18px;">docker</a> <a href="/tags/email-client/" style="font-size: 10px;">email_client</a> <a href="/tags/exam/" style="font-size: 10px;">exam</a> <a href="/tags/exception-safe/" style="font-size: 10px;">exception-safe</a> <a href="/tags/ffmpeg/" style="font-size: 10px;">ffmpeg</a> <a href="/tags/filesystem/" style="font-size: 14px;">filesystem</a> <a href="/tags/flask/" style="font-size: 10px;">flask</a> <a href="/tags/gdb/" style="font-size: 10px;">gdb</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/grpc/" style="font-size: 10px;">grpc</a> <a href="/tags/grub/" style="font-size: 10px;">grub</a> <a href="/tags/hawei/" style="font-size: 10px;">hawei</a> <a href="/tags/heapsort/" style="font-size: 10px;">heapsort</a> <a href="/tags/k8s/" style="font-size: 10px;">k8s</a> <a href="/tags/linkage/" style="font-size: 10px;">linkage</a> <a href="/tags/linux/" style="font-size: 14px;">linux</a> <a href="/tags/linux%E5%9F%BA%E7%A1%80/" style="font-size: 10px;">linux基础</a> <a href="/tags/lock/" style="font-size: 10px;">lock</a> <a href="/tags/lvm/" style="font-size: 10px;">lvm</a> <a href="/tags/maintance/" style="font-size: 10px;">maintance</a> <a href="/tags/malloc/" style="font-size: 10px;">malloc</a> <a href="/tags/mdns/" style="font-size: 10px;">mdns</a> <a href="/tags/memory/" style="font-size: 12px;">memory</a> <a href="/tags/mutex/" style="font-size: 10px;">mutex</a> <a href="/tags/mutt/" style="font-size: 10px;">mutt</a> <a href="/tags/namespace/" style="font-size: 10px;">namespace</a> <a href="/tags/network/" style="font-size: 10px;">network</a> <a href="/tags/os-maintain/" style="font-size: 10px;">os-maintain</a> <a href="/tags/printer/" style="font-size: 10px;">printer</a> <a href="/tags/program/" style="font-size: 10px;">program</a> <a href="/tags/python/" style="font-size: 14px;">python</a> <a href="/tags/rancher-k8s/" style="font-size: 10px;">rancher,k8s</a> <a href="/tags/rhce/" style="font-size: 10px;">rhce</a> <a href="/tags/rtp/" style="font-size: 10px;">rtp</a> <a href="/tags/safe/" style="font-size: 12px;">safe</a> <a href="/tags/scope/" style="font-size: 10px;">scope</a> <a href="/tags/seralize/" style="font-size: 10px;">seralize</a> <a href="/tags/shared-ptr/" style="font-size: 10px;">shared_ptr</a> <a href="/tags/socket/" style="font-size: 10px;">socket</a> <a href="/tags/socketopt/" style="font-size: 10px;">socketopt</a> <a href="/tags/sql/" style="font-size: 12px;">sql</a> <a href="/tags/storageduration/" style="font-size: 10px;">storageduration</a> <a href="/tags/sysemd/" style="font-size: 10px;">sysemd</a> <a href="/tags/template-programing/" style="font-size: 10px;">template programing</a> <a href="/tags/terminal/" style="font-size: 10px;">terminal</a> <a href="/tags/tool/" style="font-size: 18px;">tool</a> <a href="/tags/udp/" style="font-size: 10px;">udp</a> <a href="/tags/unique-ptr/" style="font-size: 10px;">unique_ptr</a> <a href="/tags/unit-test/" style="font-size: 10px;">unit test</a> <a href="/tags/urxvt/" style="font-size: 10px;">urxvt</a> <a href="/tags/webcrawler/" style="font-size: 10px;">webcrawler</a> <a href="/tags/webserver/" style="font-size: 10px;">webserver</a> <a href="/tags/weechat/" style="font-size: 10px;">weechat</a> <a href="/tags/wordpress/" style="font-size: 10px;">wordpress</a> <a href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" style="font-size: 10px;">二叉树</a> <a href="/tags/%E5%86%85%E6%A0%B8%E5%8E%9F%E7%90%86/" style="font-size: 10px;">内核原理</a> <a href="/tags/%E5%88%B7%E6%9C%BA%E6%95%99%E7%A8%8B/" style="font-size: 10px;">刷机教程</a> <a href="/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" style="font-size: 10px;">包管理</a> <a href="/tags/%E6%9F%A5%E6%89%BE/" style="font-size: 10px;">查找</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 10px;">算法</a> <a href="/tags/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/" style="font-size: 10px;">系统调用</a> <a href="/tags/%E7%BC%96%E8%AF%91/" style="font-size: 10px;">编译</a> <a href="/tags/%E8%B0%83%E4%BC%98/" style="font-size: 10px;">调优</a> <a href="/tags/%E9%9F%B3%E8%A7%86%E9%A2%91/" style="font-size: 10px;">音视频</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/02/">二月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/12/">十二月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/05/">五月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">四月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">十二月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/11/">十一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">十月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/08/">八月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">三月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">二月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/02/07/streaming-h264-with-rtp/">streaming h264 with rtp</a>
+          </li>
+        
+          <li>
+            <a href="/2023/09/08/wifi-tool/">随身wifi工具</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/21/docker-network/">docker network</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/18/mail-setup/">mail setup</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/08/install-wordpress/">install wordpress</a>
+          </li>
+        
+          <li>
+            <a href="/2022/12/29/amrnb-and-amrwb/">amrnb和amrwb的编解码</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 greek_soon@hotmail.com<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=z20lYmACQgemxcrzNk1C8Q"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'z20lYmACQgemxcrzNk1C8Q');
+</script>
+<!-- End Google Analytics -->
+
+  
+  <title>又是元气满满的一天</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="记录总结">
+<meta property="og:type" content="website">
+<meta property="og:title" content="又是元气满满的一天">
+<meta property="og:url" content="https://energygreek.github.io/page/2/index.html">
+<meta property="og:site_name" content="又是元气满满的一天">
+<meta property="og:description" content="记录总结">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="greek_soon@hotmail.com">
+<meta property="article:tag" content="c&#x2F;c++">
+<meta property="article:tag" content=" Linux日常">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/" title="又是元气满满的一天">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="又是元气满满的一天" type="application/atom+xml">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">又是元气满满的一天</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">个人博客</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS 订阅"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://energygreek.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-rotate-list" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/04/21/rotate-list/" class="article-date">
+  <time class="dt-published" datetime="2022-04-21T05:44:10.000Z" itemprop="datePublished">2022-04-21</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/04/21/rotate-list/">单向链表翻转算法</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="三指针法翻转单向链表"><a href="#三指针法翻转单向链表" class="headerlink" title="三指针法翻转单向链表"></a>三指针法翻转单向链表</h1><p>定义3个指针, 原理是三个指针分别指向前三个元素，将第一个元素指向第二个元素，然后全部后移</p>
+<ol>
+<li>第三个指针向前移动</li>
+<li>将第二个元素指向第一个元素</li>
+<li>第一个指针和第二个指针向前移动</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Node</span>&#123;</span></span><br><span class="line">　　<span class="keyword">int</span> data;</span><br><span class="line">　　Node *next;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function">Node *<span class="title">reverse</span><span class="params">(Node *head)</span> </span>&#123;</span><br><span class="line">  Node *pPrev = <span class="literal">nullptr</span>;</span><br><span class="line">  Node *pHead = head;</span><br><span class="line">  Node *pNext = <span class="literal">nullptr</span>;</span><br><span class="line">  <span class="keyword">while</span> (pHead) &#123;</span><br><span class="line">    pNext = pHead-&gt;next;</span><br><span class="line">    pHead-&gt;next = pPrev;</span><br><span class="line">    pPrev = pHead;</span><br><span class="line">    pHead = pNext;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> pHead;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Node *<span class="title">reverse</span><span class="params">(Node *head)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (!head) &#123;</span><br><span class="line">    <span class="keyword">return</span> head;</span><br><span class="line">  &#125;</span><br><span class="line">  Node *first = <span class="literal">nullptr</span>;</span><br><span class="line">  Node *second = head;</span><br><span class="line">  Node *third = head-&gt;next;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">while</span> (third) &#123;</span><br><span class="line">    second-&gt;next = first;</span><br><span class="line"></span><br><span class="line">    first = second;</span><br><span class="line">    second = third;</span><br><span class="line">    third = third-&gt;next;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  second-&gt;next = first;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> second;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="翻转链表的部分节点"><a href="#翻转链表的部分节点" class="headerlink" title="翻转链表的部分节点"></a>翻转链表的部分节点</h2><p>翻转node[m]-&gt;node[N]部分， 理解时先将链表分为3部分: part1-&gt;part2-&gt;part3, 只翻转part2  </p>
+<p>翻转动作套用三指针法，但部分翻转的难点在于处理part1为空和非空的情况，所以要判断m时候为1</p>
+<ul>
+<li>m==1即要翻转第一个元素时，需要先记录part2翻转后的tail node，最后将其next指向part3的第一个元素</li>
+<li>m!=1即part1不为空，需要先记录part2翻转后的tail node和part1的最后一个node，最后将其指向part2的新head,以及将part2的第一个node指向part3</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">struct ListNode *<span class="title">reverseBetween</span><span class="params">(struct ListNode *head, <span class="keyword">int</span> m, <span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (m == n) &#123;</span><br><span class="line">    <span class="keyword">return</span> head;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span>(!head || !head-&gt;next)&#123;</span><br><span class="line">    <span class="keyword">return</span> head;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// write code here</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">ListNode</span> *<span class="title">pleft</span> = <span class="title">NULL</span>;</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">ListNode</span> *<span class="title">phead</span> = <span class="title">head</span>;</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">ListNode</span> *<span class="title">pright</span> = <span class="title">NULL</span>;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 只有当m！=1时才需要，指向part1的最后一个元素</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">ListNode</span> *<span class="title">pPart1Tail</span> = <span class="title">NULL</span>;</span></span><br><span class="line">  <span class="comment">// 当m=1时指向part2的第一个元素</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">ListNode</span> *<span class="title">pPart2NewTail</span> = <span class="title">NULL</span>;</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// skip m</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; m; i++) &#123;</span><br><span class="line">    pleft = phead; </span><br><span class="line">    phead = phead-&gt;next;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 保存part2的head,也是翻转后的tail</span></span><br><span class="line">  pPart2NewTail = phead;</span><br><span class="line">  <span class="comment">// m != 1 时pleft不为NULL</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">ListNode</span> *<span class="title">pPartOneTail</span> = <span class="title">pleft</span>;</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">  <span class="comment">// 翻转次数要比m-n大1</span></span><br><span class="line">  <span class="keyword">while</span> (phead &amp;&amp; i &lt; n - m + <span class="number">1</span>) &#123;</span><br><span class="line">    pright = phead-&gt;next;</span><br><span class="line"></span><br><span class="line">    phead-&gt;next = pleft;</span><br><span class="line"></span><br><span class="line">    pleft = phead;</span><br><span class="line">    phead = pright;</span><br><span class="line">    i++;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span>(m==<span class="number">1</span>)&#123;</span><br><span class="line">    <span class="comment">// 指向part3的头</span></span><br><span class="line">    pPart2NewTail-&gt;next = phead;</span><br><span class="line">    <span class="keyword">return</span> pleft;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  pPartOneTail-&gt;next = pleft;</span><br><span class="line">  pPart2NewTail-&gt;next = phead;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> head;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://energygreek.github.io/2022/04/21/rotate-list/" data-id="clsbmbv4f003wbwop6p2a9qrj" data-title="单向链表翻转算法" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/algorithm/" rel="tag">algorithm</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-sdcc-compile-for-51" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/04/10/sdcc-compile-for-51/" class="article-date">
+  <time class="dt-published" datetime="2022-04-10T01:25:49.000Z" itemprop="datePublished">2022-04-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/04/10/sdcc-compile-for-51/">sdcc compiler for 51</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="在Linux下使用sdcc进行单片机开发"><a href="#在Linux下使用sdcc进行单片机开发" class="headerlink" title="在Linux下使用sdcc进行单片机开发"></a>在Linux下使用sdcc进行单片机开发</h1><p>周末研究了下单片机，本来准备写个定时器来控制电扇开关，发现比起树梅派，单片机实在不太方便</p>
+<h2 id="开发环境搭建"><a href="#开发环境搭建" class="headerlink" title="开发环境搭建"></a>开发环境搭建</h2><p>Windows大家都用Keil, 一站式比较方便，但这是个收费软件。而在Linux下，使用到一些组合来实现编译和烧录</p>
+<ol>
+<li>sdcc 开源的编译器，类似gcc</li>
+<li><a href="https://github.com/laborer/stcflash" target="_blank" rel="noopener">stcflash</a> github上的开发者开发的烧录脚本</li>
+</ol>
+<p>sdcc 在Debian有包可以直接安装</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># apt install sdcc</span><br></pre></td></tr></table></figure>
+<p>再 clone github的代码到本地，需要使用root权限执行烧录。而我执行是发现缺少python serial包，要全局安装就使用apt命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># apt install python3-serial</span><br></pre></td></tr></table></figure>
+
+<p>这样环境就搭建好了</p>
+<h2 id="编写代码"><a href="#编写代码" class="headerlink" title="编写代码"></a>编写代码</h2><p>用c语言开发时要引入比较的定义头文件，我的单片机是好多年前买的国产<code>stc 89C52RC</code>， 是基于51的拓展版本，于是用了sdcc的<code>8052.h</code>头，路径在</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// /usr/share/sdcc/include/mcs51/8052.h</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> REG8052_H</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> REG8052_H</span></span><br><span class="line">  </span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;8051.h&gt;     /* load definitions for the 8051 core */</span></span></span><br><span class="line">  </span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> REG8051_H</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">undef</span> REG8051_H</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+
+<p>不过不需要我们指定路径，sdcc会自动引入。窥视其内容可以发现它包含了8051的东西，所以说52是基于51的</p>
+<h2 id="回顾一下51单片机知识"><a href="#回顾一下51单片机知识" class="headerlink" title="回顾一下51单片机知识"></a>回顾一下51单片机知识</h2><ol>
+<li>单片机的寄存器初始是0, 而引脚初始都是高点位</li>
+<li>定时器和计数器的触发事件都是靠中断，中断执行当前（main）中的函数而执行中断响应函数，这跟Unix内核是一样的。 单片机还具有多个优先级的中断，可以嵌套</li>
+<li>中断的触发靠计数寄存器（TLx和THx）溢出，这两个都是8位寄存器，所以同时使用时，在2^16时溢出。但也有只用其中一个寄存器的时候，这由<code>TMOD</code>寄存器控制</li>
+</ol>
+<h3 id="TMOD寄存器"><a href="#TMOD寄存器" class="headerlink" title="TMOD寄存器"></a>TMOD寄存器</h3><p>TMOD是不可按位访问的寄存器，意思是只能一次性赋值所有位。 TMOD控制着两个定时器/计数器0和1</p>
+<p><img src="/images/timer.png" alt="timer"></p>
+<ul>
+<li>TMOD高四位用于设置定时器/计数器1，低四位用于设置定时器/计数器0；</li>
+<li>GATE寄存器决定是否使用外部INTx控制，即软件自动启动，还是外部启动，这里赋值0<ul>
+<li>GATE=1时，“与门”的输出信号K由INTx输入电平和TRx位的状态一起决定(即此时K=TRx·INTx)，当且仅当TRx=1,INTx=1(高电平)时，计数启动；否则，计数停止。当INT0引脚为高平时且TR0置位，TR0=1；启动定时器T0</li>
+<li>GATE=0时，“A”输出恒为1，“B”的值由TRx决定，当TR0=1,启动定时器/计数器T0，当TR1=1，启动定时器/计数器T1</li>
+</ul>
+</li>
+<li>CT位为1时选择计数器模式，为0时选择定时器模式</li>
+<li>M1,M0用于选择工作方式，当M0=1,M1=0时，使用TL0和TH0的16位来计数</li>
+</ul>
+<h3 id="TCON寄存器"><a href="#TCON寄存器" class="headerlink" title="TCON寄存器"></a>TCON寄存器</h3><p><img src="/images/TCON.png" alt="TCON"></p>
+<h3 id="定时器初始化"><a href="#定时器初始化" class="headerlink" title="定时器初始化"></a>定时器初始化</h3><p>这里使用定时器0</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">void Timer0Init(void) &#x2F;&#x2F; 1毫秒@12.000MHz</span><br><span class="line">&#123;</span><br><span class="line">    TMOD &#x3D; 0x01; &#x2F;&#x2F;设置定时器模式 0000 0001</span><br><span class="line">    &#x2F;&#x2F; TCON</span><br><span class="line">    TF0 &#x3D; 0; &#x2F;&#x2F;初始化溢出标志</span><br><span class="line">    TR0 &#x3D; 1; &#x2F;&#x2F;定时器0开始计时</span><br><span class="line">    &#x2F;&#x2F; 计数器初始值，再触发一次就溢出了</span><br><span class="line">    TH0 &#x3D; 0xFF; &#x2F;&#x2F;设置定时初值</span><br><span class="line">    TL0 &#x3D; 0xFE; &#x2F;&#x2F;设置定时初值</span><br><span class="line">    &#x2F;&#x2F; 中断通路</span><br><span class="line">    EA &#x3D; 1; </span><br><span class="line">    ET0 &#x3D; 1;</span><br><span class="line">    PT0 &#x3D; 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="计数器模式"><a href="#计数器模式" class="headerlink" title="计数器模式"></a>计数器模式</h3><p>这里使用计数器0</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Count0Init</span><span class="params">(<span class="keyword">void</span>)</span> <span class="comment">// 1毫秒@12.000MHz</span></span></span><br><span class="line"><span class="function"></span>&#123; </span><br><span class="line">    TMOD = <span class="number">0x05</span>; <span class="comment">//设置计数器模式 0000 0101</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// TCON</span></span><br><span class="line">    TF0 = <span class="number">0</span>; </span><br><span class="line">    TR0 = <span class="number">1</span>; <span class="comment">//定时器0开始计时</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 计数器初始值，再触发一次就溢出了</span></span><br><span class="line">    TH0 = <span class="number">0xFF</span>;  <span class="comment">//设置定时初值</span></span><br><span class="line">    TL0 = <span class="number">0xFE</span>;  <span class="comment">//设置定时初值</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 中断通路</span></span><br><span class="line">    EA = <span class="number">1</span>;</span><br><span class="line">    ET0 = <span class="number">1</span>;</span><br><span class="line">    PT0 = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="中断响应函数"><a href="#中断响应函数" class="headerlink" title="中断响应函数"></a>中断响应函数</h3><p>sdcc和keil有一些区别，中断标志符使用<code>__interrupt</code></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> T0Count = <span class="number">0</span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">timer0_routine</span><span class="params">()</span> __<span class="title">interrupt</span> <span class="params">(<span class="number">1</span>)</span> </span>&#123;</span><br><span class="line">  T0Count++;</span><br><span class="line">  TH0 = <span class="number">0xFF</span>; <span class="comment">//设置定时初值</span></span><br><span class="line">  TL0 = <span class="number">0xFE</span>; <span class="comment">//设置定时初值</span></span><br><span class="line">  <span class="keyword">if</span> (T0Count == <span class="number">3</span>) &#123;</span><br><span class="line">    T0Count = <span class="number">0</span>;</span><br><span class="line">    P1_1 = <span class="number">0</span>;  <span class="comment">// 0输出低电平，灯泡亮</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="完整代码"><a href="#完整代码" class="headerlink" title="完整代码"></a>完整代码</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// main.c</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"8052.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Timer0Init</span><span class="params">(<span class="keyword">void</span>)</span> <span class="comment">// 1毫秒@12.000MHz</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  TMOD = <span class="number">0x01</span>;</span><br><span class="line">  TF0 = <span class="number">0</span>;</span><br><span class="line">  TR0 = <span class="number">1</span>;</span><br><span class="line">  TH0 = <span class="number">0xFF</span>;</span><br><span class="line">  TL0 = <span class="number">0xFE</span>;</span><br><span class="line">  EA = <span class="number">1</span>;</span><br><span class="line">  ET0 = <span class="number">1</span>;</span><br><span class="line">  PT0 = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  Timer1Init();</span><br><span class="line">  <span class="keyword">while</span> (<span class="number">1</span>)</span><br><span class="line">    ;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">unsigned</span> <span class="keyword">int</span> T0Count = <span class="number">0</span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">timer0_routine</span><span class="params">()</span> __<span class="title">interrupt</span><span class="params">(<span class="number">1</span>)</span> </span>&#123;</span><br><span class="line">  T0Count++;</span><br><span class="line">  TH0 = <span class="number">0xFF</span>;</span><br><span class="line">  TL0 = <span class="number">0xFE</span>;</span><br><span class="line">  <span class="keyword">if</span> (T0Count == <span class="number">3</span>) &#123;</span><br><span class="line">    T0Count = <span class="number">0</span>;</span><br><span class="line">    P1_1 = <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="编译和烧录"><a href="#编译和烧录" class="headerlink" title="编译和烧录"></a>编译和烧录</h2><p>代码保存为main.c</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 使用sdcc编译</span><br><span class="line">sdcc main.c</span><br><span class="line">将sdcc生成的ihx文件转为hex文件</span><br><span class="line">packihx main.ihx  &gt; main.hex</span><br></pre></td></tr></table></figure>
+
+<p>烧录到单片机</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">sudo python ~/github/stcflash/stcflash.py main.hex</span><br><span class="line">Connect to /dev/ttyUSB0 at baudrate 2400</span><br><span class="line">Detecting target... <span class="keyword">done</span></span><br><span class="line"> FOSC: 11.955MHz</span><br><span class="line"> Model: STC89C52RC (ver4.3C) </span><br><span class="line"> ROM: 8KB</span><br><span class="line"> [X] Reset stops watchdog</span><br><span class="line"> [X] Internal XRAM</span><br><span class="line"> [X] Normal ALE pin</span><br><span class="line"> [X] Full gain oscillator</span><br><span class="line"> [X] Not erase data EEPROM</span><br><span class="line"> [X] Download regardless of P1</span><br><span class="line"> [X] 12T mode</span><br><span class="line">Baudrate: 38400</span><br><span class="line">Erasing target... <span class="keyword">done</span></span><br><span class="line">Size of the binary: 147</span><br><span class="line">Programming: <span class="comment">#################### done</span></span><br><span class="line">Setting options... <span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://energygreek.github.io/2022/04/10/sdcc-compile-for-51/" data-id="clsbmbv4i0041bwop1lld4qa7" data-title="sdcc compiler for 51" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/51%E5%8D%95%E7%89%87%E6%9C%BA/" rel="tag">51单片机</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-sql-learning" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/03/21/sql-learning/" class="article-date">
+  <time class="dt-published" datetime="2022-03-21T08:29:09.000Z" itemprop="datePublished">2022-03-21</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/03/21/sql-learning/">sql learning</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="数据库优化总结"><a href="#数据库优化总结" class="headerlink" title="数据库优化总结"></a>数据库优化总结</h1><p>这里总结了从数据库设计和sql结构两个方面的优化</p>
+<h2 id="数据库设计范式-Normal-Form"><a href="#数据库设计范式-Normal-Form" class="headerlink" title="数据库设计范式 Normal Form"></a>数据库设计范式 Normal Form</h2><p>范式是在数据库的设计时总结出来的一套规范，通常满足3范式就足够了。但由于3范式也存在问题，所以有了3.5范式</p>
+<p>范式从1到3是越来越严格，所以满足1NF不一定满足2NF，但满足2NF就肯定满足1NF    </p>
+<p>满足所有范式的表没有冗余数据，但也有问题，比如效率不高。这就有了反范式做法，即允许数据冗余，用空间换时间</p>
+<h3 id="1NF：原子化，单元格里的值不能被分割"><a href="#1NF：原子化，单元格里的值不能被分割" class="headerlink" title="1NF：原子化，单元格里的值不能被分割"></a>1NF：原子化，单元格里的值不能被分割</h3><table>
+<thead>
+<tr>
+<th>Employee Id</th>
+<th>Employee Name</th>
+<th>Phone Number</th>
+<th>Salary</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1EDU001</td>
+<td>Alex</td>
+<td>+91 85532065 <br> +91 85532066</td>
+<td>60,131</td>
+</tr>
+<tr>
+<td>1EDU002</td>
+<td>Alex</td>
+<td>+91 85532066</td>
+<td>75,331</td>
+</tr>
+<tr>
+<td>1EDU003</td>
+<td>Alex</td>
+<td>+91 85532068</td>
+<td>63,231</td>
+</tr>
+<tr>
+<td>1EDU004</td>
+<td>Alex</td>
+<td>+91 85532069</td>
+<td>70,231</td>
+</tr>
+<tr>
+<td>1EDU005</td>
+<td>Alex</td>
+<td>+91 85543065 <br> +91 85543075</td>
+<td>60,531</td>
+</tr>
+</tbody></table>
+<p>可见，有条目的电话格里有两个号码，是可以分割的， 所以不满足1NF。应改为</p>
+<table>
+<thead>
+<tr>
+<th>Employee Id</th>
+<th>Employee Name</th>
+<th>Phone Number</th>
+<th>Salary</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1EDU001</td>
+<td>Alex</td>
+<td>+91 85532065</td>
+<td>60,131</td>
+</tr>
+<tr>
+<td>1EDU001</td>
+<td>Alex</td>
+<td>+91 85532066</td>
+<td>60,131</td>
+</tr>
+<tr>
+<td>1EDU002</td>
+<td>Alex</td>
+<td>+91 85532066</td>
+<td>75,331</td>
+</tr>
+<tr>
+<td>1EDU003</td>
+<td>Alex</td>
+<td>+91 85532068</td>
+<td>63,231</td>
+</tr>
+<tr>
+<td>1EDU004</td>
+<td>Alex</td>
+<td>+91 85532069</td>
+<td>70,231</td>
+</tr>
+<tr>
+<td>1EDU005</td>
+<td>Alex</td>
+<td>+91 85543065</td>
+<td>60,531</td>
+</tr>
+<tr>
+<td>1EDU005</td>
+<td>Alex</td>
+<td>+91 85543075</td>
+<td>60,531</td>
+</tr>
+</tbody></table>
+<p>当所有单元格都无法分割了，就满足了第一范式</p>
+<h3 id="2NF：属性不允许部分依赖（复合）主键"><a href="#2NF：属性不允许部分依赖（复合）主键" class="headerlink" title="2NF：属性不允许部分依赖（复合）主键"></a>2NF：属性不允许部分依赖（复合）主键</h3><p>满足2NF前提要满足1NF, 范式2要求非主属性必须依赖完整复合主键或者主键。  </p>
+<p>下表<code>Employee Id</code>和<code>Department Id</code>组成复合主键<br>|Employee Id|Department Id |Office Location |<br>|—|—|—|<br>|1EDUO01 | ED-T1 | Pune |<br>|1EDUO02 | ED-S2 |Bengaluru |<br>|1EDUO03 | ED-M1 | Delhi |<br>|1EDUO04 | ED-T3 | Mumbai |<br>|1EDUO05 | ED-T1 | Pune |</p>
+<p>但<code>Office Location</code>只依赖主键的<code>Employee Id</code>部分。或者说只需<code>Department Id</code>就能保证<code>Office Location</code>唯一， 所以是部分依赖。这样不满足2NF了，应改成两个表</p>
+<table>
+<thead>
+<tr>
+<th>Employee Id</th>
+<th>Department Id</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1EDUO01</td>
+<td>ED-T1</td>
+</tr>
+<tr>
+<td>1EDUO02</td>
+<td>ED-S2</td>
+</tr>
+<tr>
+<td>1EDUO03</td>
+<td>ED-M1</td>
+</tr>
+<tr>
+<td>1EDUO04</td>
+<td>ED-T3</td>
+</tr>
+<tr>
+<td>1EDUO05</td>
+<td>ED-T1</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>Department Id</th>
+<th>Office Location</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ED-T1</td>
+<td>Pune</td>
+</tr>
+<tr>
+<td>ED-S2</td>
+<td>Bengaluru</td>
+</tr>
+<tr>
+<td>ED-M1</td>
+<td>Delhi</td>
+</tr>
+<tr>
+<td>ED-T3</td>
+<td>Mumbai</td>
+</tr>
+</tbody></table>
+<h3 id="3NF：-依赖不能传递"><a href="#3NF：-依赖不能传递" class="headerlink" title="3NF： 依赖不能传递"></a>3NF： 依赖不能传递</h3><p>满足3NF前提要满足2NF, 还有非主属性必须依赖主键/复合主键，不能依赖其他非主属性</p>
+<table>
+<thead>
+<tr>
+<th>Student Id</th>
+<th>Student name</th>
+<th>Subject Id</th>
+<th>Subject</th>
+<th>Adress</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1DT1SENGO1</td>
+<td>Alex</td>
+<td>15CS11</td>
+<td>SQL</td>
+<td>Goa</td>
+</tr>
+<tr>
+<td>1DT1SENGO2</td>
+<td>Barry</td>
+<td>15CS13</td>
+<td>JAVA</td>
+<td>Bengaluru</td>
+</tr>
+<tr>
+<td>1DT15ENGO3</td>
+<td>Clair</td>
+<td>15CS12</td>
+<td>C++</td>
+<td>Delhi</td>
+</tr>
+<tr>
+<td>1DT15ENG04</td>
+<td>DavId</td>
+<td>15CS13</td>
+<td>JAVA</td>
+<td>Kochi</td>
+</tr>
+</tbody></table>
+<p>上表的<code>Subject</code>依赖非主属性<code>Subject Id</code>，而不是依赖<code>Student Id</code>， 这就不满足3NF了。应改成</p>
+<table>
+<thead>
+<tr>
+<th>Student Id</th>
+<th>Student name</th>
+<th>Subject Id</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1DT1SENGO1</td>
+<td>Alex</td>
+<td>15CS11</td>
+</tr>
+<tr>
+<td>1DT1SENGO2</td>
+<td>Barry</td>
+<td>15CS13</td>
+</tr>
+<tr>
+<td>1DT15ENGO3</td>
+<td>Clair</td>
+<td>15CS12</td>
+</tr>
+<tr>
+<td>1DT15ENG04</td>
+<td>DavId</td>
+<td>15CS13</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>Subject Id</th>
+<th>Subject</th>
+<th>Adress</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>15CS11</td>
+<td>SQL</td>
+<td>Goa</td>
+</tr>
+<tr>
+<td>15CS13</td>
+<td>JAVA</td>
+<td>Bengaluru</td>
+</tr>
+<tr>
+<td>15CS12</td>
+<td>C++</td>
+<td>Delhi</td>
+</tr>
+<tr>
+<td>15CS13</td>
+<td>JAVA</td>
+<td>Kochi</td>
+</tr>
+</tbody></table>
+<h4 id="不满足3范式的问题"><a href="#不满足3范式的问题" class="headerlink" title="不满足3范式的问题"></a>不满足3范式的问题</h4><p>不满足3范式的数据库会存在以下问题:</p>
+<ul>
+<li>插入问题： 插入数据时，如果只有部分数据，可能导致插入失败（若某列为NOT NULL）。举例2NF里原来的表，若只有<code>Department Id</code>和<code>Office Location</code>，就无法插入</li>
+<li>更新问题： 当更新某个字段时，需要更新其它列。举例2NF的表，当更新Pune时， 第1列和第4列都要更新</li>
+<li>删除问题： 当删除某些属性时，其他属性也要删除， 举例3NF原来的表，当删除SQL课程时，学生Alex的信息也会丢失</li>
+</ul>
+<h3 id="3-5NF：-BCNF"><a href="#3-5NF：-BCNF" class="headerlink" title="3.5NF： BCNF"></a>3.5NF： BCNF</h3><p>3.5范式用于解决3范式遗留问题<br>例如</p>
+<table>
+<thead>
+<tr>
+<th>Student Id</th>
+<th>Subject</th>
+<th>Professor</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1DT15ENG01</td>
+<td>SQL</td>
+<td>Prof. Mishra</td>
+</tr>
+<tr>
+<td>1DT15ENG02</td>
+<td>JAVA</td>
+<td>Prof. Anand</td>
+</tr>
+<tr>
+<td>1DT15ENG02</td>
+<td>C++</td>
+<td>Prof. Kanthi</td>
+</tr>
+<tr>
+<td>1DT15ENG03</td>
+<td>JAVA</td>
+<td>Prof. Anand</td>
+</tr>
+<tr>
+<td>1DT15ENG04</td>
+<td>DBMS</td>
+<td>Prof. Lokesh</td>
+</tr>
+</tbody></table>
+<p>说明：</p>
+<ul>
+<li>一个学生可以登记多个科目</li>
+<li>多个老师可以教授同一个科目</li>
+<li>每个科目会有一个老师分配给一个学生</li>
+</ul>
+<p>所以这个表满足3范式，因为<code>Student Id</code>和<code>Subject</code>组成了复合主键，决定了<code>Professor</code>。  </p>
+<p>但是不满足3.5NF，因为<code>Student Id</code>和<code>Subject</code>组成了复合主键，所以<code>Subject</code>是主属性， 而存在<code>Professor</code>依赖<code>Subject</code>， 虽然<code>Subject</code>是主属性，但<code>Professor</code>是非主属性，所以不满足BCNF。</p>
+<p>此表应改成</p>
+<table>
+<thead>
+<tr>
+<th>Student Id</th>
+<th>Professor Id</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1DT15ENG01</td>
+<td>1DTPF01</td>
+</tr>
+<tr>
+<td>1DT15ENG02</td>
+<td>1DTPF02</td>
+</tr>
+<tr>
+<td>1DT15ENG02</td>
+<td>1DTPF03</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>Professor ID</th>
+<th>Professor</th>
+<th>Subject</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1DTPF01</td>
+<td>Prof. Mishra</td>
+<td>SQL</td>
+</tr>
+<tr>
+<td>1DTPF02</td>
+<td>Prof. Anand</td>
+<td>JAVA</td>
+</tr>
+<tr>
+<td>1DTPF03</td>
+<td>Prof. Kanthi</td>
+<td>C++</td>
+</tr>
+</tbody></table>
+<h3 id="反范式"><a href="#反范式" class="headerlink" title="反范式"></a>反范式</h3><p>没有冗余数据的设计未必是好设计，有时为了效率，必须降低范式标准，适当允许保留冗余数据，以达到用空间换时间的目的。</p>
+<p>例如订单表存在<code>商品</code>，<code>单价</code>，<code>数量</code>，<code>总价</code>， 这里总价是冗余的，因为可以通过单价和数量来求得，但总价经常需要，所以冗余可以提高效率。</p>
+<h2 id="HAVING-和查询语句优先级"><a href="#HAVING-和查询语句优先级" class="headerlink" title="HAVING 和查询语句优先级"></a>HAVING 和查询语句优先级</h2><p>SQL查询字句类似C语言的运算符优先级， 虽然标准里没有定义优先级，但大致为以下</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FROM &gt; WHERE &gt; SELECT &gt; GROUP BY &gt; HAVING &gt; ORDER BY</span><br></pre></td></tr></table></figure>
+<p>这个顺序可以帮忙理解查询语句是如何执行的，比如因为SELECT优先级低于FROM, 所有只能在FROM中定义alais在SELECT中使用，而不能在SELECT中定义alias并在FROM中使用</p>
+<p>HAVING指令通常和GROUP一起用，因为优先级比GROUP低，所以HAVING可以计算出GROUP的值并进行筛选。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> Sno <span class="keyword">FROM</span> Grade <span class="keyword">GROUP</span> <span class="keyword">BY</span> Sno <span class="keyword">HAVING</span> <span class="keyword">COUNT</span>(Cno) &gt; <span class="number">3</span>;</span><br></pre></td></tr></table></figure>
+<p>这个语句筛选出相同Sno记录的个数&gt;3的集合</p>
+<h2 id="VIEW和数据冗余"><a href="#VIEW和数据冗余" class="headerlink" title="VIEW和数据冗余"></a>VIEW和数据冗余</h2><p>View是一种虚拟表，可以将多表的数据关联在一起，也可以做一些冗余数据，如计算平均值</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">VIEW</span> Cl_avg_age <span class="keyword">AS</span> <span class="keyword">SELECT</span> Clno, <span class="keyword">AVG</span>(Sage) <span class="keyword">AS</span> avg_age <span class="keyword">FROM</span> Student;</span><br></pre></td></tr></table></figure>
+
+<h2 id="事物，存储过程和触发器"><a href="#事物，存储过程和触发器" class="headerlink" title="事物，存储过程和触发器"></a>事物，存储过程和触发器</h2><p>存储过程需要提前创建再使用。 因为存储过程中定义变量， 输入输出明确，所以让数据库操作更安全。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">PROCEDURE</span> ap_returncount @Sno <span class="built_in">char</span>(<span class="number">7</span>) <span class="keyword">AS</span> <span class="keyword">DECLARE</span> @<span class="keyword">count</span> <span class="built_in">int</span> <span class="keyword">SELECT</span> @<span class="keyword">count</span> = <span class="built_in">Number</span> <span class="keyword">FROM</span> <span class="keyword">Class</span> <span class="keyword">WHERE</span> Clno = (<span class="keyword">SELECT</span> Clno <span class="keyword">FROM</span> Student <span class="keyword">WHERE</span> Sno = @Sno) <span class="keyword">RETURN</span> @<span class="keyword">count</span>;</span><br></pre></td></tr></table></figure>
+
+<p>触发器是当触发条件时自动执行的命令，如当插入和更新满足条件时自动执行事物回撤。这是基于事物机制的。<br>事物可以保证多个操作的原子性， 当莫个操作不满足条件则全部<code>ROLLBACK</code>，回撤所有的操作，例如典型的转账场景，必须要扣除和增加都成功时才能成功。</p>
+<p>但事物导致效率比较低。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TRIGGER</span> tri_ins_upd_student <span class="keyword">ON</span> Student <span class="keyword">AFTER</span> <span class="keyword">INSERT</span>, <span class="keyword">UPDATE</span> <span class="keyword">AS</span> <span class="keyword">IF</span> <span class="number">40</span> &lt; (<span class="keyword">SELECT</span> <span class="built_in">Number</span> <span class="keyword">FROM</span> <span class="keyword">Class</span> <span class="keyword">WHERE</span> Clno = (<span class="keyword">SELECT</span> Clno <span class="keyword">FROM</span> inserted )) <span class="keyword">ROLLBACK</span> <span class="keyword">TRANSACTION</span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://www.edureka.co/blog/normalization-in-sql/" target="_blank" rel="noopener">https://www.edureka.co/blog/normalization-in-sql/</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://energygreek.github.io/2022/03/21/sql-learning/" data-id="clsbmbv4n004cbwop71e6da7x" data-title="sql learning" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sql/" rel="tag">sql</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-mutex-error" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/01/25/mutex-error/" class="article-date">
+  <time class="dt-published" datetime="2022-01-25T06:51:37.000Z" itemprop="datePublished">2022-01-25</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/01/25/mutex-error/">mutex error</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>记一次单元测试用例时失败，且出现奇怪的报错</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tpp.c:63: __pthread_tpp_change_priority: Assertion &#96;new_prio &#x3D;&#x3D; -1 ||(new_prio &gt;&#x3D; __sched_fifo_min_prio &amp;&amp; new_prio &lt;&#x3D;__sched_fifo_max_prio)&#39; failed</span><br></pre></td></tr></table></figure>
+
+<h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><p>函数定义如下，原因是下面的第一个assert条件不成立，new_prio != -1。这个函数的注释说明了需要使用者确保调用前已初始化。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;* We only want to initialize __sched_fifo_min_prio and __sched_fifo_max_prio</span><br><span class="line">   once.  The standard solution would be similar to pthread_once, but then</span><br><span class="line">   readers would need to use an acquire fence.  In this specific case,</span><br><span class="line">   initialization is comprised of just idempotent writes to two variables</span><br><span class="line">   that have an initial value of -1.  Therefore, we can treat each variable as</span><br><span class="line">   a separate, at-least-once initialized value.  This enables using just</span><br><span class="line">   relaxed MO loads and stores, but requires that consumers check for</span><br><span class="line">   initialization of each value that is to be used; see</span><br><span class="line">   __pthread_tpp_change_priority for an example.</span><br><span class="line"> *&#x2F;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span></span><br><span class="line">__pthread_tpp_change_priority (<span class="keyword">int</span> previous_prio, <span class="keyword">int</span> new_prio)</span><br><span class="line">&#123;</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">pthread</span> *<span class="title">self</span> = <span class="title">THREAD_SELF</span>;</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">priority_protection_data</span> *<span class="title">tpp</span> = <span class="title">THREAD_GETMEM</span> (<span class="title">self</span>, <span class="title">tpp</span>);</span></span><br><span class="line">  <span class="keyword">int</span> fifo_min_prio = atomic_load_relaxed (&amp;__sched_fifo_min_prio);</span><br><span class="line">  <span class="keyword">int</span> fifo_max_prio = atomic_load_relaxed (&amp;__sched_fifo_max_prio);</span><br><span class="line">  <span class="keyword">if</span> (tpp == <span class="literal">NULL</span>)</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="comment">/* See __init_sched_fifo_prio.  We need both the min and max prio,</span></span><br><span class="line"><span class="comment">         so need to check both, and run initialization if either one is</span></span><br><span class="line"><span class="comment">         not initialized.  The memory model's write-read coherence rule</span></span><br><span class="line"><span class="comment">         makes this work.  */</span></span><br><span class="line">      <span class="keyword">if</span> (fifo_min_prio == <span class="number">-1</span> || fifo_max_prio == <span class="number">-1</span>)</span><br><span class="line">        &#123;</span><br><span class="line">          __init_sched_fifo_prio ();</span><br><span class="line">          fifo_min_prio = atomic_load_relaxed (&amp;__sched_fifo_min_prio);</span><br><span class="line">          fifo_max_prio = atomic_load_relaxed (&amp;__sched_fifo_max_prio);</span><br><span class="line">        &#125;</span><br><span class="line">      <span class="keyword">size_t</span> <span class="built_in">size</span> = <span class="keyword">sizeof</span> *tpp;</span><br><span class="line">      <span class="built_in">size</span> += (fifo_max_prio - fifo_min_prio + <span class="number">1</span>)</span><br><span class="line">              * <span class="keyword">sizeof</span> (tpp-&gt;priomap[<span class="number">0</span>]);</span><br><span class="line">      tpp = <span class="built_in">calloc</span> (<span class="built_in">size</span>, <span class="number">1</span>);</span><br><span class="line">      <span class="keyword">if</span> (tpp == <span class="literal">NULL</span>)</span><br><span class="line">        <span class="keyword">return</span> ENOMEM;</span><br><span class="line">      tpp-&gt;priomax = fifo_min_prio - <span class="number">1</span>;</span><br><span class="line">      THREAD_SETMEM (self, tpp, tpp);</span><br><span class="line">    &#125;</span><br><span class="line">  assert (new_prio == <span class="number">-1</span></span><br><span class="line">          || (new_prio &gt;= fifo_min_prio</span><br><span class="line">              &amp;&amp; new_prio &lt;= fifo_max_prio));</span><br><span class="line">  assert (previous_prio == <span class="number">-1</span></span><br><span class="line">          || (previous_prio &gt;= fifo_min_prio</span><br><span class="line">              &amp;&amp; previous_prio &lt;= fifo_max_prio));</span><br></pre></td></tr></table></figure>
+
+<p>网上帖子的原因是给初始化mutex并设置RECURSIVE类型时，忘了对mutexattr进行初始化，导致使用了脏内存<br>即<code>pthread_mutexattr_init(&amp;mutexattr)</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">pthread_mutexattr_t mutexattr;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; Set the mutex as a recursive mutex</span><br><span class="line">pthread_mutexattr_settype(&amp;mutexattr, PTHREAD_MUTEX_RECURSIVE_NP);</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; create the mutex with the attributes set</span><br><span class="line">pthread_mutex_init(&amp;CritSec, &amp;mutexattr);</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; After initializing the mutex, the thread attribute can be destroyed</span><br><span class="line">pthread_mutexattr_destroy(&amp;mutexattr);</span><br></pre></td></tr></table></figure>
+
+<p>总之，要在线程启动前初始化好mutex</p>
+<h2 id="其他问题"><a href="#其他问题" class="headerlink" title="其他问题"></a>其他问题</h2><p>这个问题其实是c++代码抛出来的，多线程执行了下面的代码，导致了上面的问题。</p>
+<p>AppCache中有个小粒度的锁，但这个锁还未初始化就被其他线程去lock了，导致出现问题。所以要mutex最好要在线程启动前初始化</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">AppCache&#123;</span><br><span class="line">std::mutex</span><br><span class="line">&#125;；</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> app = m_app_cache.<span class="built_in">find</span>(app_path);</span><br><span class="line"><span class="keyword">if</span> (app == m_app_cache.<span class="built_in">end</span>()) &#123;</span><br><span class="line">  <span class="comment">// create a new monitor element</span></span><br><span class="line">  m_app_cache.insert_or_assign(app_path, <span class="built_in">std</span>::make_shared&lt;AppCache&gt;());</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="built_in">std</span>::lock_guard&lt;<span class="built_in">std</span>::mutex&gt; <span class="title">lk</span><span class="params">(app-&gt;second-&gt;cache_mutex)</span></span>;</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h2><p><a href="https://sourceware.org/legacy-ml/libc-help/2008-05/msg00072.html?utm_source=pocket_mylist" target="_blank" rel="noopener">https://sourceware.org/legacy-ml/libc-help/2008-05/msg00072.html?utm_source=pocket_mylist</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://energygreek.github.io/2022/01/25/mutex-error/" data-id="clsbmbv400036bwop7q9hehnp" data-title="mutex error" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c-c/" rel="tag">c/c++</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mutex/" rel="tag">mutex</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-heap-sort" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/12/13/heap-sort/" class="article-date">
+  <time class="dt-published" datetime="2021-12-13T04:28:28.000Z" itemprop="datePublished">2021-12-13</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2021/12/13/heap-sort/">heap sort</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="堆排序"><a href="#堆排序" class="headerlink" title="堆排序"></a>堆排序</h1><p>堆排类似选择排序，只排序未排序的部分，但堆排比较方式不同，每次只比较log(n)次<br>最终的堆排时间复杂度为O(nlogn)</p>
+<h2 id="关键下标"><a href="#关键下标" class="headerlink" title="关键下标"></a>关键下标</h2><p>堆一般用数组来表示，但是关系为</p>
+<ul>
+<li>当以1为起点时，若父节点是n</li>
+</ul>
+<ul>
+<li><p>左子节点=n*2</p>
+</li>
+<li><p>右子节点=n*2 + 1</p>
+</li>
+<li><p>若节点为n, 则其父节点为n/2</p>
+</li>
+<li><p>若元素为m个，则最后一个根节点（非叶节点）为m/2</p>
+</li>
+</ul>
+<ul>
+<li>当以0为起点时，若父节点是n</li>
+</ul>
+<ul>
+<li><p>左子节点=(n+1)<em>2-1 = n</em>2 + 1</p>
+</li>
+<li><p>右子节点=(n+1)<em>2+1 -1 = n</em>2 + 2</p>
+</li>
+<li><p>若节点下标为n, 其父节点为(n+1)/2 - 1 = (n-1)/2</p>
+</li>
+<li><p>若元素为m个，则最后一个根节点（非叶节点）为(m+1)/2-1 = (m-1)/2</p>
+</li>
+</ul>
+<p>可见，若以1为起点，要简洁很多</p>
+<h2 id="建立堆"><a href="#建立堆" class="headerlink" title="建立堆"></a>建立堆</h2><ol>
+<li>从第一个非叶子节点开始，比较父子节点中找的最值，如果需要调整则交换父子节点再递归遍历下一层：</li>
+</ol>
+<ul>
+<li>建立最小堆时，每次比较出最大值，一遍之后，堆顶为最大</li>
+<li>建立最大堆时，每次比较出最小值，一遍之后，堆顶为最小</li>
+</ul>
+<ol start="2">
+<li>比较到顶部节点时，完成第一次遍历，找到了顶部的最值</li>
+<li>将堆顶的最值与尾部交换，遍历范围-1，然后从堆顶开始比较</li>
+<li>重复3动作，直到范围为1</li>
+</ol>
+<p>3的动作类似<code>选择排序</code>，只遍历未排序的部分</p>
+<h2 id="最大堆和最小堆"><a href="#最大堆和最小堆" class="headerlink" title="最大堆和最小堆"></a>最大堆和最小堆</h2><p>最小堆可以求得topK<strong>大</strong>的数，反过来最大堆可以求得topK<strong>小</strong>的数</p>
+<h3 id="topK"><a href="#topK" class="headerlink" title="topK"></a>topK</h3><p>堆排序通常用来实现topK，适用于限制内存的情况。方法是建立一个堆大小为K： 先用头部K个数据建立最小堆，后续的数字与堆顶（最小）比，如果跟小则跳过，否则替换然后执行thiftdown。其时间复杂读为O)KlogK + NlogK), 只需要一次建堆，后续都是比较。空间复杂度为K。</p>
+<p>也可以则使用分治法，将数据分为多组，每组求其top k。最后合并起来再排序，求最终的topK。 分治法可以配合线程一起使用加快速度。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 使用最小堆来实现topK</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">thiftdown</span><span class="params">(<span class="keyword">int</span> *heap, <span class="keyword">int</span> root, <span class="keyword">int</span> <span class="built_in">size</span>)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> m = root;</span><br><span class="line">  <span class="keyword">int</span> l = root * <span class="number">2</span> + <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">int</span> r = root * <span class="number">2</span> + <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (l &lt; <span class="built_in">size</span> &amp;&amp; heap[l] &gt; heap[m]) &#123;</span><br><span class="line">    m = l;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (r &lt; <span class="built_in">size</span> &amp;&amp; heap[r] &gt; heap[m]) &#123;</span><br><span class="line">    m = r;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (m != root) &#123;</span><br><span class="line">    <span class="keyword">int</span> tmp = heap[root];</span><br><span class="line">    heap[root] = heap[m];</span><br><span class="line">    heap[m] = tmp;</span><br><span class="line"></span><br><span class="line">    thiftdown(heap, m, <span class="built_in">size</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">adjust</span><span class="params">(<span class="keyword">int</span> *heap, <span class="keyword">int</span> root, <span class="keyword">int</span> <span class="built_in">size</span>)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> m = root;</span><br><span class="line">  <span class="keyword">int</span> l = root * <span class="number">2</span> + <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">int</span> r = root * <span class="number">2</span> + <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (l &lt; <span class="built_in">size</span> &amp;&amp; heap[l] &lt; heap[m]) &#123;</span><br><span class="line">    m = l;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (r &lt; <span class="built_in">size</span> &amp;&amp; heap[r] &lt; heap[m]) &#123;</span><br><span class="line">    m = r;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (m != root) &#123;</span><br><span class="line">    <span class="keyword">int</span> tmp = heap[root];</span><br><span class="line">    heap[root] = heap[m];</span><br><span class="line">    heap[m] = tmp;</span><br><span class="line"></span><br><span class="line">    adjust(heap, m, <span class="built_in">size</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">heapify</span><span class="params">(<span class="keyword">int</span> *heap, <span class="keyword">int</span> <span class="built_in">size</span>)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = (<span class="built_in">size</span> - <span class="number">1</span>) / <span class="number">2</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">    thiftdown(heap, i, <span class="built_in">size</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">while</span> (<span class="built_in">size</span> &gt; <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">int</span> tmp = heap[<span class="number">0</span>];</span><br><span class="line">    heap[<span class="number">0</span>] = heap[<span class="built_in">size</span> - <span class="number">1</span>];</span><br><span class="line">    heap[<span class="built_in">size</span> - <span class="number">1</span>] = tmp;</span><br><span class="line">    <span class="built_in">size</span>--;</span><br><span class="line">    thiftdown(heap, <span class="number">0</span>, <span class="built_in">size</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> *heap, <span class="keyword">int</span> val, <span class="keyword">int</span> <span class="built_in">size</span>)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (heap[<span class="number">0</span>] &gt;= val) &#123;</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  heap[<span class="number">0</span>] = val;</span><br><span class="line">  adjust(heap, <span class="number">0</span>, <span class="built_in">size</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用方法</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">heapify(m, <span class="number">5</span>);</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">5</span>; i &lt; <span class="number">49</span>; i++) &#123;</span><br><span class="line">  add(m, n[i], <span class="number">5</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> m[<span class="number">0</span>];</span><br></pre></td></tr></table></figure>
+
+<h3 id="海量数据求topK"><a href="#海量数据求topK" class="headerlink" title="海量数据求topK"></a>海量数据求topK</h3><p>常见问题类似：</p>
+<ol>
+<li>求许多重复整数中，重复第K多的正整数。</li>
+<li>求文本中重复出现的词语次数，重复第K多的”，</li>
+<li>ip中访问最K多的”。</li>
+</ol>
+<p>这些问题需要多一步统计，统计出现次数，然后再使用堆来查找topK。</p>
+<ol>
+<li>使用数组统计，如果目标都是正整数，如问题1</li>
+<li>使用map&lt;target, int&gt;统计，int表示出现次数，如果目标字符串，如问题2和问题3</li>
+</ol>
+<p>统计完成后，将目标和计数放入结构体，再使用堆来找topK</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  目标</span><br><span class="line">  次数</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>topK 问题除了堆排序以外，还常用快排来找。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://energygreek.github.io/2021/12/13/heap-sort/" data-id="clsbmbv3o002lbwopafr3gzxc" data-title="heap sort" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/algoritm/" rel="tag">algoritm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/heapsort/" rel="tag">heapsort</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-dp-programming" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/12/09/dp-programming/" class="article-date">
+  <time class="dt-published" datetime="2021-12-09T08:01:53.000Z" itemprop="datePublished">2021-12-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2021/12/09/dp-programming/">动态算法</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="DP-四板斧"><a href="#DP-四板斧" class="headerlink" title="DP 四板斧"></a>DP 四板斧</h1><p>以跳台阶的题目为例， 题目是以每次跳1层或2层的方式跳到n台阶， 问一共有多少种跳法<br>开始我觉得这是求路径个数，而通常dp算最大或最小值， 不适用。<br>但后来换个角度想，求最大最小必须得试过所有方法才得出来的， 而将所有的试过的方法计数，就是这题的解</p>
+<h2 id="写出递归"><a href="#写出递归" class="headerlink" title="写出递归"></a>写出递归</h2><p>dp第一步要先写出递归来， 写递归得写收敛条件<br>这里的收敛条件是当传参小于0,则说明解法失败（多跳了），返回0。 当恰好为0则解法有效返回1  </p>
+<p>递归体就是跳1层和跳2层</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">jump</span><span class="params">(<span class="keyword">int</span> number)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (number &lt; <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (number == <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> jump(number - <span class="number">1</span>) + jump(number - <span class="number">2</span>);</span><br><span class="line">&#125;</span><br><span class="line">  </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">jumpFloor</span><span class="params">(<span class="keyword">int</span> number)</span> </span>&#123; </span><br><span class="line">  <span class="keyword">return</span> jump(number - <span class="number">1</span>) + jump(number - <span class="number">2</span>); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="用缓存来优化递归"><a href="#用缓存来优化递归" class="headerlink" title="用缓存来优化递归"></a>用缓存来优化递归</h2><p>递归显然会重复计算， 可以用缓存计算结果来避免， 当有缓存时使用缓存，否则才去计算， 最后将结果缓存  </p>
+<p>并且使用缓存时应该指定尾递归的值</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">jump</span><span class="params">(<span class="keyword">int</span> number, <span class="keyword">int</span> *cache)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (number &lt; <span class="number">3</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> cache[number];</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 缓存没命中就计算</span></span><br><span class="line">  <span class="keyword">int</span> ret1 =</span><br><span class="line">      cache[number - <span class="number">1</span>] != <span class="number">-1</span> ? cache[number - <span class="number">1</span>] : jump(number - <span class="number">1</span>, cache);</span><br><span class="line">  <span class="keyword">int</span> ret2 =</span><br><span class="line">      cache[number - <span class="number">2</span>] != <span class="number">-1</span> ? cache[number - <span class="number">2</span>] : jump(number - <span class="number">2</span>, cache);</span><br><span class="line">  cache[number] = ret1 + ret2;</span><br><span class="line">  <span class="keyword">return</span> cache[number];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">jumpFloor</span><span class="params">(<span class="keyword">int</span> number)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> cache[number + <span class="number">1</span>];</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; number + <span class="number">1</span>; i++) &#123;</span><br><span class="line">    cache[i] = <span class="number">-1</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  cache[<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line">  cache[<span class="number">1</span>] = <span class="number">1</span>;</span><br><span class="line">  cache[<span class="number">2</span>] = <span class="number">2</span>;</span><br><span class="line">  <span class="keyword">return</span> jump(number, cache);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="递归改for循环"><a href="#递归改for循环" class="headerlink" title="递归改for循环"></a>递归改for循环</h2><p>递归的调用流程是自上而下，先计算(n)-&gt;计算(n -1)-&gt;再计算(n-2) … 0<br>现在要反过来， 先计算(0)-&gt;计算(1)-&gt;计算(2) … n<br>即自下而上</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">jumpFloor</span><span class="params">(<span class="keyword">int</span> number)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (number &lt; <span class="number">3</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> number;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 之前要初始化为了判断， 而现在显然下标大于2的值是要计算出来的，不需要读取  </span></span><br><span class="line">  <span class="comment">// 所以不需要初始化</span></span><br><span class="line">  <span class="keyword">int</span> cache[number + <span class="number">1</span>];</span><br><span class="line">  cache[<span class="number">1</span>] = <span class="number">1</span>;</span><br><span class="line">  cache[<span class="number">2</span>] = <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">3</span>; i &lt;= number; i++) &#123;</span><br><span class="line">    cache[i] = cache[i - <span class="number">1</span>] + cache[i - <span class="number">2</span>];</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> cache[number];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="缩小缓存大小"><a href="#缩小缓存大小" class="headerlink" title="缩小缓存大小"></a>缩小缓存大小</h2><p>仔细看， 其实每次计算只涉及最大的三个数， 所以数组并不需要那么大，只用3个单元就足够，故直接写成3个变量</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">jumpFloorD</span><span class="params">(<span class="keyword">int</span> number)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (number &lt; <span class="number">3</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> number;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">int</span> total = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">int</span> minors2 = <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">int</span> minors1 = <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">3</span>; i &lt;= number; i++) &#123;</span><br><span class="line">    total = minors1 + minors2;</span><br><span class="line">    minors2 = minors1;</span><br><span class="line">    minors1 = total;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> total;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样DP解法就出来了， 这个套路是我从力扣上学到的， 非常有效简单</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>从上可见，你需要训练如何发现递归关系，剩下的工作就是缓存递归调用的结果，最后是将从上到下的解决思路变为从下到上。这样我们就可以用O(N)的时间复杂度去遍历  </p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://leetcode.com/discuss/study-guide/1490172/dynamic-programming-is-simple" target="_blank" rel="noopener">https://leetcode.com/discuss/study-guide/1490172/dynamic-programming-is-simple</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://energygreek.github.io/2021/12/09/dp-programming/" data-id="clsbmbv3k002bbwop4oj903l8" data-title="动态算法" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/DP/" rel="tag">DP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/algorithm/" rel="tag">algorithm</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-memory-management" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/11/30/memory-management/" class="article-date">
+  <time class="dt-published" datetime="2021-11-30T20:04:11.000Z" itemprop="datePublished">2021-12-01</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2021/11/30/memory-management/">应用程序的内存管理</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="浅谈内存管理"><a href="#浅谈内存管理" class="headerlink" title="浅谈内存管理"></a>浅谈内存管理</h1><p>这里记录一下看书所得，应用程序的内存管理，即glibc的malloc和相关函数</p>
+<h2 id="内存管理的重要性"><a href="#内存管理的重要性" class="headerlink" title="内存管理的重要性"></a>内存管理的重要性</h2><p>过去Linux通过默认的dlmalloc来申请内存，但不支持多线程，这导致的竞争和性能降低，而ptmalloc2支持多线程，也成为了Linux新的默认方式<br>ptmalloc2通过为每个线程单独维护一个帧，这样每个线程的申请和释放可以并行执行，但当线程过多时，线程也将共享帧。这种帧叫做<code>per thread arena</code></p>
+<h2 id="主线程和线程的内存申请方式"><a href="#主线程和线程的内存申请方式" class="headerlink" title="主线程和线程的内存申请方式"></a>主线程和线程的内存申请方式</h2><p>主线程中使用brk来申请大块内存，其实<code>brk</code>不过是修改了寄存器的值。而且返回的大小通常要比malloc申请的多，如同测试中的在主线程中申请100个字节大小的内存，返回了132 KB。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">55f7b402c000-55f7b404d000 rw-p 00000000 00:00 0                          [heap]</span><br></pre></td></tr></table></figure>
+<p>而在线程中，malloc使用mmap来申请内存，返回大小也比申请大小多，测试中的在线程中申请100字节，返回了64M的地址空间， 但只有8MB是可用的堆内存。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">7fb738000000-7fb738021000 rw-p 00000000 00:00 0      </span><br><span class="line">7fb738021000-7fb73c000000 ---p 00000000 00:00 0</span><br></pre></td></tr></table></figure>
+
+<p>主线程中申请的地址大于Data Section的地址，说明使用的<code>brk</code>，而后者申请时用了mmap，对比附录文档可以看出32位和64位区别比较大</p>
+<h2 id="arena"><a href="#arena" class="headerlink" title="arena"></a>arena</h2><p>主线程和线程使用不同的arena，这样主线程和线程同时申请内存时不存在竞争。但不是所有的线程都独享一份arena, arena的个数限制如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">For 32 bit systems:</span><br><span class="line">     Number of arena &#x3D; 2 * number of cores.</span><br><span class="line">For 64 bit systems:</span><br><span class="line">     Number of arena &#x3D; 8 * number of cores.</span><br></pre></td></tr></table></figure>
+
+<p>当线程个数太多时，会公用主线程的arena</p>
+<h3 id="main-arena-和-per-thread-arena"><a href="#main-arena-和-per-thread-arena" class="headerlink" title="main arena 和 per thread arena"></a>main arena 和 per thread arena</h3><p>main arena 指在主线程（main）中使用的，而后者是子线程中使用，两者有很大区别<br>主线程只有一块heap，所以没有heapinfo结构，而子线程有。主线程的<code>Arena header</code>是全局变量，所以存在于libc.so的Data Segment中  </p>
+<p>线程的arena含有多个heap, 每个heap都有heapinfo结构，多个heapinfo组成链表。线程的多个heap共享一个<code>malloc_state</code> 也称为<code>Arena header</code>  </p>
+<p><code>Arena header</code>包含了bin、top chunk等信息  </p>
+<p>每个heap有多个chunk，每个chunk有个<code>malloc_chunk</code>结构，其管理chunk的状态和其在heap中的偏移大小，有以下几种状态</p>
+<ul>
+<li>Allocated chunk </li>
+<li>Free chunk</li>
+<li>Top chunk</li>
+<li>Last Remainder chunk</li>
+</ul>
+<p>Top chunk 处于arena的顶部，在freelist没有合适大小的chunk时使用，如果Top chunk比申请的大，则又分为两部分（新Top chunk和用户申请的chunk）  </p>
+<p>Last Remainder chunk, 是当用户请求small chunk时，会先遍历small bin和Unsorted bin， 如果都无法满足，则遍历其他bin。<br>如果找到的chunk还有剩余，则这个chunk变为<code>Last Remainder chunk</code>，且将被加入到<code>Unsorted bin</code><br>这样的好处是多次申请small chunk时，会先向<code>Unsorted bin</code>的<code>Last Remainder chunk</code>申请， 所以小内存块会集中分布在<code>Last Remainder chunk</code>，提高小块内存的局部性  </p>
+<h2 id="bin"><a href="#bin" class="headerlink" title="bin"></a>bin</h2><p>当malloc的内存被free后（仅仅是例子中的100字节chunk），并不会释放给内核，而是进入到glibc的bin中，也叫做<code>freelist</code>。<br>当下次申请内存时，会从bin中查找合适的chunk，而只有当没有合适的大小时，才向内核申请。</p>
+<p>所以bin用来保存free过的chunk, 基于chunk的大小分为</p>
+<ul>
+<li>Fast bin</li>
+<li>Unsorted bin</li>
+<li>Small bin</li>
+<li>Large bin</li>
+</ul>
+<p>但不同的bin都使用链表来管理这些chunk</p>
+<h2 id="测试方法"><a href="#测试方法" class="headerlink" title="测试方法"></a>测试方法</h2><p>获取程序运行时的pid, 假设为949293, 那么通过以下命令可以获取程序的内存结构</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">cat &#x2F;proc&#x2F;949632&#x2F;maps</span><br><span class="line"># address           	  perms offset  dev    inode   			 pathname</span><br><span class="line">55f7b378a000-55f7b378b000 r--p 00000000 103:02 4727634                   &#x2F;tmp&#x2F;a.out (deleted)</span><br><span class="line">55f7b378b000-55f7b378c000 r-xp 00001000 103:02 4727634                   &#x2F;tmp&#x2F;a.out (deleted)</span><br><span class="line">55f7b378c000-55f7b378d000 r--p 00002000 103:02 4727634                   &#x2F;tmp&#x2F;a.out (deleted)</span><br><span class="line">55f7b378d000-55f7b378e000 r--p 00002000 103:02 4727634                   &#x2F;tmp&#x2F;a.out (deleted)</span><br><span class="line">55f7b378e000-55f7b378f000 rw-p 00003000 103:02 4727634                   &#x2F;tmp&#x2F;a.out (deleted)</span><br><span class="line">55f7b402c000-55f7b404d000 rw-p 00000000 00:00 0                          [heap]</span><br><span class="line">7f4808000000-7f4808021000 rw-p 00000000 00:00 0 </span><br><span class="line">7f4808021000-7f480c000000 ---p 00000000 00:00 0 </span><br><span class="line">7f480ea3d000-7f480ea3e000 ---p 00000000 00:00 0 </span><br><span class="line">7f480ea3e000-7f480f241000 rw-p 00000000 00:00 0 </span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<ul>
+<li>address 是起始地址-结束地址，差值为空间大小</li>
+<li>perm 是指权限，分为rwx[p,s], [p,s]指最后一位可以是private或者shared, 这些能通过<code>mprotect</code>命令修改(c中的const实现)</li>
+<li>offset 仅对mmap的区域有效，指映射偏移量</li>
+<li>pathname 如果此区域是映射的文件，则显示文件名。如果映射的是匿名映射则显示空白, 匿名映射包括线程通过mmap申请的堆内存，而[heap]是main函数的堆 </li>
+</ul>
+<p>所以通过计算address可以知道glibc申请的内存情况</p>
+<h2 id="malloc的返回值有意义吗"><a href="#malloc的返回值有意义吗" class="headerlink" title="malloc的返回值有意义吗"></a><code>malloc</code>的返回值有意义吗</h2><p>在我本机（gcc (Debian 10.2.1-6) 10.2.1 20210110 12GB）上测试了一段程序</p>
+<ol>
+<li>如果一次性申请13GB，malloc返回失败</li>
+<li>如果每次只申请2GB但不释放，第10次申请（20GB）malloc返回成功</li>
+<li>如果每次只申请2GB但不释放且<code>访问</code>，第三次申请（6GB）malloc返回成功，但访问时OOM</li>
+</ol>
+<p>所以说，malloc的返回值是没有太大意义的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">void foo(size_t large) &#123;</span><br><span class="line">  char *buffer &#x3D; (char *)malloc(large);</span><br><span class="line">  if (buffer &#x3D;&#x3D; NULL) &#123;</span><br><span class="line">    printf(&quot;error!\n&quot;);</span><br><span class="line">    exit(EXIT_FAILURE);</span><br><span class="line">  &#125;</span><br><span class="line">  printf(&quot;Memory allocated\n&quot;);</span><br><span class="line">  &#x2F;&#x2F;  for (size_t i &#x3D; 0; i &lt; large; i +&#x3D; 4096) &#123;</span><br><span class="line">  &#x2F;&#x2F;    buffer[i] &#x3D; 0;</span><br><span class="line">  &#x2F;&#x2F;  &#125;</span><br><span class="line">  printf(&quot;Travalse done\n&quot;);</span><br><span class="line">&#125;</span><br><span class="line">int main() &#123;</span><br><span class="line">  &#x2F;&#x2F; size_t large &#x3D; 1099511627776;</span><br><span class="line">  size_t large &#x3D; 13958643712;</span><br><span class="line">  for (int i &#x3D; 0; i &lt; 100; i++) &#123;</span><br><span class="line">    foo(2147483648);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  return EXIT_SUCCESS;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>内存管理不仅存在应用程序（或者说glibc）中，Linux内核也有内存管理。也不只有glibc的内存malloc一种实现，还有</p>
+<ul>
+<li>dlmalloc – General purpose allocator</li>
+<li>ptmalloc2 – glibc</li>
+<li>jemalloc – FreeBSD 的libc实现, 相比其他第三方，这个比较流行</li>
+<li>tcmalloc – Google 为多线程场景开发</li>
+<li>libumem – Solaris</li>
+</ul>
+<p>malloc是glibc对ptmalloc2的包装，而<code>ptmalloc2</code>是<code>dlmalloc</code>的重构，区别很大  </p>
+<p>最后总结，glibc的malloc通过两个系统调用函数brk和mmap来向内核申请内存，但内存释放后不会归还内核，而是放到freelist等待再次被利用</p>
+<h2 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h2><p><a href="https://man7.org/linux/man-pages/man5/proc.5.html" target="_blank" rel="noopener">https://man7.org/linux/man-pages/man5/proc.5.html</a><br><a href="https://sploitfun.wordpress.com/2015/02/10/understanding-glibc-malloc/comment-page-1/" target="_blank" rel="noopener">https://sploitfun.wordpress.com/2015/02/10/understanding-glibc-malloc/comment-page-1/</a><br><a href="https://lemire.me/blog/2021/10/27/in-c-how-do-you-know-if-the-dynamic-allocation-succeeded/" target="_blank" rel="noopener">https://lemire.me/blog/2021/10/27/in-c-how-do-you-know-if-the-dynamic-allocation-succeeded/</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://energygreek.github.io/2021/11/30/memory-management/" data-id="clsbmbv410038bwop5xayd2wz" data-title="应用程序的内存管理" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/malloc/" rel="tag">malloc</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/memory/" rel="tag">memory</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-spdlog-learn" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/11/19/spdlog-learn/" class="article-date">
+  <time class="dt-published" datetime="2021-11-19T01:53:49.000Z" itemprop="datePublished">2021-11-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2021/11/19/spdlog-learn/">spdlog learn</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="spdlog"><a href="#spdlog" class="headerlink" title="spdlog"></a>spdlog</h1><p>spdlog 支持多spdlog::logger, 适用与多个隔离模块的日志分别保存  </p>
+<p>而且logger含有多个sink的vector。sink与文件对应，如果想把日志输出到多个文件，就创建多个sink  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">std::vector&lt;sink_ptr&gt; sinks_;</span><br></pre></td></tr></table></figure>
+
+<p>logger和sink的级别独立</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; logger级别的判断</span><br><span class="line">template&lt;typename... Args&gt;</span><br><span class="line">inline void spdlog::logger::log(source_loc source, level::level_enum lvl, const char *fmt, const Args &amp;... args)</span><br><span class="line">&#123;</span><br><span class="line">    if (!should_log(lvl))</span><br><span class="line">    &#123;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; sink级别的判断</span><br><span class="line">inline void spdlog::logger::sink_it_(details::log_msg &amp;msg)</span><br><span class="line">&#123;</span><br><span class="line">#if defined(SPDLOG_ENABLE_MESSAGE_COUNTER)</span><br><span class="line">    incr_msg_counter_(msg);</span><br><span class="line">#endif</span><br><span class="line">    for (auto &amp;sink : sinks_)</span><br><span class="line">    &#123;</span><br><span class="line">        if (sink-&gt;should_log(msg.level))</span><br><span class="line">        &#123;</span><br><span class="line">            sink-&gt;log(msg);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>所以可以支持不同的级别到不同的文件，例如logger设置为trace级别， sink1 设置为info级别， sink2设置为trace级别，这样就能创建两个日志文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">info.log  # 只保存info级别</span><br><span class="line">full.log  # 保存所有级别（logger级别或者sink2的级别）</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://energygreek.github.io/2021/11/19/spdlog-learn/" data-id="clsbmbv4m004abwopg3hsg7xb" data-title="spdlog learn" class="article-share-link">分享</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-build-a-spider" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/11/07/build-a-spider/" class="article-date">
+  <time class="dt-published" datetime="2021-11-07T08:01:53.000Z" itemprop="datePublished">2021-11-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2021/11/07/build-a-spider/">网页爬虫入门</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="爬虫"><a href="#爬虫" class="headerlink" title="爬虫"></a>爬虫</h1><p>如何做一个最简单的爬虫？ 一条bash命令爬深圳7天天气</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#获取7天的天气</span></span><br><span class="line">wget -q http://www.weather.com.cn/weather/101280601.shtml -O - \</span><br><span class="line">| grep <span class="string">'class="wea"\|^&lt;h1&gt;'</span>  | grep -o <span class="string">"&gt;.*&lt;"</span> | sed <span class="string">'s/&gt;//;s/&lt;//'</span> \</span><br><span class="line">| awk <span class="string">'ORS=NR%2==1?" ":"\n" &#123;print&#125;'</span>  </span><br><span class="line"></span><br><span class="line">7日（今天） 晴</span><br><span class="line">8日（明天） 晴</span><br><span class="line">9日（后天） 晴</span><br><span class="line">10日（周五） 晴</span><br><span class="line">11日（周六） 晴</span><br><span class="line">12日（周日） 晴</span><br><span class="line">13日（周一） 晴转小雨</span><br></pre></td></tr></table></figure>
+
+<h3 id="这条命令如何写出来的"><a href="#这条命令如何写出来的" class="headerlink" title="这条命令如何写出来的"></a>这条命令如何写出来的</h3><ol>
+<li>定目标，想好要爬什么，如爬深圳天气</li>
+<li>先在浏览器访问天气网站，网址<a href="http://www.weather.com.cn/，" target="_blank" rel="noopener">http://www.weather.com.cn/，</a> 再找到深圳7天天气的网页链接为<a href="http://www.weather.com.cn/weather/101280601.shtml" target="_blank" rel="noopener">http://www.weather.com.cn/weather/101280601.shtml</a></li>
+<li>右键菜单里选择查看网页源码，搜索天气的内容所在位置</li>
+<li>找规律： 日期和天气的行有特定起始内容，日期这行以<code>&lt;h1&gt;</code>开头，天气这行包含<code>class=&quot;wea&quot;</code></li>
+<li>格式化： 清除不要的内容，使用sed和awk</li>
+</ol>
+<h3 id="拓展"><a href="#拓展" class="headerlink" title="拓展"></a>拓展</h3><p>只有这样没有意义， 不如自己在浏览器上看？ 但如果一次性查找武汉、北京、广州的天气，但网页只能查当天的，只有保存到硬盘的数据才能永远回头翻<br>或者如果想每天<code>自动</code>执行一遍呢？ 又或者如何自动发邮件提醒你带伞呢？ –都是可以的， 这需要更多耐心和学习     </p>
+<p>但因为bash处理网页比较麻烦，而且也不是今天的主题语言。</p>
+<h2 id="关键组件"><a href="#关键组件" class="headerlink" title="关键组件"></a>关键组件</h2><ul>
+<li>python</li>
+<li><a href="https://scrapy.org/" target="_blank" rel="noopener">scapy</a></li>
+<li><a href="https://www.crummy.com/software/BeautifulSoup/bs4/doc.zh/" target="_blank" rel="noopener">Beautiful Soup</a></li>
+</ul>
+<h2 id="python"><a href="#python" class="headerlink" title="python"></a>python</h2><p>python简单灵活的语法又有丰富的生态， 适合作为入门爬虫的编程语言</p>
+<h2 id="Beautiful-Soup"><a href="#Beautiful-Soup" class="headerlink" title="Beautiful Soup"></a>Beautiful Soup</h2><p>早期使用python自带的request库， 就能简单地实现一个爬虫软件</p>
+<h2 id="主角scrapy"><a href="#主角scrapy" class="headerlink" title="主角scrapy"></a>主角scrapy</h2><blockquote>
+<p>An open source and collaborative framework for extracting the data you need from websites. In a fast, simple, yet extensible way.</p>
+</blockquote>
+<p>scrapy 是一套完整框架， 实现了爬取网站的许多细节工作，让我们不需要了解代码，就能爬网站。其开发商还提供爬虫托管服务， 可以将你的爬虫做成在线服务， 而bs只是一个库</p>
+<p>简单介绍</p>
+<ul>
+<li>目录结构</li>
+<li>配置</li>
+</ul>
+<h3 id="scrapy选择器"><a href="#scrapy选择器" class="headerlink" title="scrapy选择器"></a>scrapy选择器</h3><p>选择器用来指定网页的位置，scrapy支持的选择器有两种：</p>
+<ul>
+<li>css</li>
+<li>xpath</li>
+</ul>
+<p>自己先在源码上找规律，也可以简单地使用浏览器提供的复制选择器功能  </p>
+<p>先手动验证, 获取列表的所有详情页链接</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">scrapy shell <span class="string">"https://www.douban.com/group/search?cat=1013&amp;q=深圳租房"</span>  </span><br><span class="line"><span class="comment"># xpath方式</span></span><br><span class="line">response.xpath(<span class="string">'//td[has-class("td-subject")]//a/@href'</span>).getall()</span><br><span class="line"><span class="comment"># css方式</span></span><br><span class="line">response.css(<span class="string">'td.td-subject'</span>).css(<span class="string">'a::attr(href)'</span>).getall()</span><br></pre></td></tr></table></figure>
+
+<p>先手动验证, 获得下一页</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">response.css(<span class="string">'span.next'</span>).css(<span class="string">'a::attr(href)'</span>).get()</span><br><span class="line"><span class="comment"># 控制台-&gt;‘Copy CSS Selector’</span></span><br><span class="line"><span class="comment"># .next &gt; a:nth-child(2)</span></span><br><span class="line">response.css(<span class="string">'.next &gt; a::attr(href)'</span>).get()</span><br></pre></td></tr></table></figure>
+
+<p><a href="https://parsel.readthedocs.io/en/latest/usage.html#learning-css-and-xpath" target="_blank" rel="noopener">详细</a></p>
+<h3 id="数据处理"><a href="#数据处理" class="headerlink" title="数据处理"></a>数据处理</h3><p>爬到的数据可能乱和重复， 可以加个<code>清洗</code>的步骤， 在爬到数据后对数据过滤，删除不要的数据</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 删除重复条目</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DuplicatesPipeline</span><span class="params">(object)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.ids_seen = set()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process_item</span><span class="params">(self, item, spider)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> item[<span class="string">'title_digist'</span>] <span class="keyword">in</span> self.ids_seen:</span><br><span class="line">            <span class="keyword">raise</span> DropItem(<span class="string">"Duplicate item found: %s"</span> % item)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            self.ids_seen.add(item[<span class="string">'title_digist'</span>])</span><br><span class="line">            <span class="keyword">return</span> item</span><br></pre></td></tr></table></figure>
+
+<h2 id="具体项目-爬豆瓣租房"><a href="#具体项目-爬豆瓣租房" class="headerlink" title="具体项目 爬豆瓣租房"></a>具体项目 爬豆瓣租房</h2><h2 id="使用爬虫清理百度搜索结果"><a href="#使用爬虫清理百度搜索结果" class="headerlink" title="使用爬虫清理百度搜索结果"></a>使用爬虫清理百度搜索结果</h2><p>百度搜索的有效结果只占少部分，其他是广告，视频和推荐词  </p>
+<p>用爬虫来提取有效结果</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 标题</span></span><br><span class="line">response.css(<span class="string">'#content_left &gt; div.result'</span>).css(<span class="string">'a:nth-child(1)::text'</span>).getall()</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">response.css(<span class="string">'#content_left &gt; div.result'</span>).css(<span class="string">'a:nth-child(1)::attr(href)'</span>).get()</span><br></pre></td></tr></table></figure>
+
+<h2 id="部署成在线服务"><a href="#部署成在线服务" class="headerlink" title="部署成在线服务"></a>部署成在线服务</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">pip install shub</span><br><span class="line"></span><br><span class="line">shub login</span><br><span class="line">Insert your Zyte Scrapy Cloud API Key: &lt;API_KEY&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Deploy the spider to Zyte Scrapy Cloud</span></span><br><span class="line">shub deploy</span><br><span class="line"></span><br><span class="line"><span class="comment"># Schedule the spider for execution</span></span><br><span class="line">shub schedule blogspider </span><br><span class="line">Spider blogspider scheduled, watch it running here:</span><br><span class="line">https://app.zyte.com/p/26731/job/1/8</span><br><span class="line"></span><br><span class="line"><span class="comment"># Retrieve the scraped data</span></span><br><span class="line">shub items 26731/1/8</span><br></pre></td></tr></table></figure>
+
+<h2 id="其他问题"><a href="#其他问题" class="headerlink" title="其他问题"></a>其他问题</h2><h3 id="登录"><a href="#登录" class="headerlink" title="登录"></a>登录</h3><p>不是所有页面都能像豆瓣这样简单直接访问，有的需要登陆，这时需要设置cookie<br>可将浏览器的访问的请求复制为curl请求，再将curl请求转换为scrapy请求, 有工具<a href="https://michael-shub.github.io/curl2scrapy/" target="_blank" rel="noopener">curl2scrapy</a></p>
+<p>爬携程机票，但这样只能看最新或者最便宜的机票，无法自动订票</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl <span class="string">'https://flights.ctrip.com/international/search/api/lowprice/calendar/getCalendarDetailList?v=0.4625948281116462'</span> -H <span class="string">'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101 Firefox/78.0'</span> -H <span class="string">'Accept: application/json'</span> -H <span class="string">'Accept-Language: zh-CN,en-US;q=0.5'</span> --compressed -H <span class="string">'Content-Type: application/json;charset=utf-8'</span> -H <span class="string">'transactionID: 0feb04e3db5648acb409a9efaf68eb99'</span> -H <span class="string">'scope: d'</span> -H <span class="string">'Cache-Control: no-cache'</span> -H <span class="string">'Origin: https://flights.ctrip.com'</span> -H <span class="string">'Connection: keep-alive'</span> -H <span class="string">'Referer: https://flights.ctrip.com/online/list/oneway-wuh0-szx?_=1&amp;depdate=2021-12-08&amp;cabin=y_s&amp;adult=1&amp;searchid=j1043107111-1628648957090-97788Tk-0&amp;containstax=1'</span> -H <span class="string">'Cookie: _bfa=1.1638949895953.3tfx42.1.1638949895953.1638949895953.1.2; _bfs=1.2; FlightIntl=Search=[%22WUH|%E6%AD%A6%E6%B1%89(%E5%A4%A9%E6%B2%B3%E5%9B%BD%E9%99%85%E6%9C%BA%E5%9C%BA)(WUH)|477|WUH|WUH|480%22%2C%22SZX|%E6%B7%B1%E5%9C%B3(SZX)|30|SZX|480%22%2C%222021-12-09%22]; _RF1=116.30.223.163; _RSG=mtaCn0GabiBpwk2uaRD22A; _RDG=28d46524d5c5f727d530fed50e21ed2094; _RGUID=bb259100-3132-4df0-a082-35b9380aeeb3; _bfaStatus=send; MKT_Pagesource=PC; _bfaStatusPVSend=1; _bfi=p1%3D10320673302%26p2%3D10320673302%26v1%3D2%26v2%3D1'</span> -H <span class="string">'Sec-GPC: 1'</span> -H <span class="string">'TE: Trailers'</span> --data-raw <span class="string">'&#123;"cabin":"Y_S","flightWay":"S","flightSegmentList":[&#123;"arrivalCityCode":"SZX","departureCityCode":"WUH","departureDate":"2021-12-08"&#125;]&#125;'</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="代理ip"><a href="#代理ip" class="headerlink" title="代理ip"></a>代理ip</h3><p>爬取的时候莫名其妙 IP 就被网站封掉了，毕竟各大网站也不想自己的数据被轻易地爬走。<br>对于爬虫来说，为了解决封禁 IP 的问题，一个有效的方式就是使用代理，使用代理之后可以让爬虫伪装自己的真实 IP，如果使用大量的随机的代理进行爬取，那么网站就不知道是我们的爬虫一直在爬取了，这样就有效地解决了反爬的问题。</p>
+<p><a href="https://www.abuyun.com/" target="_blank" rel="noopener">阿布云</a></p>
+<h3 id="模拟用户代理useragent"><a href="#模拟用户代理useragent" class="headerlink" title="模拟用户代理useragent"></a>模拟用户代理useragent</h3><p>User Agent中文名为用户代理，简称 UA，它是一个特殊字符串头，使得服务器能够识别客户使用的操作系统及版本、CPU 类型、浏览器及版本、浏览器渲染引擎、浏览器语言、浏览器插件等。</p>
+<p>可以使用自己浏览器的UA，也可以用百度蜘蛛的UA<a href="http://www.webkaka.com/tutorial/zhanzhang/2017/061068/" target="_blank" rel="noopener">列表</a><br>但目标网站是否允许就难说了， 需要多试一试</p>
+<h3 id="模拟浏览器"><a href="#模拟浏览器" class="headerlink" title="模拟浏览器"></a>模拟浏览器</h3><p><a href="https://www.selenium.dev/zh-cn/" target="_blank" rel="noopener">Selenium</a> 是一个用于Web应用程序测试的工具。Selenium测试直接运行在浏览器中，就像真正的用户在操作一样。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd ～&#x2F;github&#x2F;SeleniumLogin</span><br><span class="line">python SeleniumLogin&#x2F;core&#x2F;taobao.py</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">login</span><span class="params">(self, username, password, chromedriverpath, **kwargs)</span>:</span></span><br><span class="line">    <span class="comment"># 基本设置</span></span><br><span class="line">    browser = webdriver.Chrome(options=self.chrome_opts)</span><br><span class="line">    browser.get(self.login_url)</span><br><span class="line">    driver_wait = WebDriverWait(browser, <span class="number">60</span>)</span><br><span class="line">    <span class="comment"># 点击'亲, 请登录', 进入登录界面</span></span><br><span class="line">    button = driver_wait.until(EC.presence_of_element_located((By.CLASS_NAME, <span class="string">'h'</span>)))</span><br><span class="line">    button.click()</span><br><span class="line">    <span class="comment"># 输入用户名密码</span></span><br><span class="line">    username_sender = driver_wait.until(EC.presence_of_element_located((By.ID, <span class="string">'fm-login-id'</span>)))</span><br><span class="line">    username_sender.send_keys(username)</span><br><span class="line">    password_sender = driver_wait.until(EC.presence_of_element_located((By.ID, <span class="string">'fm-login-password'</span>)))</span><br><span class="line">    password_sender.send_keys(password)</span><br><span class="line">    time.sleep(<span class="number">2</span>)</span><br><span class="line">    <span class="comment"># 检查是否出现了滑动验证码</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        slider = browser.find_element_by_xpath(<span class="string">"//span[contains(@class, 'btn_slide')]"</span>)</span><br><span class="line">        <span class="keyword">if</span> slider.is_displayed():</span><br><span class="line">            ActionChains(browser).click_and_hold(on_element=slider).perform()</span><br><span class="line">            ActionChains(browser).move_by_offset(xoffset=<span class="number">258</span>, yoffset=<span class="number">0</span>).perform()</span><br><span class="line">            ActionChains(browser).pause(<span class="number">0.5</span>).release().perform()</span><br><span class="line">    <span class="keyword">except</span>:</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line">    <span class="comment"># 点击登录按钮</span></span><br><span class="line">    <span class="comment">#button = driver_wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'password-login')))</span></span><br><span class="line">    <span class="comment">#button.click()</span></span><br><span class="line">    <span class="comment"># 返回必要的数据</span></span><br><span class="line">    infos_return = &#123;<span class="string">'username'</span>: username&#125;</span><br><span class="line">    <span class="keyword">return</span> infos_return, browser</span><br></pre></td></tr></table></figure>
+<h3 id="headless"><a href="#headless" class="headerlink" title="headless"></a>headless</h3><p><a href="https://splash.readthedocs.io/en/stable/api.html#splash-http-api" target="_blank" rel="noopener">Splash HTTP API</a></p>
+<h2 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h2><p><a href="http://c.biancheng.net/view/2011.html" target="_blank" rel="noopener">http://c.biancheng.net/view/2011.html</a><br><a href="https://github.com/CharlesPikachu/SeleniumLogin" target="_blank" rel="noopener">https://github.com/CharlesPikachu/SeleniumLogin</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://energygreek.github.io/2021/11/07/build-a-spider/" data-id="clsbmbv3b001vbwop6qnphcf4" data-title="网页爬虫入门" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webcrawler/" rel="tag">webcrawler</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-container-tech" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/10/14/container-tech/" class="article-date">
+  <time class="dt-published" datetime="2021-10-14T06:33:52.000Z" itemprop="datePublished">2021-10-14</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2021/10/14/container-tech/">容器命名空间</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="容器技术"><a href="#容器技术" class="headerlink" title="容器技术"></a>容器技术</h1><p>容器是利用’cgroup’和’namespace’ 实现软件级的虚拟化，产品有lxc和docker。不同与全虚拟化和半虚拟化，这些是硬件辅助的半虚拟化Zen(Zen也有全虚拟化)和全虚拟化kvm<br>因为容器使用主机内核，不存在特权指令翻译，所以从性能上比较，容器是最高效的，其次是kvm, Zen</p>
+<h2 id="cgroup和namespace"><a href="#cgroup和namespace" class="headerlink" title="cgroup和namespace"></a>cgroup和namespace</h2><p>这两个是容器技术的根基，包括Docker, lxc。实际上docker开始用的lxc，后来用go重新写了libcontainer来实现控制这两个东西<br>简单来说，cgroup实现对进程组的资源的限制和监控，而namespace如同c++里面类似，实现了进程组之间的隔离</p>
+<p>但除此之外, 虚拟化系统时则还需要rootfs支持</p>
+<h2 id="LXC和Docker"><a href="#LXC和Docker" class="headerlink" title="LXC和Docker"></a>LXC和Docker</h2><p>lxc代码合入了内核，其原理和Docker非常类似, 不过Docker有比较丰富的全套工具和方便的api   </p>
+<h2 id="nsenter命令的使用"><a href="#nsenter命令的使用" class="headerlink" title="nsenter命令的使用"></a>nsenter命令的使用</h2><p>容器技术都使用到了namespace, 而nsenter可以操作namespace, 进入容器内部，以下都一docker容器为例  </p>
+<p>使用命令, 获取到容器的首进程pid</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker inspect --format &#39;&#123;&#123;.State.Pid&#125;&#125;&#39; containername</span><br><span class="line">3015</span><br></pre></td></tr></table></figure>
+
+<p>然后可以使用nsenter来进入容器，如同<code>docker exec</code> 一样</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ pwd</span><br><span class="line">&#x2F;home&#x2F;user</span><br><span class="line">$ sudo nsenter -t 3015 -m  pwd</span><br><span class="line">&#x2F;</span><br></pre></td></tr></table></figure>
+
+<p><code>-m</code>表示挂载命名空间，这样就能访问docker里的进程的文件系统，所以能正确打印出容器进程的当前目录<br><code>-t</code>表示目标进程，nsenter可以获取以下命名空间。 跟通过执行<code>ls /proc/self/ns</code>所看到的差不多，这里self是命令本身pid</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;proc&#x2F;pid&#x2F;ns&#x2F;mnt    the mount namespace</span><br><span class="line">&#x2F;proc&#x2F;pid&#x2F;ns&#x2F;uts    the UTS namespace</span><br><span class="line">&#x2F;proc&#x2F;pid&#x2F;ns&#x2F;ipc    the IPC namespace</span><br><span class="line">&#x2F;proc&#x2F;pid&#x2F;ns&#x2F;net    the network namespace</span><br><span class="line">&#x2F;proc&#x2F;pid&#x2F;ns&#x2F;pid    the PID namespace</span><br><span class="line">&#x2F;proc&#x2F;pid&#x2F;ns&#x2F;user   the user namespace</span><br><span class="line">&#x2F;proc&#x2F;pid&#x2F;ns&#x2F;cgroup the cgroup namespace</span><br><span class="line">&#x2F;proc&#x2F;pid&#x2F;ns&#x2F;time   the time namespace</span><br><span class="line">&#x2F;proc&#x2F;pid&#x2F;root      the root directory</span><br><span class="line">&#x2F;proc&#x2F;pid&#x2F;cwd       the working directory respectively</span><br></pre></td></tr></table></figure>
+<p>上面的每项都有对应的参数，而’-a’表示进入上面的所有命名空间</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://energygreek.github.io/2021/10/14/container-tech/" data-id="clsbmbv3a001tbwopayt7h7k1" data-title="容器命名空间" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/namespace/" rel="tag">namespace</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <a class="extend prev" rel="prev" href="/">&laquo; 上一页</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/3/">下一页 &raquo;</a>
+  </nav>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/51%E5%8D%95%E7%89%87%E6%9C%BA/" rel="tag">51单片机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DP/" rel="tag">DP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aarch64/" rel="tag">aarch64</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/admin/" rel="tag">admin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/" rel="tag">algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algoritm/" rel="tag">algoritm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bash/" rel="tag">bash</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/basics/" rel="tag">basics</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/" rel="tag">c++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c-c/" rel="tag">c/c++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cmake/" rel="tag">cmake</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dns/" rel="tag">dns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/email-client/" rel="tag">email_client</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/exam/" rel="tag">exam</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/exception-safe/" rel="tag">exception-safe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ffmpeg/" rel="tag">ffmpeg</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/filesystem/" rel="tag">filesystem</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flask/" rel="tag">flask</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gdb/" rel="tag">gdb</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/" rel="tag">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/grpc/" rel="tag">grpc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/grub/" rel="tag">grub</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hawei/" rel="tag">hawei</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/heapsort/" rel="tag">heapsort</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/" rel="tag">k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linkage/" rel="tag">linkage</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux%E5%9F%BA%E7%A1%80/" rel="tag">linux基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lock/" rel="tag">lock</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lvm/" rel="tag">lvm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maintance/" rel="tag">maintance</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/malloc/" rel="tag">malloc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mdns/" rel="tag">mdns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memory/" rel="tag">memory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mutex/" rel="tag">mutex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mutt/" rel="tag">mutt</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/namespace/" rel="tag">namespace</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/network/" rel="tag">network</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/os-maintain/" rel="tag">os-maintain</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/printer/" rel="tag">printer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/program/" rel="tag">program</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rancher-k8s/" rel="tag">rancher,k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rhce/" rel="tag">rhce</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rtp/" rel="tag">rtp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/safe/" rel="tag">safe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scope/" rel="tag">scope</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/seralize/" rel="tag">seralize</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shared-ptr/" rel="tag">shared_ptr</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/socket/" rel="tag">socket</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/socketopt/" rel="tag">socketopt</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sql/" rel="tag">sql</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/storageduration/" rel="tag">storageduration</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sysemd/" rel="tag">sysemd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/template-programing/" rel="tag">template programing</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/terminal/" rel="tag">terminal</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tool/" rel="tag">tool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/udp/" rel="tag">udp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/unique-ptr/" rel="tag">unique_ptr</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/unit-test/" rel="tag">unit test</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/urxvt/" rel="tag">urxvt</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webcrawler/" rel="tag">webcrawler</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webserver/" rel="tag">webserver</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/weechat/" rel="tag">weechat</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/wordpress/" rel="tag">wordpress</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" rel="tag">二叉树</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E6%A0%B8%E5%8E%9F%E7%90%86/" rel="tag">内核原理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%B7%E6%9C%BA%E6%95%99%E7%A8%8B/" rel="tag">刷机教程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" rel="tag">包管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9F%A5%E6%89%BE/" rel="tag">查找</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/" rel="tag">系统调用</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E8%AF%91/" rel="tag">编译</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%B0%83%E4%BC%98/" rel="tag">调优</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9F%B3%E8%A7%86%E9%A2%91/" rel="tag">音视频</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/51%E5%8D%95%E7%89%87%E6%9C%BA/" style="font-size: 10px;">51单片机</a> <a href="/tags/DP/" style="font-size: 10px;">DP</a> <a href="/tags/Linux/" style="font-size: 10px;">Linux</a> <a href="/tags/aarch64/" style="font-size: 10px;">aarch64</a> <a href="/tags/admin/" style="font-size: 10px;">admin</a> <a href="/tags/algorithm/" style="font-size: 16px;">algorithm</a> <a href="/tags/algoritm/" style="font-size: 10px;">algoritm</a> <a href="/tags/android/" style="font-size: 10px;">android</a> <a href="/tags/bash/" style="font-size: 10px;">bash</a> <a href="/tags/basics/" style="font-size: 10px;">basics</a> <a href="/tags/c/" style="font-size: 12px;">c++</a> <a href="/tags/c-c/" style="font-size: 20px;">c/c++</a> <a href="/tags/cmake/" style="font-size: 10px;">cmake</a> <a href="/tags/dns/" style="font-size: 10px;">dns</a> <a href="/tags/docker/" style="font-size: 18px;">docker</a> <a href="/tags/email-client/" style="font-size: 10px;">email_client</a> <a href="/tags/exam/" style="font-size: 10px;">exam</a> <a href="/tags/exception-safe/" style="font-size: 10px;">exception-safe</a> <a href="/tags/ffmpeg/" style="font-size: 10px;">ffmpeg</a> <a href="/tags/filesystem/" style="font-size: 14px;">filesystem</a> <a href="/tags/flask/" style="font-size: 10px;">flask</a> <a href="/tags/gdb/" style="font-size: 10px;">gdb</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/grpc/" style="font-size: 10px;">grpc</a> <a href="/tags/grub/" style="font-size: 10px;">grub</a> <a href="/tags/hawei/" style="font-size: 10px;">hawei</a> <a href="/tags/heapsort/" style="font-size: 10px;">heapsort</a> <a href="/tags/k8s/" style="font-size: 10px;">k8s</a> <a href="/tags/linkage/" style="font-size: 10px;">linkage</a> <a href="/tags/linux/" style="font-size: 14px;">linux</a> <a href="/tags/linux%E5%9F%BA%E7%A1%80/" style="font-size: 10px;">linux基础</a> <a href="/tags/lock/" style="font-size: 10px;">lock</a> <a href="/tags/lvm/" style="font-size: 10px;">lvm</a> <a href="/tags/maintance/" style="font-size: 10px;">maintance</a> <a href="/tags/malloc/" style="font-size: 10px;">malloc</a> <a href="/tags/mdns/" style="font-size: 10px;">mdns</a> <a href="/tags/memory/" style="font-size: 12px;">memory</a> <a href="/tags/mutex/" style="font-size: 10px;">mutex</a> <a href="/tags/mutt/" style="font-size: 10px;">mutt</a> <a href="/tags/namespace/" style="font-size: 10px;">namespace</a> <a href="/tags/network/" style="font-size: 10px;">network</a> <a href="/tags/os-maintain/" style="font-size: 10px;">os-maintain</a> <a href="/tags/printer/" style="font-size: 10px;">printer</a> <a href="/tags/program/" style="font-size: 10px;">program</a> <a href="/tags/python/" style="font-size: 14px;">python</a> <a href="/tags/rancher-k8s/" style="font-size: 10px;">rancher,k8s</a> <a href="/tags/rhce/" style="font-size: 10px;">rhce</a> <a href="/tags/rtp/" style="font-size: 10px;">rtp</a> <a href="/tags/safe/" style="font-size: 12px;">safe</a> <a href="/tags/scope/" style="font-size: 10px;">scope</a> <a href="/tags/seralize/" style="font-size: 10px;">seralize</a> <a href="/tags/shared-ptr/" style="font-size: 10px;">shared_ptr</a> <a href="/tags/socket/" style="font-size: 10px;">socket</a> <a href="/tags/socketopt/" style="font-size: 10px;">socketopt</a> <a href="/tags/sql/" style="font-size: 12px;">sql</a> <a href="/tags/storageduration/" style="font-size: 10px;">storageduration</a> <a href="/tags/sysemd/" style="font-size: 10px;">sysemd</a> <a href="/tags/template-programing/" style="font-size: 10px;">template programing</a> <a href="/tags/terminal/" style="font-size: 10px;">terminal</a> <a href="/tags/tool/" style="font-size: 18px;">tool</a> <a href="/tags/udp/" style="font-size: 10px;">udp</a> <a href="/tags/unique-ptr/" style="font-size: 10px;">unique_ptr</a> <a href="/tags/unit-test/" style="font-size: 10px;">unit test</a> <a href="/tags/urxvt/" style="font-size: 10px;">urxvt</a> <a href="/tags/webcrawler/" style="font-size: 10px;">webcrawler</a> <a href="/tags/webserver/" style="font-size: 10px;">webserver</a> <a href="/tags/weechat/" style="font-size: 10px;">weechat</a> <a href="/tags/wordpress/" style="font-size: 10px;">wordpress</a> <a href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" style="font-size: 10px;">二叉树</a> <a href="/tags/%E5%86%85%E6%A0%B8%E5%8E%9F%E7%90%86/" style="font-size: 10px;">内核原理</a> <a href="/tags/%E5%88%B7%E6%9C%BA%E6%95%99%E7%A8%8B/" style="font-size: 10px;">刷机教程</a> <a href="/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" style="font-size: 10px;">包管理</a> <a href="/tags/%E6%9F%A5%E6%89%BE/" style="font-size: 10px;">查找</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 10px;">算法</a> <a href="/tags/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/" style="font-size: 10px;">系统调用</a> <a href="/tags/%E7%BC%96%E8%AF%91/" style="font-size: 10px;">编译</a> <a href="/tags/%E8%B0%83%E4%BC%98/" style="font-size: 10px;">调优</a> <a href="/tags/%E9%9F%B3%E8%A7%86%E9%A2%91/" style="font-size: 10px;">音视频</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/02/">二月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/12/">十二月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/05/">五月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">四月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">十二月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/11/">十一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">十月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/08/">八月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">三月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">二月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/02/07/streaming-h264-with-rtp/">streaming h264 with rtp</a>
+          </li>
+        
+          <li>
+            <a href="/2023/09/08/wifi-tool/">随身wifi工具</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/21/docker-network/">docker network</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/18/mail-setup/">mail setup</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/08/install-wordpress/">install wordpress</a>
+          </li>
+        
+          <li>
+            <a href="/2022/12/29/amrnb-and-amrwb/">amrnb和amrwb的编解码</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 greek_soon@hotmail.com<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

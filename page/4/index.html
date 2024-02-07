@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=z20lYmACQgemxcrzNk1C8Q"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'z20lYmACQgemxcrzNk1C8Q');
+</script>
+<!-- End Google Analytics -->
+
+  
+  <title>又是元气满满的一天</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="记录总结">
+<meta property="og:type" content="website">
+<meta property="og:title" content="又是元气满满的一天">
+<meta property="og:url" content="https://energygreek.github.io/page/4/index.html">
+<meta property="og:site_name" content="又是元气满满的一天">
+<meta property="og:description" content="记录总结">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="greek_soon@hotmail.com">
+<meta property="article:tag" content="c&#x2F;c++">
+<meta property="article:tag" content=" Linux日常">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/" title="又是元气满满的一天">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="又是元气满满的一天" type="application/atom+xml">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">又是元气满满的一天</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">个人博客</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS 订阅"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://energygreek.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-temporary-object-and-reference" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/03/02/temporary-object-and-reference/" class="article-date">
+  <time class="dt-published" datetime="2021-03-02T05:36:54.000Z" itemprop="datePublished">2021-03-02</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2021/03/02/temporary-object-and-reference/">右值, 临时变量与引用</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="临时变量"><a href="#临时变量" class="headerlink" title="临时变量"></a>临时变量</h1><p>我们说的临时变量通常是指在语句块里定义的短暂生命周期的局部变量, 其存储周期为’auto’，但这里讨论的是c++中’temporary object’, 是在老版本c++中<br>而语句块里定义的变量以及非引用类型参数，并不属于这里的临时变量  </p>
+<p>c++中的临时变量出现情况：</p>
+<ul>
+<li>litteral常量, 如1</li>
+<li>类型转换   // 赋值语句结束后，自动销毁</li>
+<li>函数返回值 // 赋值语句结束后，自动销毁</li>
+<li>表达式的值 </li>
+</ul>
+<p>而临时变量的定义就是<code>编译器自动创建和销毁的没有名字的变量</code>, 也无法取地址。并且规定：  </p>
+<ul>
+<li>常量类型的引用（<code>reference to const</code>）可以绑定到临时变量</li>
+<li>非常量类型的引用（<code>reference to non-const</code>）类型不能绑定到临时变量</li>
+</ul>
+<p>这个规定的原因是： 因为上面说的<code>编译器自动创建和销毁</code>，所以去修改一个会销毁变量是<code>没有意义的</code></p>
+<h2 id="什么时候编译器要需要创建临时变量"><a href="#什么时候编译器要需要创建临时变量" class="headerlink" title="什么时候编译器要需要创建临时变量"></a>什么时候编译器要需要创建临时变量</h2><table>
+<thead>
+<tr>
+<th>创建原因</th>
+<th>销毁时机</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Result of expression evaluation</td>
+<td>All temporaries created as a result of expression evaluation are destroyed at the end of the expression statement (that is, at the semicolon), or at the end of the controlling expressions for for, if, while, do, and switch statements.</td>
+</tr>
+<tr>
+<td>Initializing const references</td>
+<td>If an initializer is not an l-value of the same type as the reference being initialized, a temporary of the underlying object type is created and initialized with the initialization expression. This temporary object is destroyed immediately after the reference object to which it is bound is destroyed.</td>
+</tr>
+</tbody></table>
+<p>主要是以下两个地方会需要临时变量：</p>
+<ul>
+<li>函数接受引用类型参数的时候</li>
+<li>函数返回的时候</li>
+<li>类型转换的时候</li>
+</ul>
+<p>举例：</p>
+<p>函数参数</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">foo</span><span class="params">(<span class="keyword">const</span> <span class="keyword">int</span> &amp;arg)</span></span>&#123;&#125;</span><br><span class="line">foo(<span class="number">1</span>);  <span class="comment">// 此时创建了临时变量，可以想象成'foo(int _tmp(i));' 而且这个_tmp 不能被修改</span></span><br></pre></td></tr></table></figure>
+
+<p>函数返回值</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">foo</span><span class="params">()</span></span>&#123;<span class="keyword">return</span> <span class="number">1</span>;&#125;</span><br><span class="line"><span class="keyword">int</span> i=foo(); <span class="comment">// 此时创建了临时变量， int _tmp = foo(); int i = _tmp;</span></span><br></pre></td></tr></table></figure>
+
+<p>类型转换</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> i = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">double</span> d = i; <span class="comment">// double _tmp = i; double d = _tmp;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="单独讨论这些似乎意义不大，-但是在实际编写代码的时候，可能会有疑惑"><a href="#单独讨论这些似乎意义不大，-但是在实际编写代码的时候，可能会有疑惑" class="headerlink" title="单独讨论这些似乎意义不大， 但是在实际编写代码的时候，可能会有疑惑"></a>单独讨论这些似乎意义不大， 但是在实际编写代码的时候，可能会有疑惑</h2><p>例如如何解释</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">const int&amp; cr &#x3D; 1; &#x2F;&#x2F; ok</span><br><span class="line">int &amp;r &#x3D; 1; &#x2F;&#x2F; ng</span><br></pre></td></tr></table></figure>
+<p>这里赋值和函数传参一样， 因为1是常数，这里为常量<code>1</code>创建临时变量， 而只有<code>reference to const</code> 才能绑定到临时变量上</p>
+<p>还有解释一个经常被引用的例子</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">foo</span><span class="params">(<span class="keyword">int</span> &amp;arg)</span></span>&#123;&#125;</span><br><span class="line"><span class="keyword">int</span> i = <span class="number">1</span>; foo(i); <span class="comment">// ok</span></span><br><span class="line"><span class="keyword">double</span> d = <span class="number">1.0</span>; foo(d); <span class="comment">// ng</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">foo</span><span class="params">(<span class="keyword">const</span> <span class="keyword">int</span> &amp;arg)</span></span>&#123;&#125;</span><br><span class="line"><span class="keyword">int</span> i = <span class="number">1</span>; foo(i); <span class="comment">// ok</span></span><br><span class="line"><span class="keyword">double</span> d = <span class="number">1.0</span>; foo(d); <span class="comment">// ok</span></span><br></pre></td></tr></table></figure>
+<p>这里虽然i和d都不是常量（不会创建临时变量）， 但是因为类型不同， 发生了类型转换，创建了临时变量。同样地，只有<code>reference to const</code> 才能绑定到临时变量上</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://energygreek.github.io/2021/03/02/temporary-object-and-reference/" data-id="clsbmbv52004qbwop9qqf6hb0" data-title="右值, 临时变量与引用" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/basics/" rel="tag">basics</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c-c/" rel="tag">c/c++</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-kmp-substring-searching-algorithm" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/02/05/kmp-substring-searching-algorithm/" class="article-date">
+  <time class="dt-published" datetime="2021-02-05T07:31:38.000Z" itemprop="datePublished">2021-02-05</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2021/02/05/kmp-substring-searching-algorithm/">kmp 子串查找算法</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>leetcode的<a href="https://leetcode-cn.com/problems/implement-strstr/" target="_blank" rel="noopener">题目</a>, 实现strstr,即查找子字符串</p>
+<h2 id="最简单的算法"><a href="#最简单的算法" class="headerlink" title="最简单的算法"></a>最简单的算法</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">strStr</span><span class="params">(<span class="keyword">char</span> * haystack, <span class="keyword">char</span> * needle)</span></span>&#123;</span><br><span class="line">    <span class="keyword">char</span> *tmp = haystack;</span><br><span class="line">    <span class="keyword">while</span>(*tmp != <span class="number">0</span>)&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="built_in">strncmp</span>(tmp, needle,<span class="built_in">strlen</span>(needle))==<span class="number">0</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> tmp - haystack;</span><br><span class="line">        &#125;</span><br><span class="line">        tmp ++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="kmp-算法"><a href="#kmp-算法" class="headerlink" title="kmp 算法"></a>kmp 算法</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// C++ program for implementation of KMP pattern searching </span></span><br><span class="line"><span class="comment">// algorithm </span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;bits/stdc++.h&gt; </span></span></span><br><span class="line">  </span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">computeLPSArray</span><span class="params">(<span class="keyword">char</span>* pat, <span class="keyword">int</span> M, <span class="keyword">int</span>* lps)</span></span>; </span><br><span class="line">  </span><br><span class="line"><span class="comment">// Prints occurrences of txt[] in pat[] </span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">KMPSearch</span><span class="params">(<span class="keyword">char</span>* pat, <span class="keyword">char</span>* txt)</span> </span></span><br><span class="line"><span class="function"></span>&#123; </span><br><span class="line">    <span class="keyword">int</span> M = <span class="built_in">strlen</span>(pat); </span><br><span class="line">    <span class="keyword">int</span> N = <span class="built_in">strlen</span>(txt); </span><br><span class="line">  </span><br><span class="line">    <span class="comment">// create lps[] that will hold the longest prefix suffix </span></span><br><span class="line">    <span class="comment">// values for pattern </span></span><br><span class="line">    <span class="keyword">int</span> lps[M]; </span><br><span class="line">  </span><br><span class="line">    <span class="comment">// Preprocess the pattern (calculate lps[] array) </span></span><br><span class="line">    computeLPSArray(pat, M, lps); </span><br><span class="line">  </span><br><span class="line">    <span class="keyword">int</span> i = <span class="number">0</span>; <span class="comment">// index for txt[] </span></span><br><span class="line">    <span class="keyword">int</span> j = <span class="number">0</span>; <span class="comment">// index for pat[] </span></span><br><span class="line">    <span class="keyword">while</span> (i &lt; N) &#123; </span><br><span class="line">        <span class="keyword">if</span> (pat[j] == txt[i]) &#123; </span><br><span class="line">            j++; </span><br><span class="line">            i++; </span><br><span class="line">        &#125; </span><br><span class="line">  </span><br><span class="line">        <span class="keyword">if</span> (j == M) &#123; </span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">"Found pattern at index %d "</span>, i - j); </span><br><span class="line">            j = lps[j - <span class="number">1</span>]; </span><br><span class="line">        &#125; </span><br><span class="line">  </span><br><span class="line">        <span class="comment">// mismatch after j matches </span></span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (i &lt; N &amp;&amp; pat[j] != txt[i]) &#123; </span><br><span class="line">            <span class="comment">// Do not match lps[0..lps[j-1]] characters, </span></span><br><span class="line">            <span class="comment">// they will match anyway </span></span><br><span class="line">            <span class="keyword">if</span> (j != <span class="number">0</span>) </span><br><span class="line">                j = lps[j - <span class="number">1</span>]; </span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                i = i + <span class="number">1</span>; </span><br><span class="line">        &#125; </span><br><span class="line">    &#125; </span><br><span class="line">&#125; </span><br><span class="line">  </span><br><span class="line"><span class="comment">// Fills lps[] for given patttern pat[0..M-1] </span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">computeLPSArray</span><span class="params">(<span class="keyword">char</span>* pat, <span class="keyword">int</span> M, <span class="keyword">int</span>* lps)</span> </span></span><br><span class="line"><span class="function"></span>&#123; </span><br><span class="line">    <span class="comment">// length of the previous longest prefix suffix </span></span><br><span class="line">    <span class="keyword">int</span> len = <span class="number">0</span>; </span><br><span class="line">  </span><br><span class="line">    lps[<span class="number">0</span>] = <span class="number">0</span>; <span class="comment">// lps[0] is always 0 </span></span><br><span class="line">  </span><br><span class="line">    <span class="comment">// the loop calculates lps[i] for i = 1 to M-1 </span></span><br><span class="line">    <span class="keyword">int</span> i = <span class="number">1</span>; </span><br><span class="line">    <span class="keyword">while</span> (i &lt; M) &#123; </span><br><span class="line">        <span class="keyword">if</span> (pat[i] == pat[len]) &#123; </span><br><span class="line">            len++; </span><br><span class="line">            lps[i] = len; </span><br><span class="line">            i++; </span><br><span class="line">        &#125; </span><br><span class="line">        <span class="keyword">else</span> <span class="comment">// (pat[i] != pat[len]) </span></span><br><span class="line">        &#123; </span><br><span class="line">            <span class="comment">// This is tricky. Consider the example. </span></span><br><span class="line">            <span class="comment">// AAACAAAA and i = 7. The idea is similar </span></span><br><span class="line">            <span class="comment">// to search step. </span></span><br><span class="line">            <span class="keyword">if</span> (len != <span class="number">0</span>) &#123; </span><br><span class="line">                len = lps[len - <span class="number">1</span>]; </span><br><span class="line">  </span><br><span class="line">                <span class="comment">// Also, note that we do not increment </span></span><br><span class="line">                <span class="comment">// i here </span></span><br><span class="line">            &#125; </span><br><span class="line">            <span class="keyword">else</span> <span class="comment">// if (len == 0) </span></span><br><span class="line">            &#123; </span><br><span class="line">                lps[i] = <span class="number">0</span>; </span><br><span class="line">                i++; </span><br><span class="line">            &#125; </span><br><span class="line">        &#125; </span><br><span class="line">    &#125; </span><br><span class="line">&#125; </span><br><span class="line">  </span><br><span class="line"><span class="comment">// Driver program to test above function </span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span></span><br><span class="line"><span class="function"></span>&#123; </span><br><span class="line">    <span class="keyword">char</span> txt[] = <span class="string">"ABABDABACDABABCABAB"</span>; </span><br><span class="line">    <span class="keyword">char</span> pat[] = <span class="string">"ABABCABAB"</span>; </span><br><span class="line">    KMPSearch(pat, txt); </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://energygreek.github.io/2021/02/05/kmp-substring-searching-algorithm/" data-id="clsbmbv3s002wbwop1ji8g1oj" data-title="kmp 子串查找算法" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/algorithm/" rel="tag">algorithm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%9F%A5%E6%89%BE/" rel="tag">查找</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-systemd-service" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/01/28/systemd-service/" class="article-date">
+  <time class="dt-published" datetime="2021-01-28T07:53:33.000Z" itemprop="datePublished">2021-01-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2021/01/28/systemd-service/">创建 systemd 服务</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>说一个老话， 现在systemd作为linux的启动管理和服务管理已经越来越重要了， 上周考试也遇到用systemd 来管理容器，这里记录一下如何编写systemd服务</p>
+<h2 id="关于systemd"><a href="#关于systemd" class="headerlink" title="关于systemd"></a>关于systemd</h2><p>systemd是只能运行在Linux上的init, 也就是启动后看到的1号进程。 除了启动， systemd还管理着很多东西，例如网络（systemd-networkd）， 域名解析（systemd-resolved），为服务创建socket(systemd.socket) 文件系统挂载，还有系统和用户的服务<br>systemd太大，说不完，需要查看各种文档</p>
+<h2 id="systemd-的两种使用模式"><a href="#systemd-的两种使用模式" class="headerlink" title="systemd 的两种使用模式"></a>systemd 的两种使用模式</h2><p>systemd 分为system级别和user级别， 对应的unit文件分别在/etc/systemd/ 和 ～/.config/systemd/下， 前者是系统级别，后者是用户级别。 用户只能运行自己设置的服务</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl start system_service.service</span><br></pre></td></tr></table></figure>
+<p>而普通用户只能执行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl --user user_service.service</span><br></pre></td></tr></table></figure>
+
+<p>这个name就是文件名称，例如必须’/etc/systemd/system/‘下存在’system_service.service’文件，在能执行第一条的命令、 必须在 ‘~/.config/systemd/user/‘下存在’user_service.service’在能执行第二条命令</p>
+<h3 id="系统服务以其他用户运行服务"><a href="#系统服务以其他用户运行服务" class="headerlink" title="系统服务以其他用户运行服务"></a>系统服务以其他用户运行服务</h3><p>系统级别的服务默认会以root来运行服务，但是也可以设置以其他用户来运行来最小化权限，例如音视频服务。也可以以某个用户来执行，那么service unit 文件就变为‘system_service@user.service’</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"># system_service@user.service</span><br><span class="line">[Unit]</span><br><span class="line">Description&#x3D;Watchman for user %i</span><br><span class="line">After&#x3D;remote-fs.target</span><br><span class="line">Conflicts&#x3D;shutdown.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">ExecStart&#x3D;&#x2F;usr&#x2F;local&#x2F;bin&#x2F;watchman --foreground --inetd</span><br><span class="line">ExecStop&#x3D;pkill -u %i -x watchman</span><br><span class="line">Restart&#x3D;on-failure</span><br><span class="line">User&#x3D;%i</span><br><span class="line">Group&#x3D;users</span><br><span class="line">StandardInput&#x3D;socket</span><br><span class="line">StandardOutput&#x3D;syslog</span><br><span class="line">SyslogIdentifier&#x3D;watchman-%i</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy&#x3D;multi-user.target</span><br></pre></td></tr></table></figure>
+
+<p>上面的服务以下面的socket 单元启动， 前提要这个服务实现接收socket,通过<code>sd_listen_fds(3)</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"># system_service@user.socket</span><br><span class="line"></span><br><span class="line">[Unit]</span><br><span class="line">Description&#x3D;Watchman socket for user %i</span><br><span class="line"></span><br><span class="line">[Socket]</span><br><span class="line">ListenStream&#x3D;&#x2F;var&#x2F;facebook&#x2F;watchman&#x2F;%i-state&#x2F;sock</span><br><span class="line">Accept&#x3D;false</span><br><span class="line">SocketMode&#x3D;0664</span><br><span class="line">SocketUser&#x3D;%i</span><br><span class="line">SocketGroup&#x3D;othergroup</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy&#x3D;sockets.target</span><br></pre></td></tr></table></figure>
+
+<h3 id="普通用户运行服务"><a href="#普通用户运行服务" class="headerlink" title="普通用户运行服务"></a>普通用户运行服务</h3><p>注意， 普通用户因为只会以自己的身份启动，所以不能想系统服务那样指定’User/Group’</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description&#x3D;tun2socks for vpn</span><br><span class="line">#Requires&#x3D;ssh_to_alpha.service</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Type&#x3D;simple</span><br><span class="line">ExecStart&#x3D;&#x2F;usr&#x2F;bin&#x2F;badvpn-tun2socks </span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy&#x3D;default.target</span><br></pre></td></tr></table></figure>
+
+<p>若希望这个用户自定义服务能自启动， WantedBy需要设置成’default.target’</p>
+<h2 id="自动创建unit-file"><a href="#自动创建unit-file" class="headerlink" title="自动创建unit-file"></a>自动创建unit-file</h2><p>以下命令可以自动在对应目录创建*.service文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl --user --force --full edit test.service</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://energygreek.github.io/2021/01/28/systemd-service/" data-id="clsbmbv4u004lbwopdrvs7218" data-title="创建 systemd 服务" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/maintance/" rel="tag">maintance</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sysemd/" rel="tag">sysemd</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-linux-reset-password" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/01/21/linux-reset-password/" class="article-date">
+  <time class="dt-published" datetime="2021-01-21T06:14:59.000Z" itemprop="datePublished">2021-01-21</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2021/01/21/linux-reset-password/">Linux重置root密码</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="rhel系列修改密码"><a href="#rhel系列修改密码" class="headerlink" title="rhel系列修改密码"></a>rhel系列修改密码</h1><p>考rhce8 栽在改密码了， 现在彻底弄明白</p>
+<h2 id="关于selinux"><a href="#关于selinux" class="headerlink" title="关于selinux"></a>关于selinux</h2><p>这是rhel和其他发行版的最大区别，也是我忽略的点。启用selinux 时，改密码后，额外要执行<code>touch /.autorelabel</code>， 新密码才能生效，而平时我使用centos一直是禁用selinux的。</p>
+<h2 id="启用selinux"><a href="#启用selinux" class="headerlink" title="启用selinux"></a>启用selinux</h2><p>selinux 默认状态是enforcing, 禁用时为disable, 通过<code>sestate</code> 查看状态。</p>
+<h3 id="编译’-etc-selinux-config’"><a href="#编译’-etc-selinux-config’" class="headerlink" title="编译’/etc/selinux/config’"></a>编译’/etc/selinux/config’</h3><p>修改selinux配置，从disable 到enforcing</p>
+<h3 id="执行两次下面动作"><a href="#执行两次下面动作" class="headerlink" title="执行两次下面动作"></a>执行两次下面动作</h3><p>创建这个文件的意义是重新label selinux, 不仅是当修改selinux配置需要做，在重置root密码时也是需要</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">touch &#x2F;.autorelabel</span><br><span class="line">reboot</span><br></pre></td></tr></table></figure>
+
+<h2 id="叙说改密"><a href="#叙说改密" class="headerlink" title="叙说改密"></a>叙说改密</h2><p>rhel5~8有两种方式重置密码，老版本为给linux启动参数加上’init=/bin/sh’, 新版本为加<code>rd.break</code><br>老版本适用于centos8（已测）, 而新版本应该不支持rhel5，6（未测），下面是完整步骤</p>
+<h3 id="老版本"><a href="#老版本" class="headerlink" title="老版本"></a>老版本</h3><ol>
+<li>进入grub界面，按e进入编辑启动参数，到linux 行，按ctrl+e或者end键到末尾，追加’init=/bin/sh’</li>
+<li>按ctrl+x继续，系统自动进入内存文件系统的根目录</li>
+<li>执行<code>/sbin/load_policy -i</code>来初始化selinux</li>
+<li>此时系统处于ro模式，执行<code>mount -oremount,rw /</code> 重新挂载根分区，使系统可写</li>
+<li><code>passwd</code> 设置root密码</li>
+<li>如果启用了selinux, 额外要执行<code>touch /.autorelabel</code></li>
+<li>最后执行<code>exit</code>或者 <code>exec /sbin/reboot</code> 或者<code>exec /sbin/init</code></li>
+</ol>
+<h3 id="新版本"><a href="#新版本" class="headerlink" title="新版本"></a>新版本</h3><ol>
+<li>进入grub界面，按e进入编辑启动参数，到linux 行，按ctrl+e或者end键到末尾，追加’rd.break’</li>
+<li>按ctrl+x继续，系统自动进入root系统，此时真正的文件系统以ro挂载在/sysroot</li>
+<li>执行<code>mount -oremount,rw /sysrot</code> 重新挂载</li>
+<li>执行<code>chroot /sysroot</code> 进入系统</li>
+<li>执行<code>passwd</code>设置root密码</li>
+<li>如果启用了selinux, 需要额外创建文件<code>touch /.autorelabel</code></li>
+<li>执行<code>exit</code> 退出，然后执行 <code>umount /sysroot</code> 来确保写入</li>
+<li>reboot 来重新进入</li>
+</ol>
+<h2 id="通过rescue模式改密码"><a href="#通过rescue模式改密码" class="headerlink" title="通过rescue模式改密码"></a>通过rescue模式改密码</h2><p>任何发行版都可以通过光盘引导来改密。如果熟悉archlinux安装的方式，就知道进入live os之后可以挂载原系统的磁盘<br>然后chroot成为root用户，就能直接执行<code>passwd</code>来修改密码</p>
+<h2 id="通过修改镜像改密码"><a href="#通过修改镜像改密码" class="headerlink" title="通过修改镜像改密码"></a>通过修改镜像改密码</h2><p>最暴力的方式就是用guestfish工具, 一条命令改密。当然得先获取镜像文件<br>先切换到root用户，使用guestmount命令挂载分区，-i表示自动挂载</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">guestmount --add base.raw  -i &#x2F;tmp&#x2F;hm</span><br></pre></td></tr></table></figure>
+<p>然后chroot到挂载点</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chroot &#x2F;tmp&#x2F;hm</span><br></pre></td></tr></table></figure>
+<p>然后改密</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">passwd</span><br></pre></td></tr></table></figure>
+
+<p>virt提供了简化版本，一条命令就能改密码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">virt-customize -a centos8.qcow2 --root-password password:123456</span><br></pre></td></tr></table></figure>
+
+<p>可见镜像文件有多么不安全</p>
+<h2 id="最后记录一下vmware虚拟机镜像转换kvm镜像"><a href="#最后记录一下vmware虚拟机镜像转换kvm镜像" class="headerlink" title="最后记录一下vmware虚拟机镜像转换kvm镜像"></a>最后记录一下vmware虚拟机镜像转换kvm镜像</h2><p>由于收到的vmware镜像，又没有装vmware workstation，所以找到转换镜像的方法，也很方便</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qemu-img convert  CentOS\ 5.vmdk  base-000001.raw</span><br></pre></td></tr></table></figure>
+<p>但问题是不支持转换快照文件</p>
+<h2 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h2><p><a href="https://docs.openstack.org/image-guide/convert-images.html" target="_blank" rel="noopener">https://docs.openstack.org/image-guide/convert-images.html</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://energygreek.github.io/2021/01/21/linux-reset-password/" data-id="clsbmbv3x002zbwop2ow2c4kj" data-title="Linux重置root密码" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/admin/" rel="tag">admin</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/" rel="tag">linux</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-weechat-manual" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/01/19/weechat-manual/" class="article-date">
+  <time class="dt-published" datetime="2021-01-19T10:19:42.000Z" itemprop="datePublished">2021-01-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2021/01/19/weechat-manual/">weechat-manual</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="weechat-使用方法"><a href="#weechat-使用方法" class="headerlink" title="weechat 使用方法"></a>weechat 使用方法</h1><p>weechat 是一个irc客户端， 在终端中运行，不需要gui桌面，非常方便。 这里记录配置方法</p>
+<p>主要参考<a href="https://samirparikh.com/blog/setting-up-weechat-commandline-irc-client.html" target="_blank" rel="noopener">链接</a></p>
+<h2 id="安装和运行weechat"><a href="#安装和运行weechat" class="headerlink" title="安装和运行weechat"></a>安装和运行weechat</h2><p>安装后，直接在终端运行<code>weechat</code>，就能进入weechat</p>
+<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><h3 id="添加server"><a href="#添加server" class="headerlink" title="添加server"></a>添加server</h3><p>irc有很多server, 常用的是freenode。 另外有darkscience。 添加方法如下，另外weechat里面命令都是以’/‘ 开头，还能使用tab补全</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;server add freenode chat.freenode.net&#x2F;6697 -ssl</span><br></pre></td></tr></table></figure>
+<p>irc 除了有很多服务器url, 每个url 还有多个端口供链接，比如6697</p>
+<h3 id="设置昵称"><a href="#设置昵称" class="headerlink" title="设置昵称"></a>设置昵称</h3><p>昵称默认是linux系统的用户名，昵称用来在聊天中显示名称</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;nick mynickname</span><br></pre></td></tr></table></figure>
+<p>**注意：<br>手动修改昵称不是简单的事情，特别是当已经连接serer时。 比较方便的办法就是直接改配置文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># ～&#x2F;.weechat&#x2F;irc.conf</span><br><span class="line">nicks &#x3D; &quot;malloy,malloy1,malloy2&quot;</span><br></pre></td></tr></table></figure>
+<p>带后缀的昵称用来当malloy占用时的备用，比如网络重连时昵称有冲突就需要备用昵称</p>
+<h3 id="注册昵称"><a href="#注册昵称" class="headerlink" title="注册昵称"></a>注册昵称</h3><p>因为有很多聊天室要求注册后才能进入，所以先要使用邮箱注册</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;msg nickserv register userpassword example@email</span><br></pre></td></tr></table></figure>
+
+<p>然后irc 会提示查收邮件，在邮件里面提示你在irc输入命令完成注册</p>
+<h3 id="加入聊天室"><a href="#加入聊天室" class="headerlink" title="加入聊天室"></a>加入聊天室</h3><p>聊天室都是以#开头，例如我使用的 #archlinuxcn</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;join #weechat</span><br></pre></td></tr></table></figure>
+
+<h3 id="退出聊天室"><a href="#退出聊天室" class="headerlink" title="退出聊天室"></a>退出聊天室</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;parted &quot;leave message&quot;</span><br></pre></td></tr></table></figure>
+<p>或者</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;close</span><br></pre></td></tr></table></figure>
+
+<h2 id="自动设置"><a href="#自动设置" class="headerlink" title="自动设置"></a>自动设置</h2><p>设置打开weechat时，自动登陆和自动进入聊天室</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;set irc.server.freenode.autoconnect on</span><br><span class="line">&#x2F;set irc.server.networkname.autojoin &quot;#channel1,#channel2&quot;</span><br></pre></td></tr></table></figure>
+
+<h2 id="界面设置"><a href="#界面设置" class="headerlink" title="界面设置"></a>界面设置</h2><p>先介绍weechat的各名称对应命令 :<br>聊天室称为buffer, 切换聊天室命令 <code>/buffer n</code><br>最左边的聊天列表是bufferlist bar<br>进入buffer后，最右边的是nicklist bar，一个聊天室界面叫做window， 所以下面的命令设置就与 /bar /windows 有关</p>
+<p>隐藏和显示bufferlist</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;bar hiden bufferlist </span><br><span class="line">&#x2F;bar show bufferlist</span><br><span class="line">&#x2F;bar toggle bufferlist</span><br></pre></td></tr></table></figure>
+<p>分屏显示所有聊天室，水平分屏splith,竖直分屏 splitev</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;window splitv</span><br></pre></td></tr></table></figure>
+<p>窗口切换</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;window +1</span><br><span class="line">&#x2F;window -1</span><br></pre></td></tr></table></figure>
+<p>窗口合并</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;window merge</span><br></pre></td></tr></table></figure>
+
+<h2 id="安全设置"><a href="#安全设置" class="headerlink" title="安全设置"></a>安全设置</h2><ol>
+<li>上面添加服务器时，已经配置了ssl选项，就表示使用通讯加密了，但irc的聊天记录一般是对外公开的  </li>
+<li>设置weechat开启密码， 进入weechat前验密<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;secure passphrase superSecretPassphrase</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h2 id="自动化设置和鉴权"><a href="#自动化设置和鉴权" class="headerlink" title="自动化设置和鉴权"></a>自动化设置和鉴权</h2><p>注册好昵称之后，配置自动化登陆，而不需要手动执行命令</p>
+<p>设置irc登陆昵称，作为identify的参数，务必要跟register的保持一致</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;secure set networkname_nickname password</span><br></pre></td></tr></table></figure>
+<p>设置irc登陆密码，作为identify的参数，务必要跟register的密码保持一致</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;secure set networkname_password password</span><br></pre></td></tr></table></figure>
+
+<p>设置weechat启动时自动登陆服务器，以及自动加入channel</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;set irc.server.libera.autoconnect on</span><br><span class="line">&#x2F;set irc.server.libera.autojoin &quot;#archlinux-cn,#c,#c++&quot;</span><br></pre></td></tr></table></figure>
+<p>以及自动验密</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;set irc.server.networkname.command &quot;&#x2F;msg nickserv identify $&#123;sec.data.networkname_nickname&#125; $&#123;sec.data.network_password&#125;&quot;</span><br></pre></td></tr></table></figure>
+<p>其实显而易见地，<code>sec.data.networkname_nickname</code>和<code>sec.data.network_password</code> 都只是保存在sec.data里的变量，其实可以两个变量合成一条也没问题</p>
+<h2 id="更多功能"><a href="#更多功能" class="headerlink" title="更多功能"></a>更多功能</h2><p>weechat有很多拓展插件，可以完成很多事情，比如自动回复，远程控制，连接telegram等, <a href="https://weechat.org/scripts/" target="_blank" rel="noopener">参考</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://energygreek.github.io/2021/01/19/weechat-manual/" data-id="clsbmbv55004xbwophmcy6aqu" data-title="weechat-manual" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/tool/" rel="tag">tool</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/weechat/" rel="tag">weechat</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-rancher-learn" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/01/15/rancher-learn/" class="article-date">
+  <time class="dt-published" datetime="2021-01-15T06:15:22.000Z" itemprop="datePublished">2021-01-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2021/01/15/rancher-learn/">rancher-learn</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://energygreek.github.io/2021/01/15/rancher-learn/" data-id="clsbmbv4c003qbwop1274abal" data-title="rancher-learn" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/rancher-k8s/" rel="tag">rancher,k8s</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-udp-loader-balance" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/01/15/udp-loader-balance/" class="article-date">
+  <time class="dt-published" datetime="2021-01-15T03:06:27.000Z" itemprop="datePublished">2021-01-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2021/01/15/udp-loader-balance/">udp loader balance</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="udp-的端口复用实现负载均衡"><a href="#udp-的端口复用实现负载均衡" class="headerlink" title="udp 的端口复用实现负载均衡"></a>udp 的端口复用实现负载均衡</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>偶尔看到 python 3.9 的release note 里面提到一个bug</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">asyncio¶</span><br><span class="line"></span><br><span class="line">出于重要的安全性考量，asyncio.loop.create_datagram_endpoint() 的 reuse_address 形参不再被支持。 这是由 UDP 中的套接字选项 SO_REUSEADDR 的行为导致的。 更多细节请参阅 loop.create_datagram_endpoint() 的文档。 （由 Kyle Stanley, Antoine Pitrou 和 Yury Selivanov 在 bpo-37228 中贡献。。）</span><br></pre></td></tr></table></figure>
+<p>意思是tcp的socket option:SO_REUSEADDR不适用于udp：<br>在tcp中这个选项表示立即回收端口，减少 time_wait 的时间。而在udp中，这个选项表示多个socket可以绑定一个端口， 由内核来分发请求。</p>
+<p>所以看到此功能，自己试了一下，确实如此， 顺便回顾一下知识</p>
+<h2 id="主要代码"><a href="#主要代码" class="headerlink" title="主要代码"></a>主要代码</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">struct sockaddr_in addr;</span><br><span class="line">addr.sin_family &#x3D; AF_INET;</span><br><span class="line">addr.sin_port &#x3D; htons(8888);</span><br><span class="line">inet_pton(AF_INET,&quot;127.0.0.1&quot;,(void*)&amp;addr.sin_addr);</span><br><span class="line">&#x2F;&#x2F; inet_pton 支持ipv4和ipv6,是比较新的转换函数</span><br><span class="line"></span><br><span class="line">sfd &#x3D; socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);</span><br><span class="line">if(sfd &#x3D;&#x3D; -1)</span><br><span class="line">&#123;</span><br><span class="line">    perror(&quot;socket&quot;);</span><br><span class="line">    exit(1);</span><br><span class="line">&#125;</span><br><span class="line">int val &#x3D; 1;</span><br><span class="line">if(0 !&#x3D; setsockopt(sfd, SOL_SOCKET, SO_REUSEPORT,&amp;val, sizeof(val)))&#123;</span><br><span class="line">    perror(&quot;setsockopt&quot;);</span><br><span class="line">    exit(1);</span><br><span class="line">&#125;</span><br><span class="line">&#x2F;* sockaddr 和 sockaddr_in 有什么区别？</span><br><span class="line">   struct sockaddr &#123;  </span><br><span class="line"> 	sa_family_t sin_family;&#x2F;&#x2F;地址族</span><br><span class="line">　　  	char sa_data[14]; &#x2F;&#x2F;14字节，包含套接字中的目标地址和端口信息               </span><br><span class="line">　　    &#125;; </span><br><span class="line">　　    struct sockaddr_in &#123;</span><br><span class="line">　　      sa_family_t sin_family;&#x2F;&#x2F;地址族</span><br><span class="line">　　      uint16_t sin_port;</span><br><span class="line">　　      struct in_addr sin_addr;	&#x2F;&#x2F; 32 位地址</span><br><span class="line">　　      char	sin_zero[8];	&#x2F;&#x2F; reserve</span><br><span class="line">　　    &#125;;</span><br><span class="line">　　    struct in_addr &#123;</span><br><span class="line">　　    	In_addr_t	s_addr;  &#x2F;&#x2F;32位</span><br><span class="line">　　    &#125;;</span><br><span class="line">　　    </span><br><span class="line">　　    sockaddr_in 和 sockaddr 长度相同，都 sin_family + 14 个字节，但是前者显式划分了</span><br><span class="line">　　 *&#x2F; </span><br><span class="line">if(bind(sfd, (struct  sockaddr*) &amp;addr, sizeof(addr)) !&#x3D; 0)</span><br><span class="line">&#123;</span><br><span class="line">    perror(&quot;bind&quot;);</span><br><span class="line">    exit(1);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h2><p>先启动两个服务端，再使用ncat 来模拟请求, </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ncat -uv 0.0.0.0 8888</span><br></pre></td></tr></table></figure>
+
+<p>启动ncat时，系统会分配给一个服务端处理。 但是重启ncat时， 会切换到另一个服务端处理</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://energygreek.github.io/2021/01/15/udp-loader-balance/" data-id="clsbmbv53004rbwop91oeg16h" data-title="udp loader balance" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/socket/" rel="tag">socket</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/socketopt/" rel="tag">socketopt</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/udp/" rel="tag">udp</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-aliyun-dynamic-dns" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/01/04/aliyun-dynamic-dns/" class="article-date">
+  <time class="dt-published" datetime="2021-01-04T10:23:15.000Z" itemprop="datePublished">2021-01-04</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2021/01/04/aliyun-dynamic-dns/">阿里云动态设置 dns</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>如果服务器的公网ip动态变化的情况下，如何访问，甚至如何通过域名访问？ </p>
+<p>例如公司自己搭建的服务器如何暴露在公网上， 如果请求固定ip听说很贵， 还可以通过<code>frp</code>实现, 这里介绍2种方案</p>
+<h2 id="动态dns"><a href="#动态dns" class="headerlink" title="动态dns"></a>动态dns</h2><p>前提是服务器有出口ip, 而不是在路由器下。 </p>
+<ul>
+<li>如果服务器在路由器下， 通过设置nat,将外网访问的请求的目的ip转换为局域网’192.168.<em>.</em>‘，也能实现公网请求局域网的服务器</li>
+</ul>
+<p>阿里云（相信大多数云厂商都支持） 可以支持动态改变dns的解析地址，即通过api调用就能改变dns的解析， 这样当出口ip变化时， 立即调用api来修改dns解析  </p>
+<p>实现原理:</p>
+<ol>
+<li>定时检测出口ip, 例如每5分钟执行一次。 可以通过crontab和以下命令实现<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl https:&#x2F;&#x2F;httpbin.org&#x2F;ip</span><br></pre></td></tr></table></figure></li>
+<li>通过阿里云的api操作dns</li>
+<li>如果服务器在内网，添加nat规则，将目的ip转换为内网ip</li>
+</ol>
+<p>这里有个现成的<a href="https://github.com/NewFuture/DDNS" target="_blank" rel="noopener">项目</a></p>
+<h2 id="frp"><a href="#frp" class="headerlink" title="frp"></a>frp</h2><p>frp 就是内网穿透了， 没有出口ip的情况下，例如在路由器下且路由器不支持nat的时候， 或者是在运营商级NAT的模式下，就可以采取这中方式。 但是前提是需要有公网的服务器</p>
+<p>实现原理：</p>
+<ol>
+<li>通过在公网服务器运行frp 服务端， 在没有出口ip的局域网服务器上运行frp客户端</li>
+<li>客户端主动去连接服务端， 连接上之后， 服务端会为客户端创建一个端口， 所有的向这个端口的请求都被转发到局域网的服务器，实现公网访问局域网的服务器</li>
+</ol>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>如果有出口ip, 即使经常变化， 可以使用动态dns的技术实现暴露到公网， 成本低廉。 否则使用frp,需要额外购买服务器，或者使用花生壳类似的穿透技术， 但是有被掏裤裆的风险</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://energygreek.github.io/2021/01/04/aliyun-dynamic-dns/" data-id="clsbmbv2z001hbwopebx379bo" data-title="阿里云动态设置 dns" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dns/" rel="tag">dns</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-crash-boot" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/01/04/crash-boot/" class="article-date">
+  <time class="dt-published" datetime="2021-01-04T09:47:05.000Z" itemprop="datePublished">2021-01-04</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2021/01/04/crash-boot/">crash boot</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>元旦过完回公司发现archlinux 系统无法启动了， 提示没有找到内核之类的错误。 虽然也没有找到根本原因，只知道是内核镜像丢失了， 这里记一下解决办法</p>
+<h1 id="现象"><a href="#现象" class="headerlink" title="现象"></a>现象</h1><p>启动之后， 提示缺少内核， 需要先指定内核。 回车后进入grub 界面。 在grub 界面可以执行ls (hd<em>,gpt</em>)/ 来查看分区的文件<br>hd0、 hd1 代表的硬盘编号， gpt1、 gpt2、 gpt3 代表分区， ls (hd0, gpt1)/ 表示查看第一个硬盘第一个分区的文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ls (hd1, gpt2)</span><br><span class="line">EFI  grub  initramfs-linux-fallback.img</span><br></pre></td></tr></table></figure>
+
+<p>我的boot分区是第二个硬盘的第二个分区， 可见确实没有 vmlinuz-linux 文件，也很奇怪</p>
+<h2 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h2><p>没有 ‘vmlinuz-linux’ 文件的话需要通过archlinux的U盘启动盘启动， 挂载分区后，arch-chroot 进入到坏系统  </p>
+<p>执行重装linux </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pacman -S linux</span><br></pre></td></tr></table></figure>
+<p>执行grub 相关命令， 重建引导配置。 我的EFI单独分区了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">grub-install --target&#x3D;x86_64-efi --efi-directory&#x3D;&#x2F;boot&#x2F;EFI --bootloader-id&#x3D;Arch</span><br><span class="line">grub-config -o &#x2F;boot&#x2F;grub&#x2F;grub.cfg</span><br></pre></td></tr></table></figure>
+
+<p><code>exit</code>退出坏系统，umount 再重启。 一定要umount 分区否则grub不会生效</p>
+<h2 id="没有umount-导致的grub不生效"><a href="#没有umount-导致的grub不生效" class="headerlink" title="没有umount 导致的grub不生效"></a>没有umount 导致的grub不生效</h2><p>因为没有umount，<code>exit</code>后直接重启， 发现依旧无法进入系统，还是进入了grub界面，好在linux内核镜像已经存在了，可以通过grub来配置启动<br>所以这种情况也适用于系统ok，但引导损坏的情况。</p>
+<h3 id="解决办法-1"><a href="#解决办法-1" class="headerlink" title="解决办法"></a>解决办法</h3><p>我的boot分区是(hd1,gpt2)</p>
+<p>执行一下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">set prefix&#x3D;(hd1,gpt2)&#x2F;grub&#x2F;  # 指定实际的grub目录</span><br><span class="line">set root&#x3D;(hd1,gp2)</span><br><span class="line">insmod normal</span><br><span class="line">normal</span><br></pre></td></tr></table></figure>
+
+<p>此时grub会刷新， 继续执行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">insmod linux</span><br><span class="line">linux &#x2F;vmlinuz-linux root&#x3D;&#x2F;dev&#x2F;nvme0n1p2   # 设置内核</span><br><span class="line">initrd &#x2F;initd.img</span><br><span class="line">boot</span><br></pre></td></tr></table></figure>
+
+<p>由于不知道nvme的命名方式，导致也挺麻烦， grub下可以看到uuid,但不能看到分区名称， 后来发现可以通过uuid方式指定root</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">insmod linux</span><br><span class="line">linux &#x2F;vmlinuz root&#x3D;UUID&#x3D;xxxxxxxxxxx</span><br><span class="line">initrd &#x2F;initd.img</span><br><span class="line">boot</span><br></pre></td></tr></table></figure>
+
+<h2 id="扩充"><a href="#扩充" class="headerlink" title="扩充"></a>扩充</h2><p>同样可以通过磁盘+分区的方式指定内核和initrd</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://energygreek.github.io/2021/01/04/crash-boot/" data-id="clsbmbv3d001zbwopdh3ddzep" data-title="crash boot" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/grub/" rel="tag">grub</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-linux-perm" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/11/20/linux-perm/" class="article-date">
+  <time class="dt-published" datetime="2020-11-20T08:37:29.000Z" itemprop="datePublished">2020-11-20</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/11/20/linux-perm/">linux perm</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="linux-权限位"><a href="#linux-权限位" class="headerlink" title="linux 权限位"></a>linux 权限位</h1><p>linux的权限位用来定义文件和目录的权限，</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://energygreek.github.io/2020/11/20/linux-perm/" data-id="clsbmbv3w002ybwopebwwgnep" data-title="linux perm" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux%E5%9F%BA%E7%A1%80/" rel="tag">linux基础</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <a class="extend prev" rel="prev" href="/page/3/">&laquo; 上一页</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/5/">下一页 &raquo;</a>
+  </nav>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/51%E5%8D%95%E7%89%87%E6%9C%BA/" rel="tag">51单片机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DP/" rel="tag">DP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aarch64/" rel="tag">aarch64</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/admin/" rel="tag">admin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/" rel="tag">algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algoritm/" rel="tag">algoritm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bash/" rel="tag">bash</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/basics/" rel="tag">basics</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/" rel="tag">c++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c-c/" rel="tag">c/c++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cmake/" rel="tag">cmake</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dns/" rel="tag">dns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/email-client/" rel="tag">email_client</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/exam/" rel="tag">exam</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/exception-safe/" rel="tag">exception-safe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ffmpeg/" rel="tag">ffmpeg</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/filesystem/" rel="tag">filesystem</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flask/" rel="tag">flask</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gdb/" rel="tag">gdb</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/" rel="tag">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/grpc/" rel="tag">grpc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/grub/" rel="tag">grub</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hawei/" rel="tag">hawei</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/heapsort/" rel="tag">heapsort</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/" rel="tag">k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linkage/" rel="tag">linkage</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux%E5%9F%BA%E7%A1%80/" rel="tag">linux基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lock/" rel="tag">lock</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lvm/" rel="tag">lvm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maintance/" rel="tag">maintance</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/malloc/" rel="tag">malloc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mdns/" rel="tag">mdns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memory/" rel="tag">memory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mutex/" rel="tag">mutex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mutt/" rel="tag">mutt</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/namespace/" rel="tag">namespace</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/network/" rel="tag">network</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/os-maintain/" rel="tag">os-maintain</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/printer/" rel="tag">printer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/program/" rel="tag">program</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rancher-k8s/" rel="tag">rancher,k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rhce/" rel="tag">rhce</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rtp/" rel="tag">rtp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/safe/" rel="tag">safe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scope/" rel="tag">scope</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/seralize/" rel="tag">seralize</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shared-ptr/" rel="tag">shared_ptr</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/socket/" rel="tag">socket</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/socketopt/" rel="tag">socketopt</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sql/" rel="tag">sql</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/storageduration/" rel="tag">storageduration</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sysemd/" rel="tag">sysemd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/template-programing/" rel="tag">template programing</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/terminal/" rel="tag">terminal</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tool/" rel="tag">tool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/udp/" rel="tag">udp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/unique-ptr/" rel="tag">unique_ptr</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/unit-test/" rel="tag">unit test</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/urxvt/" rel="tag">urxvt</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webcrawler/" rel="tag">webcrawler</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webserver/" rel="tag">webserver</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/weechat/" rel="tag">weechat</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/wordpress/" rel="tag">wordpress</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" rel="tag">二叉树</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E6%A0%B8%E5%8E%9F%E7%90%86/" rel="tag">内核原理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%B7%E6%9C%BA%E6%95%99%E7%A8%8B/" rel="tag">刷机教程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" rel="tag">包管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9F%A5%E6%89%BE/" rel="tag">查找</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/" rel="tag">系统调用</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E8%AF%91/" rel="tag">编译</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%B0%83%E4%BC%98/" rel="tag">调优</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9F%B3%E8%A7%86%E9%A2%91/" rel="tag">音视频</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/51%E5%8D%95%E7%89%87%E6%9C%BA/" style="font-size: 10px;">51单片机</a> <a href="/tags/DP/" style="font-size: 10px;">DP</a> <a href="/tags/Linux/" style="font-size: 10px;">Linux</a> <a href="/tags/aarch64/" style="font-size: 10px;">aarch64</a> <a href="/tags/admin/" style="font-size: 10px;">admin</a> <a href="/tags/algorithm/" style="font-size: 16px;">algorithm</a> <a href="/tags/algoritm/" style="font-size: 10px;">algoritm</a> <a href="/tags/android/" style="font-size: 10px;">android</a> <a href="/tags/bash/" style="font-size: 10px;">bash</a> <a href="/tags/basics/" style="font-size: 10px;">basics</a> <a href="/tags/c/" style="font-size: 12px;">c++</a> <a href="/tags/c-c/" style="font-size: 20px;">c/c++</a> <a href="/tags/cmake/" style="font-size: 10px;">cmake</a> <a href="/tags/dns/" style="font-size: 10px;">dns</a> <a href="/tags/docker/" style="font-size: 18px;">docker</a> <a href="/tags/email-client/" style="font-size: 10px;">email_client</a> <a href="/tags/exam/" style="font-size: 10px;">exam</a> <a href="/tags/exception-safe/" style="font-size: 10px;">exception-safe</a> <a href="/tags/ffmpeg/" style="font-size: 10px;">ffmpeg</a> <a href="/tags/filesystem/" style="font-size: 14px;">filesystem</a> <a href="/tags/flask/" style="font-size: 10px;">flask</a> <a href="/tags/gdb/" style="font-size: 10px;">gdb</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/grpc/" style="font-size: 10px;">grpc</a> <a href="/tags/grub/" style="font-size: 10px;">grub</a> <a href="/tags/hawei/" style="font-size: 10px;">hawei</a> <a href="/tags/heapsort/" style="font-size: 10px;">heapsort</a> <a href="/tags/k8s/" style="font-size: 10px;">k8s</a> <a href="/tags/linkage/" style="font-size: 10px;">linkage</a> <a href="/tags/linux/" style="font-size: 14px;">linux</a> <a href="/tags/linux%E5%9F%BA%E7%A1%80/" style="font-size: 10px;">linux基础</a> <a href="/tags/lock/" style="font-size: 10px;">lock</a> <a href="/tags/lvm/" style="font-size: 10px;">lvm</a> <a href="/tags/maintance/" style="font-size: 10px;">maintance</a> <a href="/tags/malloc/" style="font-size: 10px;">malloc</a> <a href="/tags/mdns/" style="font-size: 10px;">mdns</a> <a href="/tags/memory/" style="font-size: 12px;">memory</a> <a href="/tags/mutex/" style="font-size: 10px;">mutex</a> <a href="/tags/mutt/" style="font-size: 10px;">mutt</a> <a href="/tags/namespace/" style="font-size: 10px;">namespace</a> <a href="/tags/network/" style="font-size: 10px;">network</a> <a href="/tags/os-maintain/" style="font-size: 10px;">os-maintain</a> <a href="/tags/printer/" style="font-size: 10px;">printer</a> <a href="/tags/program/" style="font-size: 10px;">program</a> <a href="/tags/python/" style="font-size: 14px;">python</a> <a href="/tags/rancher-k8s/" style="font-size: 10px;">rancher,k8s</a> <a href="/tags/rhce/" style="font-size: 10px;">rhce</a> <a href="/tags/rtp/" style="font-size: 10px;">rtp</a> <a href="/tags/safe/" style="font-size: 12px;">safe</a> <a href="/tags/scope/" style="font-size: 10px;">scope</a> <a href="/tags/seralize/" style="font-size: 10px;">seralize</a> <a href="/tags/shared-ptr/" style="font-size: 10px;">shared_ptr</a> <a href="/tags/socket/" style="font-size: 10px;">socket</a> <a href="/tags/socketopt/" style="font-size: 10px;">socketopt</a> <a href="/tags/sql/" style="font-size: 12px;">sql</a> <a href="/tags/storageduration/" style="font-size: 10px;">storageduration</a> <a href="/tags/sysemd/" style="font-size: 10px;">sysemd</a> <a href="/tags/template-programing/" style="font-size: 10px;">template programing</a> <a href="/tags/terminal/" style="font-size: 10px;">terminal</a> <a href="/tags/tool/" style="font-size: 18px;">tool</a> <a href="/tags/udp/" style="font-size: 10px;">udp</a> <a href="/tags/unique-ptr/" style="font-size: 10px;">unique_ptr</a> <a href="/tags/unit-test/" style="font-size: 10px;">unit test</a> <a href="/tags/urxvt/" style="font-size: 10px;">urxvt</a> <a href="/tags/webcrawler/" style="font-size: 10px;">webcrawler</a> <a href="/tags/webserver/" style="font-size: 10px;">webserver</a> <a href="/tags/weechat/" style="font-size: 10px;">weechat</a> <a href="/tags/wordpress/" style="font-size: 10px;">wordpress</a> <a href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" style="font-size: 10px;">二叉树</a> <a href="/tags/%E5%86%85%E6%A0%B8%E5%8E%9F%E7%90%86/" style="font-size: 10px;">内核原理</a> <a href="/tags/%E5%88%B7%E6%9C%BA%E6%95%99%E7%A8%8B/" style="font-size: 10px;">刷机教程</a> <a href="/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" style="font-size: 10px;">包管理</a> <a href="/tags/%E6%9F%A5%E6%89%BE/" style="font-size: 10px;">查找</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 10px;">算法</a> <a href="/tags/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/" style="font-size: 10px;">系统调用</a> <a href="/tags/%E7%BC%96%E8%AF%91/" style="font-size: 10px;">编译</a> <a href="/tags/%E8%B0%83%E4%BC%98/" style="font-size: 10px;">调优</a> <a href="/tags/%E9%9F%B3%E8%A7%86%E9%A2%91/" style="font-size: 10px;">音视频</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/02/">二月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/12/">十二月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/05/">五月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">四月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">十二月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/11/">十一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">十月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/08/">八月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">三月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">二月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/02/07/streaming-h264-with-rtp/">streaming h264 with rtp</a>
+          </li>
+        
+          <li>
+            <a href="/2023/09/08/wifi-tool/">随身wifi工具</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/21/docker-network/">docker network</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/18/mail-setup/">mail setup</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/08/install-wordpress/">install wordpress</a>
+          </li>
+        
+          <li>
+            <a href="/2022/12/29/amrnb-and-amrwb/">amrnb和amrwb的编解码</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 greek_soon@hotmail.com<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

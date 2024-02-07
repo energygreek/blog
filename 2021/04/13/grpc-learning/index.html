@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=z20lYmACQgemxcrzNk1C8Q"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'z20lYmACQgemxcrzNk1C8Q');
+</script>
+<!-- End Google Analytics -->
+
+  
+  <title>grpc 学习 | 又是元气满满的一天</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="rpcrpc 意为远程过程调用, http, grpc 广义上讲都是rpc。而且还有个项目叫grpc-gateway, 可以将grpc通过http的方式暴露。 grpcgrpc 是rpc的一种实现，由google开源，其他还有thrift, sogorpc 等等。 并且grpc使用的http&#x2F;2协议 http&#x2F;1.1 与 http&#x2F;2 的区别 2使用二进制，而1.1使用文本，提高效率 2将相同的t">
+<meta property="og:type" content="article">
+<meta property="og:title" content="grpc 学习">
+<meta property="og:url" content="https://energygreek.github.io/2021/04/13/grpc-learning/index.html">
+<meta property="og:site_name" content="又是元气满满的一天">
+<meta property="og:description" content="rpcrpc 意为远程过程调用, http, grpc 广义上讲都是rpc。而且还有个项目叫grpc-gateway, 可以将grpc通过http的方式暴露。 grpcgrpc 是rpc的一种实现，由google开源，其他还有thrift, sogorpc 等等。 并且grpc使用的http&#x2F;2协议 http&#x2F;1.1 与 http&#x2F;2 的区别 2使用二进制，而1.1使用文本，提高效率 2将相同的t">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-04-13T11:04:30.000Z">
+<meta property="article:modified_time" content="2024-02-07T09:59:29.787Z">
+<meta property="article:author" content="greek_soon@hotmail.com">
+<meta property="article:tag" content="grpc">
+<meta property="article:tag" content="c++">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/" title="又是元气满满的一天">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="又是元气满满的一天" type="application/atom+xml">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">又是元气满满的一天</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">个人博客</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS 订阅"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://energygreek.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-grpc-learning" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/04/13/grpc-learning/" class="article-date">
+  <time class="dt-published" datetime="2021-04-13T11:04:30.000Z" itemprop="datePublished">2021-04-13</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      grpc 学习
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="rpc"><a href="#rpc" class="headerlink" title="rpc"></a>rpc</h1><p>rpc 意为<code>远程过程调用</code>, http, grpc 广义上讲都是rpc。<br>而且还有个项目叫<a href="https://github.com/grpc-ecosystem/grpc-gateway" target="_blank" rel="noopener">grpc-gateway</a>, 可以将grpc通过http的方式暴露。</p>
+<h1 id="grpc"><a href="#grpc" class="headerlink" title="grpc"></a>grpc</h1><p>grpc 是rpc的一种实现，由google开源，其他还有thrift, sogorpc 等等。 并且grpc使用的http/2协议</p>
+<h2 id="http-1-1-与-http-2-的区别"><a href="#http-1-1-与-http-2-的区别" class="headerlink" title="http/1.1 与 http/2 的区别"></a>http/1.1 与 http/2 的区别</h2><ul>
+<li>2使用二进制，而1.1使用文本，提高效率</li>
+<li>2将相同的tcp连接合并为一个请求，提高性能,而1.1则为每个请求创建tcp连接</li>
+<li>2的客户端使用流，这样可以多次请求</li>
+<li>2含有trailers，也就是尾部消息，可以用来发送body的checksume等, 当然也可以直接放到body里<br>…</li>
+</ul>
+<p>而1.1中也已经实现服务端到客户端的流,使用’Transfer-Encoding=chunked’来替代’Content-Length’，详见<a href="https://datatracker.ietf.org/doc/html/rfc7230#section-3.3.2" target="_blank" rel="noopener">rfc</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">A sender MUST NOT send a Content-Length header field in any message</span><br><span class="line">  that contains a Transfer-Encoding header field.</span><br></pre></td></tr></table></figure>
+
+<h2 id="认识proto文件"><a href="#认识proto文件" class="headerlink" title="认识proto文件"></a>认识proto文件</h2><h3 id="proto-文件中多个service和单个service-区别"><a href="#proto-文件中多个service和单个service-区别" class="headerlink" title="proto 文件中多个service和单个service 区别"></a>proto 文件中多个service和单个service 区别</h3><p>在同一个service里的方法会codegen到同一个类，但这个类比较鸡肋。<br>由于RPC调用是RESTful的，所以多次调用或者多个rpc方法无法通过同一个service来共享数据，这需要使用者借助其他办法来解决。</p>
+<p>service 还可以用以隔离相同名称的rpc， 如 </p>
+<ul>
+<li>service1/helloworld</li>
+<li>service2/helloworld</li>
+</ul>
+<p>而方法和方法通过<code>RpcServiceMethod</code>来保存，而通过index来调用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">::grpc::Service::RequestAsyncUnary(0, context, request, response, new_call_cq, notification_cq, tag);</span><br><span class="line">::grpc::Service::RequestAsyncUnary(1, context, request, response, new_call_cq, notification_cq, tag);</span><br></pre></td></tr></table></figure>
+
+<h3 id="rpc-声明UnaryCall-amp-StreamingCall"><a href="#rpc-声明UnaryCall-amp-StreamingCall" class="headerlink" title="rpc 声明UnaryCall&amp;StreamingCall"></a>rpc 声明UnaryCall&amp;StreamingCall</h3><p>非流调用也称为<code>UnaryCall</code>，指发送或接受的消息大小是固定的。<br>流调用称为<code>StreamingCall</code>，可以多次发送或者接收，所以消息大小并不固定。</p>
+<p>StreamCall 可以多次调用，直到发送<code>WriteDone/Finish</code>，所以在接受的一端总是</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">while(read stream)&#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>grpc支持客户端流服务端非流、客户端非流、服务端流以及双向流，而普通的就是客户端和服务端都不流NORMAL_RPC(unary call)</p>
+<ul>
+<li>grpc::internal::RpcMethod::NORMAL_RPC</li>
+<li>grpc::internal::RpcMethod::RpcType::SERVER_STREAMING</li>
+<li>grpc::internal::RpcMethod::RpcType::CLIENT_STREAMING</li>
+<li>grpc::internal::RpcMethod::RpcType::BIDI_STREAMING</li>
+</ul>
+<h3 id="认识pb-h和grpc-pb-h文件"><a href="#认识pb-h和grpc-pb-h文件" class="headerlink" title="认识pb.h和grpc.pb.h文件"></a>认识pb.h和grpc.pb.h文件</h3><p>protoc 调用<code>grpc_cpp_plugin</code> 插件生成grpc.pb.{h,cc}文件，生成rpc方法的实现  </p>
+<p>pb.{h,cc}则是定义了protobuf消息的序列化和反序列化方法</p>
+<h4 id="反射、序列化和反序列化的实现"><a href="#反射、序列化和反序列化的实现" class="headerlink" title="反射、序列化和反序列化的实现"></a>反射、序列化和反序列化的实现</h4><p>pb.h 实现grpc的请求参数和返回参数的特定语言的解析，还有pb的通用方法，<br>例如: <code>has_xx</code>(版本3里只有自定义类型才支持), <code>class XXX_CPP_API</code></p>
+<p>生成的class都继承自<code>google::protobuf::Message</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">class HelloRequest PROTOBUF_FINAL :</span><br><span class="line">      public ::PROTOBUF_NAMESPACE_ID::Message</span><br><span class="line"></span><br><span class="line">#define PROTOBUF_NAMESPACE &quot;google::protobuf&quot;</span><br><span class="line">#define PROTOBUF_NAMESPACE_ID google::protobuf</span><br></pre></td></tr></table></figure>
+<p>而在<code>message</code>中有注释说明, 关键函数是<code>SerializeToString</code>和<code>ParseFromString</code>，还有个array版本<code>SerializeToArray</code>,<br>还有一个反射函数<code>GetDescriptor()</code>用来动态获取指定槽位的数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; Example usage:</span><br><span class="line">  &#x2F;&#x2F;</span><br><span class="line">  &#x2F;&#x2F; Say you have a message defined as:</span><br><span class="line">  &#x2F;&#x2F;</span><br><span class="line">  &#x2F;&#x2F;   message Foo &#123;</span><br><span class="line">  &#x2F;&#x2F;     optional string text &#x3D; 1;</span><br><span class="line">  &#x2F;&#x2F;     repeated int32 numbers &#x3D; 2;</span><br><span class="line">  &#x2F;&#x2F;   &#125;</span><br><span class="line">  &#x2F;&#x2F;</span><br><span class="line">  &#x2F;&#x2F; Then, if you used the protocol compiler to generate a class from the above</span><br><span class="line">  &#x2F;&#x2F; definition, you could use it like so:</span><br><span class="line">  &#x2F;&#x2F;</span><br><span class="line">  &#x2F;&#x2F;   std::string data;  &#x2F;&#x2F; Will store a serialized version of the message.</span><br><span class="line">  &#x2F;&#x2F;</span><br><span class="line">  &#x2F;&#x2F;   &#123;</span><br><span class="line">  &#x2F;&#x2F;     &#x2F;&#x2F; Create a message and serialize it.</span><br><span class="line">  &#x2F;&#x2F;     Foo foo;</span><br><span class="line">  &#x2F;&#x2F;     foo.set_text(&quot;Hello World!&quot;);</span><br><span class="line">  &#x2F;&#x2F;     foo.add_numbers(1);</span><br><span class="line">  &#x2F;&#x2F;     foo.add_numbers(5);</span><br><span class="line">  &#x2F;&#x2F;     foo.add_numbers(42);</span><br><span class="line">  &#x2F;&#x2F;</span><br><span class="line">  &#x2F;&#x2F;     foo.SerializeToString(&amp;data);</span><br><span class="line">  &#x2F;&#x2F;   &#125;</span><br><span class="line">  &#x2F;&#x2F;</span><br><span class="line">  &#x2F;&#x2F;   &#123;</span><br><span class="line">  &#x2F;&#x2F;     &#x2F;&#x2F; Parse the serialized message and check that it contains the</span><br><span class="line">  &#x2F;&#x2F;     &#x2F;&#x2F; correct data.</span><br><span class="line">  &#x2F;&#x2F;     Foo foo;</span><br><span class="line">  &#x2F;&#x2F;     foo.ParseFromString(data);</span><br><span class="line">  &#x2F;&#x2F;</span><br><span class="line">  &#x2F;&#x2F;     assert(foo.text() &#x3D;&#x3D; &quot;Hello World!&quot;);</span><br><span class="line">  &#x2F;&#x2F;     assert(foo.numbers_size() &#x3D;&#x3D; 3);</span><br><span class="line">  &#x2F;&#x2F;     assert(foo.numbers(0) &#x3D;&#x3D; 1);</span><br><span class="line">  &#x2F;&#x2F;     assert(foo.numbers(1) &#x3D;&#x3D; 5);</span><br><span class="line">  &#x2F;&#x2F;     assert(foo.numbers(2) &#x3D;&#x3D; 42);</span><br><span class="line">  &#x2F;&#x2F;   &#125;</span><br></pre></td></tr></table></figure>
+
+<p>如下可以将Message转换为基本类型</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">int size &#x3D; reqMsg.ByteSizeLong();</span><br><span class="line">char* array &#x3D; new char[size];</span><br><span class="line">reqMsg.SerializeToArray(array, size);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">std::string bytes &#x3D; reqMsg.SerializeAsString();</span><br><span class="line">const char* array &#x3D; bytes.data();</span><br><span class="line">int size &#x3D; bytes.size();</span><br></pre></td></tr></table></figure>
+
+<p>进一步看<code>protobuf::message</code>继承自<code>protobuf::message_lite</code>, 后者实现了<code>SerializeAsString</code>和<code>SerializeToArray</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">inline uint8* SerializeToArrayImpl(const MessageLite&amp; msg, uint8* target,</span><br><span class="line">                                     int size) &#123;</span><br><span class="line">    constexpr bool debug &#x3D; false;</span><br><span class="line">    if (debug) &#123;</span><br><span class="line">      &#x2F;&#x2F; Force serialization to a stream with a block size of 1, which forces</span><br><span class="line">      &#x2F;&#x2F; all writes to the stream to cross buffers triggering all fallback paths</span><br><span class="line">      &#x2F;&#x2F; in the unittests when serializing to string &#x2F; array.</span><br><span class="line">      io::ArrayOutputStream stream(target, size, 1);</span><br><span class="line">      uint8* ptr;</span><br><span class="line">      io::EpsCopyOutputStream out(</span><br><span class="line">          &amp;stream, io::CodedOutputStream::IsDefaultSerializationDeterministic(),</span><br><span class="line">          &amp;ptr);</span><br><span class="line">      ptr &#x3D; msg._InternalSerialize(ptr, &amp;out);</span><br><span class="line">      out.Trim(ptr);</span><br><span class="line">      GOOGLE_DCHECK(!out.HadError() &amp;&amp; stream.ByteCount() &#x3D;&#x3D; size);</span><br><span class="line">      return target + size;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">      io::EpsCopyOutputStream out(</span><br><span class="line">          target, size,</span><br><span class="line">          io::CodedOutputStream::IsDefaultSerializationDeterministic());</span><br><span class="line">实际调用-&gt;    auto res &#x3D; msg._InternalSerialize(target, &amp;out);</span><br><span class="line">      GOOGLE_DCHECK(target + size &#x3D;&#x3D; res);</span><br><span class="line">      return res;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>可见，其实序列化最终调用的是pb.h文件里定义的<code>_InternalSerialize</code>, 举例官方例子<code>HelloRequest</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">::PROTOBUF_NAMESPACE_ID::uint8* HelloRequest::_InternalSerialize(</span><br><span class="line">     ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream*   stream) const &#123;</span><br><span class="line">   &#x2F;&#x2F; @@protoc_insertion_point(serialize_to_array_start:helloworld.HelloRequest)</span><br><span class="line">   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits &#x3D; 0;</span><br><span class="line">   (void) cached_has_bits;</span><br><span class="line"> </span><br><span class="line">   &#x2F;&#x2F; string name &#x3D; 1;</span><br><span class="line">   if (this-&gt;name().size() &gt; 0) &#123;</span><br><span class="line">     ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(</span><br><span class="line">       this-&gt;_internal_name().data(), static_cast&lt;int&gt;(this-&gt;_internal_name().length()),</span><br><span class="line">       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,</span><br><span class="line">       &quot;helloworld.HelloRequest.name&quot;);</span><br><span class="line">     target &#x3D; stream-&gt;WriteStringMaybeAliased(</span><br><span class="line">         1, this-&gt;_internal_name(), target);</span><br><span class="line">   &#125;</span><br><span class="line"> </span><br><span class="line">   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) &#123;</span><br><span class="line">     target &#x3D; ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToA  rray(</span><br><span class="line">        _internal_metadata_.unknown_fields&lt;::PROTOBUF_NAMESPACE_ID::UnknownFieldSet&gt;(::PROTOB  UF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);</span><br><span class="line">   &#125;</span><br><span class="line">   &#x2F;&#x2F; @@protoc_insertion_point(serialize_to_array_end:helloworld.HelloRequest)</span><br><span class="line">   return target;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="grpc-pb生成的代码实现rpc调用"><a href="#grpc-pb生成的代码实现rpc调用" class="headerlink" title="grpc.pb生成的代码实现rpc调用"></a>grpc.pb生成的代码实现rpc调用</h4><p>生成的框架代码用来继承实现Service和获取stub来发起rpc call。实际上这些代码并不是必须的<br>在下面讲了如何使用几个工厂类来创建Stub，还有直接<code>new</code>出Service</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">class XXXServer &#123;</span><br><span class="line">        &#x2F;&#x2F; 客户端使用的桩</span><br><span class="line">	class Stub</span><br><span class="line">        &#x2F;&#x2F; base </span><br><span class="line">	class Service</span><br><span class="line">	&#x2F;&#x2F; 各种版本的rpc包装，但都继承自base</span><br><span class="line">        class WithAsyncMethod_XXX</span><br><span class="line">        typedef WithAsyncMethod_XXX&lt;Service &gt; AsyncService;</span><br><span class="line">	typedef ExperimentalWithCallbackMethod_XXX&lt;Service &gt; CallbackService;</span><br><span class="line">	class WithGenericMethod_XXX</span><br><span class="line">	class WithRawMethod_XXX</span><br><span class="line">	typedef WithStreamedUnaryMethod_XXX&lt;Service &gt; StreamedUnaryService;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="同步与异步"><a href="#同步与异步" class="headerlink" title="同步与异步"></a>同步与异步</h2><p>grpc 的异步即为使用cq事件驱动（cq-based），使用tag标记事件。另外还有callback方式</p>
+<h3 id="对于客户端"><a href="#对于客户端" class="headerlink" title="对于客户端"></a>对于客户端</h3><p>同步时，通过调用’::grpc::internal::BlockingUnaryCall’<br>异步时，创建’ClientAsyncResponseReader’(非流), 然后通过调用’ClientAsyncResponseReader’的write和finish，并等待tag<br>当存在流时分别是</p>
+<ul>
+<li>::grpc::ClientAsyncReader</li>
+<li>::grpc::ClientAsyncWriter</li>
+<li>::grpc::ClientAsyncReaderWriter</li>
+</ul>
+<p>这些类型可用对应的工厂类来创建, 生成代码的stub也是这么用的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">class ClientReaderFactory </span><br><span class="line">class ClientWriterFactory </span><br><span class="line">class ClientReaderWriterFactory</span><br></pre></td></tr></table></figure>
+
+<h3 id="对于服务端"><a href="#对于服务端" class="headerlink" title="对于服务端"></a>对于服务端</h3><p>同步时，通过’AddMethod’来注册，生成代码会在父类构造时执行。注册后由grpc调用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Greeter::Service::Service() &#123;</span><br><span class="line">    AddMethod(new ::grpc::internal::RpcServiceMethod(</span><br><span class="line">        Greeter_method_names[0],</span><br><span class="line">        ::grpc::internal::RpcMethod::NORMAL_RPC,</span><br><span class="line">        new ::grpc::internal::RpcMethodHandler&lt; Greeter::Service, ::helloworld::HelloRequest, ::helloworld::HelloReply&gt;(</span><br><span class="line">            [](Greeter::Service* service,</span><br><span class="line">               ::grpc_impl::ServerContext* ctx,</span><br><span class="line">               const ::helloworld::HelloRequest* req,</span><br><span class="line">               ::helloworld::HelloReply* resp) &#123;</span><br><span class="line">                 return service-&gt;SayHello(ctx, req, resp);</span><br><span class="line">               &#125;, this)));</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>异步时，类似客户端</p>
+<ul>
+<li>grpc::ServerAsyncReaderWriter</li>
+<li>grpc::ServerAsyncReader</li>
+<li>grpc::ServerAsyncWriter</li>
+</ul>
+<p>可见服务端是直接new出来的，异步时这些io操作对象也是直接new出来的, 在调用以下时传入</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">RequestAsyncBidiStreaming</span><br><span class="line">RequestAsyncClientStreaming</span><br><span class="line">RequestAsyncServerStreaming</span><br></pre></td></tr></table></figure>
+
+<h2 id="grpc-callback"><a href="#grpc-callback" class="headerlink" title="grpc callback"></a>grpc callback</h2><p>只在客户端使用，callback方式的请求可以传入一个lambda, 在请求完成时调用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">stub_-&gt;async()-&gt;SayHello(&amp;context, &amp;request, &amp;reply,</span><br><span class="line">                         [&amp;mu, &amp;cv, &amp;done, &amp;status](Status s) &#123;</span><br><span class="line">                           status &#x3D; std::move(s);</span><br><span class="line">                           std::lock_guard&lt;std::mutex&gt; lock(mu);</span><br><span class="line">                           done &#x3D; true;</span><br><span class="line">                           cv.notify_one();</span><br><span class="line">                         &#125;);</span><br></pre></td></tr></table></figure>
+
+<p>新版本的grpc已经将实验性的标记去除，说明此方式成熟了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL</span><br><span class="line">  ::grpc::Service::</span><br><span class="line">#else</span><br><span class="line">  ::grpc::Service::experimental().</span><br><span class="line">#endif</span><br></pre></td></tr></table></figure>
+
+<h2 id="grpc异步流"><a href="#grpc异步流" class="headerlink" title="grpc异步流"></a>grpc异步流</h2><p>官方仓库的示例代码没有异步且流的, 在实际项目中用到异步流,使用大概方法</p>
+<ol>
+<li>手动创建writereader</li>
+<li>启动时，调用’grpc::Service::RequestAsyncBidiStreaming’ 和 ‘grpc::Service::RequestAsyncClientStreaming’ 以及’RequestAsyncServerStreaming’, 向cq塞请求new_connection事件</li>
+<li>收到’new_connection’事件返回后，再调用read事件。</li>
+</ol>
+<p>一共有5个类型</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">new_connection, read, write, finish, done</span><br></pre></td></tr></table></figure>
+<p>我写了一个demo <a href="https://github.com/energygreek/grpcstreamhelloworld" target="_blank" rel="noopener">grpcstreamhelloworld</a></p>
+<h2 id="grpc-消息大小"><a href="#grpc-消息大小" class="headerlink" title="grpc 消息大小"></a>grpc 消息大小</h2><p>老版本的grpc中，发送端是支持无限大小的，但接受端只能是4M</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#define GRPC_DEFAULT_MAX_SEND_MESSAGE_LENGTH -1</span><br><span class="line">#define GRPC_DEFAULT_MAX_RECV_MESSAGE_LENGTH (4 * 1024 * 1024)</span><br></pre></td></tr></table></figure>
+<p>服务端代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">std::unique_ptr&lt;Server&gt; ServerBuilder::BuildAndStart() &#123;</span><br><span class="line">    if (max_receive_message_size_ &gt;&#x3D; 0) &#123;</span><br><span class="line">      args.SetInt(GRPC_ARG_MAX_RECEIVE_MESSAGE_LENGTH, max_receive_message_size_);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>但在新版grpc中变了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">std::unique_ptr&lt;grpc::Server&gt; ServerBuilder::BuildAndStart() &#123;</span><br><span class="line">  grpc::ChannelArguments args;</span><br><span class="line">  if (max_receive_message_size_ &gt;&#x3D; -1) &#123;</span><br><span class="line">    args.SetInt(GRPC_ARG_MAX_RECEIVE_MESSAGE_LENGTH, max_receive_message_size_);</span><br><span class="line">  &#125;</span><br><span class="line">  if (max_send_message_size_ &gt;&#x3D; -1) &#123;</span><br><span class="line">    args.SetInt(GRPC_ARG_MAX_SEND_MESSAGE_LENGTH, max_send_message_size_);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="grpc-编译安装的问题"><a href="#grpc-编译安装的问题" class="headerlink" title="grpc 编译安装的问题"></a>grpc 编译安装的问题</h2><p><a href="https://github.com/grpc/grpc/issues/13841" target="_blank" rel="noopener">https://github.com/grpc/grpc/issues/13841</a></p>
+<h2 id="grpc异步存在问题"><a href="#grpc异步存在问题" class="headerlink" title="grpc异步存在问题"></a>grpc异步存在问题</h2><p>因为异步服务端通过completionqueue来通知rpc执行结果和执行下次调用，通常使用多queue和多线程的方式提高处理效率</p>
+<ol>
+<li>通常情况是多queue, 即每个service对应一个queue, 而每个service又有多个rpc，线程去轮询这个complete_queue。这样导致高线程切换开销，而且complete_queue也占用大量内存</li>
+<li>多线程，queue可以用多个线程去轮询，但0.13版本可能出现bug</li>
+</ol>
+<h2 id="grpc异步流存在的问题"><a href="#grpc异步流存在的问题" class="headerlink" title="grpc异步流存在的问题"></a>grpc异步流存在的问题</h2><p>grpc区别与其他框架很大一个优势是支持异步流，即可以多次请求和多次回复。异步是基于cq的事件驱动，所以必须等待tag回调, 连续两次发送会异常。<br>而真正的请求一般在业务模块处理, 不知道tag的状态即不知道是否正在发送， 那么如何在cq回调外发送消息呢？ </p>
+<p>办法是维护一个发送队列，消息先存队列里，等待cq回调时取出发送。 另外由于流同步需要显式发送结束标记(服务端调Stream::Finish, 客户端调用WriteDown和Finish),<br>所以需要有一个特殊消息加以区分，通常用空指针，也可以设置结束标志。另外由于发送代码会同时被业务调用和cq回调，需要对发送代码加锁</p>
+<h2 id="调试grpc"><a href="#调试grpc" class="headerlink" title="调试grpc"></a>调试grpc</h2><p>通过设置环境变量，让grpc向控制台打印详细信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">export GRPC_VERBOSITY&#x3D;DEBUG</span><br><span class="line">bash-5.0# .&#x2F;build&#x2F;bin&#x2F;hasync slave  stdin stdout @127.0.0.1:7615</span><br><span class="line">D1026 08:27:44.142802149   24658 ev_posix.cc:174]            Using polling engine: epollex</span><br><span class="line">D1026 08:27:44.143406685   24658 dns_resolver_ares.cc:490]   Using ares dns resolver</span><br><span class="line">I1026 08:27:44.158115785   24658 server_builder.cc:332]      Synchronous server. Num CQs: 1, Min pollers: 1, Max Pollers: 2, CQ timeout (msec): 10000</span><br></pre></td></tr></table></figure>
+
+<h2 id="项目实践"><a href="#项目实践" class="headerlink" title="项目实践"></a>项目实践</h2><p>项目使用客户端异步/同步，服务端全异步， 可以兼容四种传输方式</p>
+<h2 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h2><p><a href="https://grpc.github.io/grpc/cpp/grpcpp_2impl_2codegen_2sync__stream_8h_source.html" target="_blank" rel="noopener">https://grpc.github.io/grpc/cpp/grpcpp_2impl_2codegen_2sync__stream_8h_source.html</a><br><a href="https://grpc.github.io/grpc/cpp/grpcpp_2impl_2codegen_2byte__buffer_8h_source.html" target="_blank" rel="noopener">https://grpc.github.io/grpc/cpp/grpcpp_2impl_2codegen_2byte__buffer_8h_source.html</a><br><a href="https://grpc.github.io/grpc/cpp/call__op__set_8h_source.html" target="_blank" rel="noopener">https://grpc.github.io/grpc/cpp/call__op__set_8h_source.html</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://energygreek.github.io/2021/04/13/grpc-learning/" data-id="clsbmbv3q002qbwopfvjs7sdv" data-title="grpc 学习" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c/" rel="tag">c++</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/grpc/" rel="tag">grpc</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2021/04/15/buffer-cache-too-high/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前一篇</strong>
+      <div class="article-nav-title">
+        
+          buffer-cache too high
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2021/04/02/ways-to-use-third-party-library-in-cmake/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">cmake 使用第三方库</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/51%E5%8D%95%E7%89%87%E6%9C%BA/" rel="tag">51单片机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DP/" rel="tag">DP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aarch64/" rel="tag">aarch64</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/admin/" rel="tag">admin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/" rel="tag">algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algoritm/" rel="tag">algoritm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bash/" rel="tag">bash</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/basics/" rel="tag">basics</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/" rel="tag">c++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c-c/" rel="tag">c/c++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cmake/" rel="tag">cmake</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dns/" rel="tag">dns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/email-client/" rel="tag">email_client</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/exam/" rel="tag">exam</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/exception-safe/" rel="tag">exception-safe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ffmpeg/" rel="tag">ffmpeg</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/filesystem/" rel="tag">filesystem</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flask/" rel="tag">flask</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gdb/" rel="tag">gdb</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/" rel="tag">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/grpc/" rel="tag">grpc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/grub/" rel="tag">grub</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hawei/" rel="tag">hawei</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/heapsort/" rel="tag">heapsort</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/" rel="tag">k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linkage/" rel="tag">linkage</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux%E5%9F%BA%E7%A1%80/" rel="tag">linux基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lock/" rel="tag">lock</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lvm/" rel="tag">lvm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maintance/" rel="tag">maintance</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/malloc/" rel="tag">malloc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mdns/" rel="tag">mdns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memory/" rel="tag">memory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mutex/" rel="tag">mutex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mutt/" rel="tag">mutt</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/namespace/" rel="tag">namespace</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/network/" rel="tag">network</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/os-maintain/" rel="tag">os-maintain</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/printer/" rel="tag">printer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/program/" rel="tag">program</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rancher-k8s/" rel="tag">rancher,k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rhce/" rel="tag">rhce</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rtp/" rel="tag">rtp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/safe/" rel="tag">safe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scope/" rel="tag">scope</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/seralize/" rel="tag">seralize</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shared-ptr/" rel="tag">shared_ptr</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/socket/" rel="tag">socket</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/socketopt/" rel="tag">socketopt</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sql/" rel="tag">sql</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/storageduration/" rel="tag">storageduration</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sysemd/" rel="tag">sysemd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/template-programing/" rel="tag">template programing</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/terminal/" rel="tag">terminal</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tool/" rel="tag">tool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/udp/" rel="tag">udp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/unique-ptr/" rel="tag">unique_ptr</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/unit-test/" rel="tag">unit test</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/urxvt/" rel="tag">urxvt</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webcrawler/" rel="tag">webcrawler</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webserver/" rel="tag">webserver</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/weechat/" rel="tag">weechat</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/wordpress/" rel="tag">wordpress</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" rel="tag">二叉树</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E6%A0%B8%E5%8E%9F%E7%90%86/" rel="tag">内核原理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%B7%E6%9C%BA%E6%95%99%E7%A8%8B/" rel="tag">刷机教程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" rel="tag">包管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9F%A5%E6%89%BE/" rel="tag">查找</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/" rel="tag">系统调用</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E8%AF%91/" rel="tag">编译</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%B0%83%E4%BC%98/" rel="tag">调优</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9F%B3%E8%A7%86%E9%A2%91/" rel="tag">音视频</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/51%E5%8D%95%E7%89%87%E6%9C%BA/" style="font-size: 10px;">51单片机</a> <a href="/tags/DP/" style="font-size: 10px;">DP</a> <a href="/tags/Linux/" style="font-size: 10px;">Linux</a> <a href="/tags/aarch64/" style="font-size: 10px;">aarch64</a> <a href="/tags/admin/" style="font-size: 10px;">admin</a> <a href="/tags/algorithm/" style="font-size: 16px;">algorithm</a> <a href="/tags/algoritm/" style="font-size: 10px;">algoritm</a> <a href="/tags/android/" style="font-size: 10px;">android</a> <a href="/tags/bash/" style="font-size: 10px;">bash</a> <a href="/tags/basics/" style="font-size: 10px;">basics</a> <a href="/tags/c/" style="font-size: 12px;">c++</a> <a href="/tags/c-c/" style="font-size: 20px;">c/c++</a> <a href="/tags/cmake/" style="font-size: 10px;">cmake</a> <a href="/tags/dns/" style="font-size: 10px;">dns</a> <a href="/tags/docker/" style="font-size: 18px;">docker</a> <a href="/tags/email-client/" style="font-size: 10px;">email_client</a> <a href="/tags/exam/" style="font-size: 10px;">exam</a> <a href="/tags/exception-safe/" style="font-size: 10px;">exception-safe</a> <a href="/tags/ffmpeg/" style="font-size: 10px;">ffmpeg</a> <a href="/tags/filesystem/" style="font-size: 14px;">filesystem</a> <a href="/tags/flask/" style="font-size: 10px;">flask</a> <a href="/tags/gdb/" style="font-size: 10px;">gdb</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/grpc/" style="font-size: 10px;">grpc</a> <a href="/tags/grub/" style="font-size: 10px;">grub</a> <a href="/tags/hawei/" style="font-size: 10px;">hawei</a> <a href="/tags/heapsort/" style="font-size: 10px;">heapsort</a> <a href="/tags/k8s/" style="font-size: 10px;">k8s</a> <a href="/tags/linkage/" style="font-size: 10px;">linkage</a> <a href="/tags/linux/" style="font-size: 14px;">linux</a> <a href="/tags/linux%E5%9F%BA%E7%A1%80/" style="font-size: 10px;">linux基础</a> <a href="/tags/lock/" style="font-size: 10px;">lock</a> <a href="/tags/lvm/" style="font-size: 10px;">lvm</a> <a href="/tags/maintance/" style="font-size: 10px;">maintance</a> <a href="/tags/malloc/" style="font-size: 10px;">malloc</a> <a href="/tags/mdns/" style="font-size: 10px;">mdns</a> <a href="/tags/memory/" style="font-size: 12px;">memory</a> <a href="/tags/mutex/" style="font-size: 10px;">mutex</a> <a href="/tags/mutt/" style="font-size: 10px;">mutt</a> <a href="/tags/namespace/" style="font-size: 10px;">namespace</a> <a href="/tags/network/" style="font-size: 10px;">network</a> <a href="/tags/os-maintain/" style="font-size: 10px;">os-maintain</a> <a href="/tags/printer/" style="font-size: 10px;">printer</a> <a href="/tags/program/" style="font-size: 10px;">program</a> <a href="/tags/python/" style="font-size: 14px;">python</a> <a href="/tags/rancher-k8s/" style="font-size: 10px;">rancher,k8s</a> <a href="/tags/rhce/" style="font-size: 10px;">rhce</a> <a href="/tags/rtp/" style="font-size: 10px;">rtp</a> <a href="/tags/safe/" style="font-size: 12px;">safe</a> <a href="/tags/scope/" style="font-size: 10px;">scope</a> <a href="/tags/seralize/" style="font-size: 10px;">seralize</a> <a href="/tags/shared-ptr/" style="font-size: 10px;">shared_ptr</a> <a href="/tags/socket/" style="font-size: 10px;">socket</a> <a href="/tags/socketopt/" style="font-size: 10px;">socketopt</a> <a href="/tags/sql/" style="font-size: 12px;">sql</a> <a href="/tags/storageduration/" style="font-size: 10px;">storageduration</a> <a href="/tags/sysemd/" style="font-size: 10px;">sysemd</a> <a href="/tags/template-programing/" style="font-size: 10px;">template programing</a> <a href="/tags/terminal/" style="font-size: 10px;">terminal</a> <a href="/tags/tool/" style="font-size: 18px;">tool</a> <a href="/tags/udp/" style="font-size: 10px;">udp</a> <a href="/tags/unique-ptr/" style="font-size: 10px;">unique_ptr</a> <a href="/tags/unit-test/" style="font-size: 10px;">unit test</a> <a href="/tags/urxvt/" style="font-size: 10px;">urxvt</a> <a href="/tags/webcrawler/" style="font-size: 10px;">webcrawler</a> <a href="/tags/webserver/" style="font-size: 10px;">webserver</a> <a href="/tags/weechat/" style="font-size: 10px;">weechat</a> <a href="/tags/wordpress/" style="font-size: 10px;">wordpress</a> <a href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" style="font-size: 10px;">二叉树</a> <a href="/tags/%E5%86%85%E6%A0%B8%E5%8E%9F%E7%90%86/" style="font-size: 10px;">内核原理</a> <a href="/tags/%E5%88%B7%E6%9C%BA%E6%95%99%E7%A8%8B/" style="font-size: 10px;">刷机教程</a> <a href="/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" style="font-size: 10px;">包管理</a> <a href="/tags/%E6%9F%A5%E6%89%BE/" style="font-size: 10px;">查找</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 10px;">算法</a> <a href="/tags/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/" style="font-size: 10px;">系统调用</a> <a href="/tags/%E7%BC%96%E8%AF%91/" style="font-size: 10px;">编译</a> <a href="/tags/%E8%B0%83%E4%BC%98/" style="font-size: 10px;">调优</a> <a href="/tags/%E9%9F%B3%E8%A7%86%E9%A2%91/" style="font-size: 10px;">音视频</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/02/">二月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/12/">十二月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/05/">五月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">四月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">十二月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/11/">十一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">十月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/08/">八月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">三月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">二月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/02/07/streaming-h264-with-rtp/">streaming h264 with rtp</a>
+          </li>
+        
+          <li>
+            <a href="/2023/09/08/wifi-tool/">随身wifi工具</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/21/docker-network/">docker network</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/18/mail-setup/">mail setup</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/08/install-wordpress/">install wordpress</a>
+          </li>
+        
+          <li>
+            <a href="/2022/12/29/amrnb-and-amrwb/">amrnb和amrwb的编解码</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 greek_soon@hotmail.com<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=z20lYmACQgemxcrzNk1C8Q"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'z20lYmACQgemxcrzNk1C8Q');
+</script>
+<!-- End Google Analytics -->
+
+  
+  <title>又是元气满满的一天</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="记录总结">
+<meta property="og:type" content="website">
+<meta property="og:title" content="又是元气满满的一天">
+<meta property="og:url" content="https://energygreek.github.io/index.html">
+<meta property="og:site_name" content="又是元气满满的一天">
+<meta property="og:description" content="记录总结">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="greek_soon@hotmail.com">
+<meta property="article:tag" content="c&#x2F;c++">
+<meta property="article:tag" content=" Linux日常">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/" title="又是元气满满的一天">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="又是元气满满的一天" type="application/atom+xml">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">又是元气满满的一天</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">个人博客</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS 订阅"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://energygreek.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-streaming-h264-with-rtp" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/02/07/streaming-h264-with-rtp/" class="article-date">
+  <time class="dt-published" datetime="2024-02-07T03:34:38.000Z" itemprop="datePublished">2024-02-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/02/07/streaming-h264-with-rtp/">streaming h264 with rtp</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>这里记录了使用ffmpeg来发送h264的rtp流，主要问题是处理pps和sps的发送，看了非常多的文档和例子包括gptchat，直到用gdb跟ffmpeg才找到解决办法。</p>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>公司的有个发送视频彩铃的业务，需要向终端发送h264。开始想法是创建ffmpeg进程来发送，不过发现进程太好资源并发上不去。后来用写代码来多线程发送。</p>
+<h3 id="sdp协商转码问题"><a href="#sdp协商转码问题" class="headerlink" title="sdp协商转码问题"></a>sdp协商转码问题</h3><p>sdp协商结果会有不同的分辨率、等级、质量之类的参数(pps/sps)，为了避免转码，提前制作了不同参数的视频。不过后来发现只要正确发送pps/sps，终端都能正确解码，不是必须按sdp里的视频参数。</p>
+<h3 id="用ffmpeg发送"><a href="#用ffmpeg发送" class="headerlink" title="用ffmpeg发送"></a>用ffmpeg发送</h3><p>开始直接使用命令ffmpeg发送，发现终端不能解码。对比正常的rtp流发现缺少了pps/sps。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ffmpeg -i video.mp4 -an -c:v copy -f rtp rtp:&#x2F;&#x2F;ip:port</span><br></pre></td></tr></table></figure>
+<p>一番搜索发现ffmpeg将pps/sps等参数写到sdp中(out-of-band)，还用base64编码了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a&#x3D;fmtp:96 packetization-mode&#x3D;1; sprop-parameter-sets&#x3D;Z2QAKKzRAHgCJ+XAWoCAgKAAAAMAIAAAB4HjBiJA,aOvvLA&#x3D;&#x3D;; profile-level-id&#x3D;640028</span><br></pre></td></tr></table></figure>
+
+<p>ffplay等播放软件会解析sdp，载入pps/sps，所以正确解码，但是sip场景下只能通过rtp来发送sps/pps(in-band)。 后来发现用ffmpeg的’bit stream filter’能解决问题</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ffmpeg -i video.mp4 -an -c:v copy -bsf h264_mp4toannexb -f rtp rtp:&#x2F;&#x2F;ip:port</span><br></pre></td></tr></table></figure>
+
+<p>即使不转码，使用ffmpeg进程发送视频，在两核的系统中大概只能发送十几路。</p>
+<h3 id="代码实现发送"><a href="#代码实现发送" class="headerlink" title="代码实现发送"></a>代码实现发送</h3><p>基于ffmpeg的示例代码’doc/example/remux.c’, 将原来写文件改为rtp即可。因为还没有用到’h264_mp4toannexb’，还不会发送pps和sps。</p>
+<h4 id="关键问题就是如何使用这个bsf"><a href="#关键问题就是如何使用这个bsf" class="headerlink" title="关键问题就是如何使用这个bsf"></a>关键问题就是如何使用这个bsf</h4><p>网上看到的例子包括用gptchat生成的例子，都是类似下面的步骤。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"># 搜索bsf</span><br><span class="line">av_bsf_get_by_name(&quot;h264_mp4toannexb&quot;)</span><br><span class="line"># 创建bsf的上下文</span><br><span class="line">av_bsf_alloc(bsf, &amp;bsf_ctx)</span><br><span class="line"># 从输入的format上下文中复制编码参数</span><br><span class="line">avcodec_parameters_copy(bsf_ctx-&gt;par_in, input_ctx-&gt;streams[video_stream_idx]-&gt;codecpar)</span><br><span class="line"># 初始化bsf上下文</span><br><span class="line">av_bsf_init(bsf_ctx)</span><br><span class="line"># 读入packet</span><br><span class="line">av_read_frame(input_ctx, &amp;pkt)</span><br><span class="line"># 送到bsf中处理</span><br><span class="line">av_bsf_send_packet(bsf_ctx, pkt)</span><br><span class="line"># 取出处理后的pkt</span><br><span class="line">av_bsf_receive_packet(bsf_ctx, pkt)</span><br><span class="line"># 发送rtp</span><br></pre></td></tr></table></figure>
+
+<p>抓包发现还是没有发送PPS/SPS, 而且第一个NALU是SEI，并且是坏的(Malformed)。调试发现bsf确实成功将SEI从AVCC转换成了AnnexB形式，也在SEI后追加了PPS和SPS。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">(gdb) x&#x2F;150bx pkt-&gt;data</span><br><span class="line">0x5555556da310: 0x00    0x00    0x00    0x01    0x06    0x05    0x2e    0xdc</span><br><span class="line">0x5555556da318: 0x45    0xe9    0xbd    0xe6    0xd9    0x48    0xb7    0x96</span><br><span class="line">0x5555556da320: 0x2c    0xd8    0x20    0xd9    0x23    0xee    0xef    0x78</span><br><span class="line">0x5555556da328: 0x32    0x36    0x34    0x20    0x2d    0x20    0x63    0x6f</span><br><span class="line">0x5555556da330: 0x72    0x65    0x20    0x31    0x35    0x35    0x20    0x72</span><br><span class="line">0x5555556da338: 0x32    0x39    0x30    0x31    0x20    0x37    0x64    0x30</span><br><span class="line">0x5555556da340: 0x66    0x66    0x32    0x32    0x00    0x80    0x00    0x00</span><br><span class="line">0x5555556da348: 0x00    0x01    0x67    0x64    0x00    0x28    0xac    0xd1</span><br><span class="line">0x5555556da350: 0x00    0x78    0x02    0x27    0xe5    0xc0    0x5a    0x80</span><br><span class="line">0x5555556da358: 0x80    0x80    0xa0    0x00    0x00    0x03    0x00    0x20</span><br><span class="line">0x5555556da360: 0x00    0x00    0x07    0x81    0xe3    0x06    0x22    0x40</span><br><span class="line">0x5555556da368: 0x00    0x00    0x00    0x01    0x68    0xeb    0xef    0x2c</span><br><span class="line">0x5555556da370: 0x00    0x00    0x01    0x65    0x88    0x84    0x02    0xff</span><br><span class="line">0x5555556da378: 0x91    0x3c    0x4a    0x51    0x5b    0xfd    0x02    0x3f</span><br><span class="line">0x5555556da380: 0xc1    0x67    0x8d    0xc0    0x94    0x98    0xee    0x7d</span><br><span class="line">0x5555556da388: 0x43    0x23    0xc0    0x4f    0xf7    0x56    0x37    0xfc</span><br><span class="line">0x5555556da390: 0xf1    0xf3    0xd3    0x83    0x03    0xa9    0x6d    0xd2</span><br><span class="line">0x5555556da398: 0x07    0xcf    0x19    0xa2    0x1e    0x29    0x64    0xfe</span><br><span class="line">0x5555556da3a0: 0x1f    0x8e    0xd6    0x71    0x5f    0x33</span><br></pre></td></tr></table></figure>
+<p><code>0x00 0x00 0x00 0x01</code>是annexb格式的起始码，第一个NALU是0x06(SEI)，第二个NALU是0x07(SPS)，第三个是0x08(PPS)。问题出在rtp打包的<code>ff_rtp_send_h264_hevc</code>。这里判断出<code>s-&gt;nal_length_size</code>不是0而是4, 所以还是以AVCC格式的首四个字节代表长度来解析pkt，而这是pkt是annexB格式了，前四个字节就是0x00, 0x00, 0x00, 0x01。所以打包错误。 问题怎么使rtp按annexB来打包，为什么<code>nal_length_size</code>是4不是0。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">void ff_rtp_send_h264_hevc(AVFormatContext *s1, const uint8_t *buf1, int size)</span><br><span class="line">&#123;</span><br><span class="line">    const uint8_t *r, *end &#x3D; buf1 + size;</span><br><span class="line">    RTPMuxContext *s &#x3D; s1-&gt;priv_data;</span><br><span class="line"></span><br><span class="line">    s-&gt;timestamp &#x3D; s-&gt;cur_timestamp;</span><br><span class="line">    s-&gt;buf_ptr   &#x3D; s-&gt;buf;</span><br><span class="line">    if (s-&gt;nal_length_size)</span><br><span class="line">        r &#x3D; ff_avc_mp4_find_startcode(buf1, end, s-&gt;nal_length_size) ? buf1 : end;</span><br><span class="line">    else</span><br><span class="line">        r &#x3D; ff_avc_find_startcode(buf1, end);</span><br></pre></td></tr></table></figure>
+
+<p>找到初始化rtp的初始化函数<code>rtp_write_header</code>，发现设置<code>nal_length_size</code>的地方，原来判断extradata，如果第一个字节是1,则按avcc打包。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">case AV_CODEC_ID_H264:</span><br><span class="line">    &#x2F;* check for H.264 MP4 syntax *&#x2F;</span><br><span class="line">    if (st-&gt;codecpar-&gt;extradata_size &gt; 4 &amp;&amp; st-&gt;codecpar-&gt;extradata[0] &#x3D;&#x3D; 1) &#123;</span><br><span class="line">        s-&gt;nal_length_size &#x3D; (st-&gt;codecpar-&gt;extradata[4] &amp; 0x03) + 1;</span><br><span class="line">    &#125;</span><br><span class="line">    break;</span><br></pre></td></tr></table></figure>
+<p>而当前的extradata是类似avcc的（又不同于AVCC, 因为多一个header)，第一个字节等于1，而通过调试ffmpeg_g到这里时，extradata是annexB格式，即首4个字节是0x00,0x00,0x00,0x01。关于extradata格式的问题，从开始我就发现刚初始化时，extradata就是0x01开头，那么问题ffmpeg_g的extradata什么时候变的，再次调试发现，bsf初始化跟上面的不同。在ffmpeg_g中bsf初始化在fftools/ffmpeg_mux.c文件中:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"># fftools&#x2F;ffmpeg_mux.c</span><br><span class="line">static int bsf_init(MuxStream *ms)</span><br><span class="line">&#123;</span><br><span class="line">    OutputStream *ost &#x3D; &amp;ms-&gt;ost;</span><br><span class="line">    AVBSFContext *ctx &#x3D; ms-&gt;bsf_ctx;</span><br><span class="line">    int ret;</span><br><span class="line"></span><br><span class="line">    if (!ctx)</span><br><span class="line">        return avcodec_parameters_copy(ost-&gt;st-&gt;codecpar, ost-&gt;par_in);</span><br><span class="line"></span><br><span class="line">    ret &#x3D; avcodec_parameters_copy(ctx-&gt;par_in, ost-&gt;par_in);</span><br><span class="line">    if (ret &lt; 0)</span><br><span class="line">        return ret;</span><br><span class="line"></span><br><span class="line">    ctx-&gt;time_base_in &#x3D; ost-&gt;st-&gt;time_base;</span><br><span class="line"></span><br><span class="line">    ret &#x3D; av_bsf_init(ctx);</span><br><span class="line">    if (ret &lt; 0) &#123;</span><br><span class="line">        av_log(ms, AV_LOG_ERROR, &quot;Error initializing bitstream filter: %s\n&quot;,</span><br><span class="line">               ctx-&gt;filter-&gt;name);</span><br><span class="line">        return ret;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ret &#x3D; avcodec_parameters_copy(ost-&gt;st-&gt;codecpar, ctx-&gt;par_out);</span><br><span class="line">    if (ret &lt; 0)</span><br><span class="line">        return ret;</span><br><span class="line">    ost-&gt;st-&gt;time_base &#x3D; ctx-&gt;time_base_out;</span><br><span class="line"></span><br><span class="line">    ms-&gt;bsf_pkt &#x3D; av_packet_alloc();</span><br><span class="line">    if (!ms-&gt;bsf_pkt)</span><br><span class="line">        return AVERROR(ENOMEM);</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>发现，ffmpeg的bsf初始化多一个步骤，将bsf的par_out拷贝到输出AVstream中。而这par_out中的extradata就是我们要的annexB格式！</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ret &#x3D; avcodec_parameters_copy(ost-&gt;st-&gt;codecpar, ctx-&gt;par_out);</span><br></pre></td></tr></table></figure>
+
+<p>问题找到答案了，1是初始化rtp muxer前先初始化bsf，2是初始化bsf后将par_out拷贝回rtp muxer，再初始化rtp muxer。</p>
+<h4 id="正确例子"><a href="#正确例子" class="headerlink" title="正确例子"></a>正确例子</h4><p>基于ffmpeg的doc/example/remux.c 删除了错误处理。只关心h264，所以输入输出都只处理index=0的包。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line">int main(int argc, char **argv) &#123;</span><br><span class="line">  const AVOutputFormat *ofmt &#x3D; NULL;</span><br><span class="line">  AVFormatContext *ifmt_ctx &#x3D; NULL, *ofmt_ctx &#x3D; NULL;</span><br><span class="line">  AVPacket *pkt &#x3D; NULL;</span><br><span class="line">  const char *in_filename, *out_filename;</span><br><span class="line">  int ret &#x3D; 0;</span><br><span class="line">  in_filename &#x3D; &quot;video.mp4&quot;;</span><br><span class="line">  out_filename &#x3D; &quot;rtp:&#x2F;&#x2F;127.0.0.1:10020&quot;;</span><br><span class="line">  pkt &#x3D; av_packet_alloc();</span><br><span class="line">  ret &#x3D; avformat_open_input(&amp;ifmt_ctx, in_filename, 0, 0);</span><br><span class="line">  ret &#x3D; avformat_find_stream_info(ifmt_ctx, 0);</span><br><span class="line">  av_dump_format(ifmt_ctx, 0, in_filename, 0);</span><br><span class="line"></span><br><span class="line">  &#x2F;&#x2F; 创建输出rtp上下文，不初始化</span><br><span class="line">  avformat_alloc_output_context2(&amp;ofmt_ctx, NULL, &quot;rtp&quot;, out_filename);</span><br><span class="line">  &#x2F;&#x2F; 初始化bsf</span><br><span class="line">  const AVBitStreamFilter *bsf_stream_filter &#x3D;</span><br><span class="line">      av_bsf_get_by_name(&quot;h264_mp4toannexb&quot;);</span><br><span class="line">  AVBSFContext *bsf_ctx &#x3D; NULL;</span><br><span class="line">  ret &#x3D; av_bsf_alloc(bsf_stream_filter, &amp;bsf_ctx);</span><br><span class="line">  ret &#x3D;</span><br><span class="line">      avcodec_parameters_copy(bsf_ctx-&gt;par_in, ifmt_ctx-&gt;streams[0]-&gt;codecpar);</span><br><span class="line">  ret &#x3D; av_bsf_init(bsf_ctx);</span><br><span class="line"></span><br><span class="line">  ofmt &#x3D; ofmt_ctx-&gt;oformat;</span><br><span class="line">  AVStream *out_stream &#x3D; avformat_new_stream(ofmt_ctx, NULL);</span><br><span class="line">  &#x2F;&#x2F; 关键在这！！ 原来是从ifmt_ctx的stream中拷贝codecpar，改成从bsf中拷贝</span><br><span class="line">  &#x2F;&#x2F; ret &#x3D; avcodec_parameters_copy(out_stream-&gt;codecpar, in_codecpar);</span><br><span class="line">  ret &#x3D; avcodec_parameters_copy(out_stream-&gt;codecpar, bsf_ctx-&gt;par_out);</span><br><span class="line">  out_stream-&gt;codecpar-&gt;codec_tag &#x3D; 0;</span><br><span class="line">  av_dump_format(ofmt_ctx, 0, out_filename, 1);</span><br><span class="line">  if (!(ofmt-&gt;flags &amp; AVFMT_NOFILE)) &#123;</span><br><span class="line">    ret &#x3D; avio_open(&amp;ofmt_ctx-&gt;pb, out_filename, AVIO_FLAG_WRITE);</span><br><span class="line">  &#125;</span><br><span class="line">  &#x2F;&#x2F; 初始化bsf后再初始化rtp</span><br><span class="line">  ret &#x3D; avformat_write_header(ofmt_ctx, NULL);</span><br><span class="line"></span><br><span class="line">  while (1) &#123;</span><br><span class="line">    AVStream *in_stream, *out_stream;</span><br><span class="line">    ret &#x3D; av_read_frame(ifmt_ctx, pkt);</span><br><span class="line">    if (pkt-&gt;stream_index !&#x3D; 0) &#123;</span><br><span class="line">      continue;</span><br><span class="line">    &#125;</span><br><span class="line">    in_stream &#x3D; ifmt_ctx-&gt;streams[pkt-&gt;stream_index];</span><br><span class="line">    out_stream &#x3D; ofmt_ctx-&gt;streams[pkt-&gt;stream_index];</span><br><span class="line">    log_packet(ifmt_ctx, pkt, &quot;in&quot;);</span><br><span class="line"></span><br><span class="line">    av_bsf_send_packet(bsf_ctx, pkt);</span><br><span class="line">    av_bsf_receive_packet(bsf_ctx, pkt);</span><br><span class="line">    &#x2F;* copy packet *&#x2F;</span><br><span class="line">    av_packet_rescale_ts(pkt, in_stream-&gt;time_base, out_stream-&gt;time_base);</span><br><span class="line">    pkt-&gt;pos &#x3D; -1;</span><br><span class="line">    log_packet(ofmt_ctx, pkt, &quot;out&quot;);</span><br><span class="line">    ret &#x3D; av_interleaved_write_frame(ofmt_ctx, pkt);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  av_write_trailer(ofmt_ctx);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="h264-mp4toannexb"><a href="#h264-mp4toannexb" class="headerlink" title="h264_mp4toannexb"></a>h264_mp4toannexb</h3><p>这个bsf将从mp4文件中读取的avcc格式的packet转换成annexb格式的packet。调试发现第一个读出来的包是SEI一个I帧，通过bsf处理后，会在SEI后面追加上PPS和SPS信息。而读取mp4文件时，sps/pps在extradata中。</p>
+<h3 id="相关知识"><a href="#相关知识" class="headerlink" title="相关知识"></a>相关知识</h3><p>这些知识反复看来看去，总也不能贯穿起来，直到问题解决才算明白。</p>
+<h4 id="NALU"><a href="#NALU" class="headerlink" title="NALU"></a>NALU</h4><p>NALU是真正用来保存h264视频信息的，包括I帧，P/B帧，PPS，SEI，SPS等。NALU由两部分组成：头（1字节）和payload，头中包含nalu的类型。h264规范只定义了NALU本身单元，但没有定义怎么保存NALU单元，所以有了两种格式保存NALU，AVCC和AnnexB。</p>
+<h5 id="NALU类型"><a href="#NALU类型" class="headerlink" title="NALU类型"></a>NALU类型</h5><p>NAL unit type的值和说明，类型后面跟payload。详细参见在Rec. ITU-T H.264文件的63页，这里展示常用的</p>
+<ul>
+<li>5,Coded slice of an IDR picture (I帧)</li>
+<li>6,Supplemental enhancement information (SEI)</li>
+<li>7,Sequence parameter set (SPS) </li>
+<li>8,Picture parameter set (PPS)</li>
+<li>24,Single-Time Aggregation Packet(STAP-A)</li>
+</ul>
+<p>从抓包看到SPS算上payload的长度为30，PPS算上payload的长度为4。不知道长度是不是固定的。</p>
+<h5 id="STAP-A"><a href="#STAP-A" class="headerlink" title="STAP-A"></a>STAP-A</h5><p>STAP-A是多个NALU的聚合(Aggregation)，即这个NALU的payload里是多个NALU。STAP-A类型的NAL用来发送PPS/SPS/SEI等多种聚合。因为这些单元都很小。STRAP-A类型的header也是一个字节，但是payload里面有多个NALU，并且每个NALU前面用2字节来表示这个NALU的大小。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">|STAP-A header|NALU-1 size|NALU-1|NALU-2 size|NALU-2|</span><br></pre></td></tr></table></figure>
+
+<p>NALU-1中又有header和payload。</p>
+<h4 id="AVCC和AnnexB"><a href="#AVCC和AnnexB" class="headerlink" title="AVCC和AnnexB"></a>AVCC和AnnexB</h4><p>上面说了规范没有定义怎么保存NALU，所以有了这两个格式，他们两是平等关系，只有保存的格式不同而已。AVCC用来保存，annexB用来流传输。</p>
+<ul>
+<li>AVCC用1~4个字节来表示NALU的长度，长度后面是NALU。读取方法是先读长度，再读取NALU。再读下一个长度，再读下一个NALU…</li>
+<li>而annexb用<code>0x00,0x00,0x00,0x01</code>或者<code>0x00,0x00,0x01</code>的起始码(start code)来分隔不同的NALU，所以方法是先读起始码，再一直读，直到发现下一个起始码，表示这个NALU结束，下一个NALU开始。</li>
+</ul>
+<p>ffmpeg使用中发现，AVCC一般用4字节表示NALU的长度，具体多少字节，在ffmpeg的extradata中有定义。annexB也是用4字节的起始码，也就是0x00,0x00,0x00,0x01。</p>
+<h4 id="Fragmentation-Units-FUs-分片"><a href="#Fragmentation-Units-FUs-分片" class="headerlink" title="Fragmentation Units (FUs) 分片"></a>Fragmentation Units (FUs) 分片</h4><p>FU就是网络分片，因为I帧是一个完整的图片，所以非常大，为了保证udp不丢包，所以要分次发送。 第一个分片的FU的头设置了Start bit， 最后一个分片的FU头设置了END bit。分片是在rtp muxer中完成，注意ffmpeg中一个packet可以包含多个音频帧，但是只包含一个帧，直到发送rtp之前，一个packet总是完整的一帧视频（I/P/B）。 对于比较小的packet，例如聚合了PPS/SPS等信息的STAP-A包，不需要分片。</p>
+<h4 id="extradata"><a href="#extradata" class="headerlink" title="extradata"></a>extradata</h4><p>上面很多次提到ffmpeg的extradata, 就是AVCodecParameters.extradata，它的长度是AVCodecParameters.extradata_size。在读取mp4文件的时候，ffmpeg会自动填充，在解码rtp的时候可能就需要手动填充了。extradata的比特位如下，首先是6字节的头，然后是多个SPS类型的NALU（2字节的长度分割多个NALU），再然后是PPS类型的NALU个数，最后是PPS类型的多个NALU(2字节的长度分割多个NALU）。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">bits    </span><br><span class="line">8   version ( always 0x01 )</span><br><span class="line">8   avc profile ( sps[0][1] )</span><br><span class="line">8   avc compatibility ( sps[0][2] )</span><br><span class="line">8   avc level ( sps[0][3] )</span><br><span class="line">6   reserved ( all bits on )</span><br><span class="line">2   NALULengthSizeMinusOne</span><br><span class="line">3   reserved ( all bits on )</span><br><span class="line">5   number of SPS NALUs (usually 1)</span><br><span class="line"></span><br><span class="line">repeated once per SPS:</span><br><span class="line">  16         SPS size</span><br><span class="line">  variable   SPS NALU data</span><br><span class="line"></span><br><span class="line">8   number of PPS NALUs (usually 1)</span><br><span class="line"></span><br><span class="line">repeated once per PPS:</span><br><span class="line">  16       PPS size</span><br><span class="line">  variable PPS NALU data</span><br></pre></td></tr></table></figure>
+
+<p>里面包含了一个或多个PPS/SPS(NALU)，但保存的格式，既不是AVCC也不是AnnexB。因为上面可知AVCC用1<del>4个字节表示NALU的长度，AnnexB用3</del>4字节的起始码，而extradata是有一个6字节的header，里面有个字段叫<code>NALULengthSizeMinusOne</code>就是定义了AVCC使用多少个字节来表示NALU的长度。如果<code>NALULengthSizeMinusOne</code>等于0，那么AVCC用1字节表示NALU的长度。通常就是用4字节。</p>
+<h5 id="extradata例子"><a href="#extradata例子" class="headerlink" title="extradata例子"></a>extradata例子</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">(gdb) x &#x2F;150bx fmt_ctx-&gt;streams[0]-&gt;codecpar-&gt;extradata</span><br><span class="line">0x55555571d9c0: 0x01    0x64    0x00    0x28    0xff    0xe1    0x00    0x1e</span><br><span class="line">0x55555571d9c8: 0x67    0x64    0x00    0x28    0xac    0xd1    0x00    0x78</span><br><span class="line">0x55555571d9d0: 0x02    0x27    0xe5    0xc0    0x5a    0x80    0x80    0x80</span><br><span class="line">0x55555571d9d8: 0xa0    0x00    0x00    0x03    0x00    0x20    0x00    0x00</span><br><span class="line">0x55555571d9e0: 0x07    0x81    0xe3    0x06    0x22    0x40    0x01    0x00</span><br><span class="line">0x55555571d9e8: 0x04    0x68    0xeb    0xef    0x2c    0x00    0x00    0x00</span><br><span class="line">0x55555571d9f0: 0x00    0x00    0x00    0x00    0x00    0x00    0x00    0x00</span><br><span class="line">0x55555571d9f8: 0x00    0x00    0x00    0x00    0x00    0x00    0x00    0x00</span><br><span class="line">0x55555571da00: 0x00    0x00    0x00    0x00    0x00    0x00    0x00    0x00</span><br><span class="line">0x55555571da08: 0x00    0x00    0x00    0x00    0x00    0x00    0x00    0x00</span><br><span class="line">0x55555571da10: 0x00    0x00    0x00    0x00    0x00    0x00    0x00    0x00</span><br><span class="line">0x55555571da18: 0x00    0x00    0x00    0x00    0x00    0x00    0x00    0x00</span><br><span class="line">0x55555571da20: 0x00    0x00    0x00    0x00    0x00    0x00    0x00    0x00</span><br><span class="line">0x55555571da28: 0x00    0x00    0x00    0x00    0x00    0x00    0x00    0x00</span><br><span class="line">0x55555571da30: 0x00    0x00    0x00    0x00    0x00    0x00    0x00    0x00</span><br><span class="line">0x55555571da38: 0xc1    0x00    0x00    0x00    0x00    0x00    0x00    0x00</span><br><span class="line">0x55555571da40: 0x9d    0xad    0x00    0x00    0x50    0x55    0x00    0x00</span><br><span class="line">0x55555571da48: 0xfa    0x19    0xc4    0x92    0x40    0xa0    0xdc    0xba</span><br><span class="line">0x55555571da50: 0x00    0x00    0x00    0x00    0x00    0x00</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>第5字节0xff,二进制为:1111 1111, 后2位表示<code>NALULengthSizeMinusOne</code>=3，所以ffmpeg用4字节表示NALU的大小（AVCC格式）。</li>
+<li>第6字节0xe1,二进制为:1110 0001，后5位表示SPS的个数=1,所以只有一个SPS。</li>
+<li>第7，8字节表示SPS的长度，0x00，0x1e，二进制为:0000 0000, 0001 1110，所以SPS长度为30。</li>
+<li>跳过30个字节，0x01，二进制为:0000 0001, 表示有1个PPS。</li>
+<li>后面的2个字节，0x00,0x04,二进制为:0000,0004,表示PPS的长度为4个字节。</li>
+</ul>
+<h5 id="NALU头的解析"><a href="#NALU头的解析" class="headerlink" title="NALU头的解析"></a>NALU头的解析</h5><p>NALU头是1字节，第一位F bit, 后两位NRI bit, 后五位表示NALU的type。</p>
+<p>SPS的头是0x67，而进制为: 01100111，所以type值正好是7。<br>PPS的头是0x68，而进制为: 01101000，所以type值正好是8。</p>
+<p>对比wireshark解析结果可以确认上面的理解正确，可见extradata就是6个字节的header加多个AVCC格式的NALU。</p>
+<h5 id="创建extradata"><a href="#创建extradata" class="headerlink" title="创建extradata"></a>创建extradata</h5><p>rtp解码时，需要手动生成extradata。创建AVCC格式的extradata</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">write(0x1);  &#x2F;&#x2F; version</span><br><span class="line">write(sps[0].data[1]); &#x2F;&#x2F; profile</span><br><span class="line">write(sps[0].data[2]); &#x2F;&#x2F; compatibility</span><br><span class="line">write(sps[0].data[3]); &#x2F;&#x2F; level</span><br><span class="line">write(0xFC | 3); &#x2F;&#x2F; reserved (6 bits), NULA length size - 1 (2 bits)</span><br><span class="line">write(0xE0 | 1); &#x2F;&#x2F; reserved (3 bits), num of SPS (5 bits)</span><br><span class="line">write_word(sps[0].size); &#x2F;&#x2F; 2 bytes for length of SPS</span><br><span class="line">for(size_t i&#x3D;0 ; i &lt; sps[0].size ; ++i)</span><br><span class="line">  write(sps[0].data[i]); &#x2F;&#x2F; data of SPS</span><br><span class="line"></span><br><span class="line">write(&amp;b, pps.size());  &#x2F;&#x2F; num of PPS</span><br><span class="line">for(size_t i&#x3D;0 ; i &lt; pps.size() ; ++i) &#123;</span><br><span class="line">  write_word(pps[i].size);  &#x2F;&#x2F; 2 bytes for length of PPS</span><br><span class="line">  for(size_t j&#x3D;0 ; j &lt; pps[i].size ; ++j)</span><br><span class="line">    write(pps[i].data[j]);  &#x2F;&#x2F; data of PPS</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>创建annexB格式的extradata</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">write(0x00)</span><br><span class="line">write(0x00)</span><br><span class="line">write(0x00)</span><br><span class="line">write(0x01)</span><br><span class="line">for each byte b in SPS</span><br><span class="line">  write(b)</span><br><span class="line"></span><br><span class="line">for each PPS p in PPS_array</span><br><span class="line">  write(0x00)</span><br><span class="line">  write(0x00)</span><br><span class="line">  write(0x00)</span><br><span class="line">  write(0x01)</span><br><span class="line">  for each byte b in p</span><br><span class="line">    write(b)</span><br></pre></td></tr></table></figure>
+
+<h2 id="wireshark解析"><a href="#wireshark解析" class="headerlink" title="wireshark解析"></a>wireshark解析</h2><p>从wiresshark对比用bsf和不用bsf的抓包发现，SEI包的内容没有变化，是不是可以不需要转成annexb，直接将PPS/SPS直接拷贝到packet中发出去呢？</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://membrane.stream/learn/h264/3" target="_blank" rel="noopener">https://membrane.stream/learn/h264/3</a><br><a href="https://github.com/cisco/openh264/issues/2501#issuecomment-231340268" target="_blank" rel="noopener">https://github.com/cisco/openh264/issues/2501#issuecomment-231340268</a><br><a href="https://stackoverflow.com/questions/17667002/how-to-add-sps-pps-read-from-mp4-file-information-to-every-idr-frame" target="_blank" rel="noopener">https://stackoverflow.com/questions/17667002/how-to-add-sps-pps-read-from-mp4-file-information-to-every-idr-frame</a><br><a href="https://stackoverflow.com/questions/24884827/possible-locations-for-sequence-picture-parameter-sets-for-h-264-stream" target="_blank" rel="noopener">https://stackoverflow.com/questions/24884827/possible-locations-for-sequence-picture-parameter-sets-for-h-264-stream</a><br><a href="https://aviadr1.blogspot.com/2010/05/h264-extradata-partially-explained-for.html" target="_blank" rel="noopener">https://aviadr1.blogspot.com/2010/05/h264-extradata-partially-explained-for.html</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://energygreek.github.io/2024/02/07/streaming-h264-with-rtp/" data-id="clsbmbv4v004nbwop2cwu1h2q" data-title="streaming h264 with rtp" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ffmpeg/" rel="tag">ffmpeg</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/rtp/" rel="tag">rtp</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-wifi-tool" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2023/09/08/wifi-tool/" class="article-date">
+  <time class="dt-published" datetime="2023-09-08T07:34:43.000Z" itemprop="datePublished">2023-09-08</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2023/09/08/wifi-tool/">随身wifi工具</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>本文记录了淘宝卖的随身wifi刷机成Debian，还能收发短信。还有救砖的艰辛过程，不过结局美满。</p>
+<h2 id="依赖"><a href="#依赖" class="headerlink" title="依赖"></a>依赖</h2><ul>
+<li>edl备份恢复工具，<a href="https://github.com/bkerler/edl" target="_blank" rel="noopener">https://github.com/bkerler/edl</a>, 下载源代码后执行<code>git submodule update --init --recursive</code>和 <code>pip install -r requirements.txt</code></li>
+<li>openstick编译好的debian <a href="https://github.com/OpenStick/OpenStick。" target="_blank" rel="noopener">https://github.com/OpenStick/OpenStick。</a> 在release页面下载 base.zip, debian.zip, firmware-ufi001c.zip，boot-ufi001c.img</li>
+<li>apt 安装 adb fastboot</li>
+</ul>
+<h2 id="切卡"><a href="#切卡" class="headerlink" title="切卡"></a>切卡</h2><p>刚接触时看网上的都是在后台页面切卡，但是刷机了没有后台页面如何切卡呢？ 为了切卡又重刷安卓，导致变砖了。参考网上资料发现，Debian下可以直接切。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">debian默认卡槽位1:</span><br><span class="line"></span><br><span class="line">echo 1 &gt; &#x2F;sys&#x2F;class&#x2F;leds&#x2F;sim:sel&#x2F;brightness</span><br><span class="line">echo 0 &gt; &#x2F;sys&#x2F;class&#x2F;leds&#x2F;sim:en&#x2F;brightness</span><br><span class="line">echo 0 &gt; &#x2F;sys&#x2F;class&#x2F;leds&#x2F;sim:sel2&#x2F;brightness</span><br><span class="line">echo 0 &gt; &#x2F;sys&#x2F;class&#x2F;leds&#x2F;sim:en2&#x2F;brightnessR</span><br><span class="line">modprobe -r qcom-q6v5-mss</span><br><span class="line">modprobe qcom-q6v5-mss</span><br><span class="line">systemctl restart rmtfs</span><br><span class="line">systemctl restart dbus-org.freedesktop.ModemManager1.service</span><br><span class="line"></span><br><span class="line">esim槽位3:</span><br><span class="line"></span><br><span class="line">echo 0 &gt; &#x2F;sys&#x2F;class&#x2F;leds&#x2F;sim:sel&#x2F;brightness</span><br><span class="line">echo 0 &gt; &#x2F;sys&#x2F;class&#x2F;leds&#x2F;sim:en&#x2F;brightness</span><br><span class="line">echo 1 &gt; &#x2F;sys&#x2F;class&#x2F;leds&#x2F;sim:sel2&#x2F;brightness</span><br><span class="line">echo 0 &gt; &#x2F;sys&#x2F;class&#x2F;leds&#x2F;sim:en2&#x2F;brightness</span><br><span class="line">modprobe -r qcom-q6v5-mss</span><br><span class="line">modprobe qcom-q6v5-mss</span><br><span class="line">systemctl restart rmtfs</span><br><span class="line">systemctl restart dbus-org.freedesktop.ModemManager1.service</span><br><span class="line"></span><br><span class="line">其他两个槽位</span><br><span class="line"></span><br><span class="line">槽位2:</span><br><span class="line"></span><br><span class="line">echo 0 &gt; &#x2F;sys&#x2F;class&#x2F;leds&#x2F;sim:sel&#x2F;brightness</span><br><span class="line">echo 1 &gt; &#x2F;sys&#x2F;class&#x2F;leds&#x2F;sim:en&#x2F;brightness</span><br><span class="line">echo 0 &gt; &#x2F;sys&#x2F;class&#x2F;leds&#x2F;sim:sel2&#x2F;brightness</span><br><span class="line">echo 0 &gt; &#x2F;sys&#x2F;class&#x2F;leds&#x2F;sim:en2&#x2F;brightness</span><br><span class="line">modprobe -r qcom-q6v5-mss</span><br><span class="line">modprobe qcom-q6v5-mss</span><br><span class="line">systemctl restart rmtfs</span><br><span class="line">systemctl restart dbus-org.freedesktop.ModemManager1.service</span><br><span class="line"></span><br><span class="line">槽位4:</span><br><span class="line">echo 0 &gt; &#x2F;sys&#x2F;class&#x2F;leds&#x2F;sim:sel&#x2F;brightness</span><br><span class="line">echo 0 &gt; &#x2F;sys&#x2F;class&#x2F;leds&#x2F;sim:en&#x2F;brightness</span><br><span class="line">echo 0 &gt; &#x2F;sys&#x2F;class&#x2F;leds&#x2F;sim:sel2&#x2F;brightness</span><br><span class="line">echo 1 &gt; &#x2F;sys&#x2F;class&#x2F;leds&#x2F;sim:en2&#x2F;brightness</span><br><span class="line">modprobe -r qcom-q6v5-mss</span><br><span class="line">modprobe qcom-q6v5-mss</span><br><span class="line">systemctl restart rmtfs</span><br><span class="line">systemctl restart dbus-org.freedesktop.ModemManager1.service</span><br><span class="line"></span><br><span class="line">有些棒子esim槽位不一样槽位3不行自行试试槽位2 4</span><br></pre></td></tr></table></figure>
+<p><a href="https://github.com/OpenStick/OpenStick/issues/49#issuecomment-1568202001" target="_blank" rel="noopener">https://github.com/OpenStick/OpenStick/issues/49#issuecomment-1568202001</a></p>
+<h2 id="刷机"><a href="#刷机" class="headerlink" title="刷机"></a>刷机</h2><p>先使用edl全量备份，方法在最下面。先刷base包，解压base.zip后执行里面的<code>flash.sh</code>。然后刷debian包，解压debian.zip后执行里面的<code>flash.sh</code>。这时进入系统发现可能出现问题（我也没明显感觉到问题），因为他们是ufi001b的。<br>所以再刷适配ufi001c的包，解压firmware-ufi001c.zip。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cd firmware-ufi001c</span><br><span class="line">adb push .&#x2F;* &#x2F;lib&#x2F;firmware</span><br><span class="line">adb reboot bootloader</span><br><span class="line">fastboot flash boot boot-ufi001c.img</span><br><span class="line">fastboot reboot</span><br></pre></td></tr></table></figure>
+<p>但是在刷ufi001c的包之前我能找到modem网络，刷完就没了，所以有了下面基带恢复的步骤。</p>
+<h2 id="基带"><a href="#基带" class="headerlink" title="基带"></a>基带</h2><p>基带文件在随身wifi的modem分区，先用edl备份modem分区。当然下面介绍了edl全量备份，跳过了userdata，估计是root和home目录。</p>
+<h3 id="恢复基带文件"><a href="#恢复基带文件" class="headerlink" title="恢复基带文件"></a>恢复基带文件</h3><p>我在安装debian系统时，发现移动网络不可用，于是参考网上说的，将原始基带恢复后正常。 基带文件名为”modem.bin”, edl全量备份后在dumps目录下。直接mount该文件，然后将modem.*和mba.mbn取出来，当发现刷机后发现移动网络不能使用时，重新拷回去就能用了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo mount modem.bin &#x2F;mnt</span><br></pre></td></tr></table></figure>
+<p>复制到firmware-ufi001c目录，覆盖之前的文件。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cp &#x2F;mnt&#x2F;modem.* .</span><br><span class="line">cp &#x2F;mnt&#x2F;mba.mbn .</span><br></pre></td></tr></table></figure>
+
+<p>再次拷贝到wifi棒子的/lib/firmware目录, 配合再刷一次适配001C的boot文件。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">adb push .&#x2F;* &#x2F;lib&#x2F;firmware</span><br><span class="line">adb reboot bootloader</span><br><span class="line">fastboot flash boot boot-ufi001c.img</span><br><span class="line">fastboot reboot #重启</span><br></pre></td></tr></table></figure>
+
+<p>然后就能找到modem网卡了。</p>
+<h2 id="重启modem"><a href="#重启modem" class="headerlink" title="重启modem"></a>重启modem</h2><p>有时重刷了firmware，还是出现没有modem网卡的情况，也就是<code>mmcli -m 0</code>提示找不到modem设备的时候，需要执行下面的命令。或者直接等一会重启ModemManager</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">systemctl stop ModemManager</span><br><span class="line">qmicli -d &#x2F;dev&#x2F;wwan0qmi0 --uim-sim-power-off&#x3D;1 &amp;&amp; qmicli -d &#x2F;dev&#x2F;wwan0qmi0 --uim-sim-power-on&#x3D;1</span><br><span class="line">systemctl start ModemManager</span><br></pre></td></tr></table></figure>
+
+<h2 id="短信收发和转发邮件"><a href="#短信收发和转发邮件" class="headerlink" title="短信收发和转发邮件"></a>短信收发和转发邮件</h2><p>下载两个python文件，地址 <a href="https://gitee.com/jiu-xiao/ufi-message。配置smtp.py中的邮箱信息，我使用的QQ邮箱登录，然后转发到另一个邮箱。开始发送不成功，修改后能发送了，内容如下。" target="_blank" rel="noopener">https://gitee.com/jiu-xiao/ufi-message。配置smtp.py中的邮箱信息，我使用的QQ邮箱登录，然后转发到另一个邮箱。开始发送不成功，修改后能发送了，内容如下。</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">#!python3</span><br><span class="line"></span><br><span class="line">my_sender&#x3D;&#39;@qq.com&#39;</span><br><span class="line">my_user&#x3D;&#39;@hotmail.com&#39;</span><br><span class="line">server_address&#x3D;&#39;smtp.qq.com&#39;</span><br><span class="line">server_port&#x3D;465</span><br><span class="line">server_passwd&#x3D;&#39;&#39; #填写qq邮箱授权码</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">import smtplib</span><br><span class="line">from email.mime.text import MIMEText</span><br><span class="line">from email.utils import formataddr</span><br><span class="line">import datetime</span><br><span class="line">import time</span><br><span class="line"></span><br><span class="line">def mail(text):</span><br><span class="line">    msg&#x3D;MIMEText(text,&#39;plain&#39;,&#39;utf-8&#39;)</span><br><span class="line">    msg[&#39;From&#39;]&#x3D;formataddr([&quot;随身Wifi&quot;,my_sender])</span><br><span class="line">    msg[&#39;To&#39;]&#x3D;formataddr([my_user,my_user])</span><br><span class="line">    msg[&#39;Subject&#39;]&#x3D;&quot;转发 &quot;+time.strftime(&quot;%H:%%M:%S %m&#x2F;%d&quot;)</span><br><span class="line"></span><br><span class="line">    server&#x3D;smtplib.SMTP_SSL(server_address,server_port)</span><br><span class="line"></span><br><span class="line">    server.login(my_sender,server_passwd)</span><br><span class="line">    server.auth_plain()</span><br><span class="line">    server.sendmail(my_sender,[my_user,],msg.as_string())</span><br><span class="line">    server.quit()</span><br></pre></td></tr></table></figure>
+
+<p>然后就能写进crontab自动跑了。</p>
+<h2 id="救砖"><a href="#救砖" class="headerlink" title="救砖"></a>救砖</h2><h3 id="edl使用"><a href="#edl使用" class="headerlink" title="edl使用"></a>edl使用</h3><p>github上的开源工具，可以替代Windows那些高通工具，Miko，星海啥的。是我这Linux用户的福音，并且简单，windows常常失败。<br>使用edl工具之前要先重启到edl也就是9008模式，使用命令<code>adb reboot edl</code>，不需要按RST键。</p>
+<p>备份：推荐第一种方式，第二种方式生成的一个文件刷到另一个设备失败，但是可以刷MiKo导出的单文件。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">edl rl dumps --skip&#x3D;userdata --genxml</span><br><span class="line">or</span><br><span class="line">edl rf flash.bin #单文件</span><br></pre></td></tr></table></figure>
+
+<p>恢复:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">edl qfil rawprogram0.xml patch0.xml .</span><br></pre></td></tr></table></figure>
+
+<h3 id="恢复分区"><a href="#恢复分区" class="headerlink" title="恢复分区"></a>恢复分区</h3><p>刷了debian后，分区会变，这样导致有些分区不存在所以无法刷回去。这里介绍下恢复分区的方法。不过上面的edl恢复应该不需要这个操作。</p>
+<p>备份分区</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;edl gpt . --genxml</span><br></pre></td></tr></table></figure>
+<p>备份后有两个文件，恢复时只用gpt_main0.bin文件，恢复分区命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;edl w gpt gpt_main0.bin</span><br></pre></td></tr></table></figure>
+<p>打印分区来验证下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;edl printgpt</span><br></pre></td></tr></table></figure>
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://forum.openwrt.org/t/uf896-qualcomm-msm8916-lte-router-384mib-ram-2-4gib-flash-android-openwrt/131712/160" target="_blank" rel="noopener">https://forum.openwrt.org/t/uf896-qualcomm-msm8916-lte-router-384mib-ram-2-4gib-flash-android-openwrt/131712/160</a><br><a href="https://www.kancloud.cn/handsomehacker/openstick/2636505" target="_blank" rel="noopener">https://www.kancloud.cn/handsomehacker/openstick/2636505</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://energygreek.github.io/2023/09/08/wifi-tool/" data-id="clsbmbv580051bwop7k2n1qn8" data-title="随身wifi工具" class="article-share-link">分享</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-docker-network" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2023/07/21/docker-network/" class="article-date">
+  <time class="dt-published" datetime="2023-07-21T07:55:38.000Z" itemprop="datePublished">2023-07-21</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2023/07/21/docker-network/">docker network</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>记录一次docker的网络问题，以及学到的知识。</p>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>公司用docker容器替代虚拟机来隔离，用来ssh登录以及运行不同的服务。容器连接了双网络，一个用来访问同宿主机上的容器，另一个用来从其他主机访问。</p>
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>宿主机重启之后，容器无法访问。需要手动改路由。</p>
+<h2 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h2><p>每次修改路由麻烦，后面发现两个网络都是macvlan时，存在无法没有网络。</p>
+<h2 id="创建桥接物理网卡"><a href="#创建桥接物理网卡" class="headerlink" title="创建桥接物理网卡"></a>创建桥接物理网卡</h2><p>这是需要指定parent为物理网卡，既然是桥接物理网卡，就能从其他宿主机访问了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker network create -d bridge   --subnet&#x3D;10.9.3.0&#x2F;24   --gateway&#x3D;10.9.3.1   -o parent&#x3D;ens39f0 public_net_bridge</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker network create -d macvlan  --subnet&#x3D;10.9.3.0&#x2F;24   --gateway&#x3D;10.9.3.1   -o parent&#x3D;ens39f0 public_net_macvlan</span><br></pre></td></tr></table></figure>
+<p>这两个由于使用的同一个网段/网卡，所以不可能同时存在。也许可以通过指定不同的ip-range来实现吗？</p>
+<h2 id="创建桥接虚拟网卡"><a href="#创建桥接虚拟网卡" class="headerlink" title="创建桥接虚拟网卡"></a>创建桥接虚拟网卡</h2><p>这种网络就不能从非宿主机的其他主机访问，只能在同宿机下的容器之间访问。我称之为私有网络 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker network create -d bridge   private_net_bridge</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker network create -d macvlan  private_net_macvlan</span><br></pre></td></tr></table></figure>
+<p>这里没有指定网络地址</p>
+<h2 id="iperf测速"><a href="#iperf测速" class="headerlink" title="iperf测速"></a>iperf测速</h2><p>发现无论桥接物理网卡还是虚拟网卡，macvlan都要比bridge快</p>
+<ul>
+<li><p>私有网络<br>bridge 模式分别测得: 20.4 Gbits/sec 22.6 Gbits/sec 23.0 Gbits/sec<br>macvlan 模式分别测得: 26.1 Gbits/sec 24.4 Gbits/sec 26.7 Gbits/sec</p>
+</li>
+<li><p>桥接物理网卡<br>macvlan: 25.7 Gbits/sec 25.5 Gbits/sec 27.3 Gbits/sec<br>bridge: 20.2 Gbits/sec 20.4 Gbits/sec 23.2 Gbits/sec</p>
+</li>
+</ul>
+<h2 id="顺便说下容器连接多网络的方法"><a href="#顺便说下容器连接多网络的方法" class="headerlink" title="顺便说下容器连接多网络的方法"></a>顺便说下容器连接多网络的方法</h2><p>容器启动的时候，只能指定一个网络, 然后启动之后，可以通过命令来连接多网络，可以在启动时设置–restart=alway,这样重启主机后自动连接双网络</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker network connect private_net_bridge test_container</span><br></pre></td></tr></table></figure>
+
+<h2 id="杂项"><a href="#杂项" class="headerlink" title="杂项"></a>杂项</h2><p>网络配置挺复杂，macvlan 下面还分</p>
+<ul>
+<li>Bridge mode, 就是常见的模式，走宿主机的网卡</li>
+<li>802.1q trunk bridge mode, 先在物理网卡上创建子网卡</li>
+</ul>
+<h3 id="IPvlan"><a href="#IPvlan" class="headerlink" title="IPvlan"></a>IPvlan</h3><p>除了bridge macvlan之外，还有IPvlan, 这种模式下，所有的容器都使用相同的mac地址，所以如果容器使用dhcp来获取ip地址，则可能有问题。 访问其他容器时，可以配置来使用macvlan模式。</p>
+<h3 id="overlay"><a href="#overlay" class="headerlink" title="overlay"></a>overlay</h3><p>docker network driver 除了上面的三种模式之外，还有overlay, 用于连接不同主机的网络，可以跨宿主机访问容器。</p>
+<h2 id="宿主机网络类型"><a href="#宿主机网络类型" class="headerlink" title="宿主机网络类型"></a>宿主机网络类型</h2><p>我通常会创建bridge并将物理网卡设为从卡，然后创建虚拟网桥，用于访问虚拟机。而除了bridge, 还有bond,另外还有team。总而言之，bridge可以使不同的虚拟机（client）使用网卡的虚拟化功能，而bond可以将不同的网卡绑定，实现负载均衡。如果两个网卡分别有1M带宽，那么bond后的网卡则有2M带宽。下面的链接先bonding,然后在bonding网卡上创建bridge网卡。<a href="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/networking_guide/sec-vlan_on_bond_and_bridge_using_the_networkmanager_command_line_tool_nmcli" target="_blank" rel="noopener">参考</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://energygreek.github.io/2023/07/21/docker-network/" data-id="clsbmbv3h0025bwopcuzdhipb" data-title="docker network" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/network/" rel="tag">network</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-mail-setup" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2023/07/18/mail-setup/" class="article-date">
+  <time class="dt-published" datetime="2023-07-18T10:24:55.000Z" itemprop="datePublished">2023-07-18</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2023/07/18/mail-setup/">mail setup</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="Linux下的邮件配置"><a href="#Linux下的邮件配置" class="headerlink" title="Linux下的邮件配置"></a>Linux下的邮件配置</h1><p>这里记录Linux（debian）下如何使用Mutt查看邮件，用fetchmail接收邮件，用msmtp发送邮件以及使用maildrop来筛选邮件。与其他邮件客户端相比，如thunderbird，他们使用的在线登陆方式，没有下载邮件来离线访问。而mutt支持离线访问本地的邮件，也可以配置为访问邮件服务器，查看服务器上的邮件。 在线方式除了离线不可用的缺点之外，每次打开mutt需要登陆，非常慢。<br>我这里的配置是比较简陋，适合公司少量邮件的场景。又因为目前使用的Byobu-terminal终端，其邮件提醒是基于/var/mail/spool/$USER文件。邮件比较多或者附件比较大的话，相较于用文件夹来存储邮件，这种方式会比较慢。</p>
+<h2 id="软件安装"><a href="#软件安装" class="headerlink" title="软件安装"></a>软件安装</h2><p>需要安装 fetchmail, maildrop, mutt</p>
+<h2 id="接收配置"><a href="#接收配置" class="headerlink" title="接收配置"></a>接收配置</h2><p>在家目录下创建文件.fetchmailrc</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">poll imap.exmail.qq.com</span><br><span class="line">  protocol IMAP</span><br><span class="line">  user &quot;example@example.com&quot;</span><br><span class="line">  password &quot;password&quot;</span><br><span class="line">  keep</span><br><span class="line">  #fetchall</span><br><span class="line">  ssl</span><br><span class="line"></span><br><span class="line">mimedecode</span><br><span class="line">mda &quot;&#x2F;usr&#x2F;bin&#x2F;maildrop&quot;</span><br></pre></td></tr></table></figure>
+<p>keep 方式不会删除服务器上的邮件。然后启动定时任务，自动检查新邮件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl --user enable --now fetchmail.service</span><br></pre></td></tr></table></figure>
+
+<h2 id="发送配置"><a href="#发送配置" class="headerlink" title="发送配置"></a>发送配置</h2><p>在家目录创建文件.msmtproc，填入发送的验证信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">defaults</span><br><span class="line">auth           on</span><br><span class="line">tls            on</span><br><span class="line">tls_starttls off</span><br><span class="line">tls_trust_file &#x2F;etc&#x2F;ssl&#x2F;certs&#x2F;ca-certificates.crt</span><br><span class="line">logfile        ~&#x2F;.msmtp.log</span><br><span class="line"></span><br><span class="line"># exmail</span><br><span class="line">account        office</span><br><span class="line">host           smtp.exmail.qq.com</span><br><span class="line">port           465</span><br><span class="line">from           example@example.com</span><br><span class="line">user           example@example.com</span><br><span class="line">password       password</span><br></pre></td></tr></table></figure>
+
+<h2 id="mutt配置"><a href="#mutt配置" class="headerlink" title="mutt配置"></a>mutt配置</h2><p>由于我不想删除/var/mail/里面的邮件，这样才能在byobu-terminal中提醒，所以没有配置maildrop。最后需要配置mutt读取/var/mail/$USER。在家目录或者xdg配置目录（~/.config/mutt）创建文件.muttrc/muttrc</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">set spoolfile&#x3D;&#x2F;var&#x2F;spool&#x2F;mail&#x2F;jimery</span><br><span class="line">set header_cache&#x3D;~&#x2F;.cache&#x2F;mutt</span><br><span class="line">set send_charset&#x3D;&quot;utf-8&quot;</span><br></pre></td></tr></table></figure>
+
+<p>这样就能查看邮件了。 在mutt里面手动管理邮件，存档或者删除。</p>
+<h2 id="mutt使用"><a href="#mutt使用" class="headerlink" title="mutt使用"></a>mutt使用</h2><p>其实不用mutt, 直接用mail也可以，这个默认访问/var/mail/$USER,是Linux默认的邮件工具。 mutt能很方便调用msmtproc来发送邮件。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://energygreek.github.io/2023/07/18/mail-setup/" data-id="clsbmbv3z0033bwop367bay7p" data-title="mail setup" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/email-client/" rel="tag">email_client</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mutt/" rel="tag">mutt</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-install-wordpress" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2023/07/08/install-wordpress/" class="article-date">
+  <time class="dt-published" datetime="2023-07-08T09:03:12.000Z" itemprop="datePublished">2023-07-08</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2023/07/08/install-wordpress/">install wordpress</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="安装wordpress记录"><a href="#安装wordpress记录" class="headerlink" title="安装wordpress记录"></a>安装wordpress记录</h1><p>本文记录在debian上安装配置wordpress的补助，并配置了ftp功能，支持自更新wordpress。</p>
+<h2 id="安装wordpress"><a href="#安装wordpress" class="headerlink" title="安装wordpress"></a>安装wordpress</h2><p>下载最新的包，解压到<code>/var/www/html</code></p>
+<h2 id="安装配置数据库"><a href="#安装配置数据库" class="headerlink" title="安装配置数据库"></a>安装配置数据库</h2><p>安装mariadb, 创建数据库和用户</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mysql -u root</span><br><span class="line">CREATE DATABASE wordpressdb; </span><br><span class="line">CREATE USER wordpressuser@localhost IDENTIFIED BY &#39;password&#39;;</span><br><span class="line">GRANT ALL PRIVILEGES ON wordpressdb.* TO wordpressuser@localhost;</span><br></pre></td></tr></table></figure>
+<h2 id="安装配置nginx-php"><a href="#安装配置nginx-php" class="headerlink" title="安装配置nginx php"></a>安装配置nginx php</h2><p>安装nginx和php-7.4，还有php一些组件<br>nginx 配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">server &#123; </span><br><span class="line">  listen 80 default_server; </span><br><span class="line">  listen [::]:80 default_server;</span><br><span class="line">  server_name your_domain.com;</span><br><span class="line"></span><br><span class="line">  root &#x2F;var&#x2F;www&#x2F;html;</span><br><span class="line">  index index.php index.html index.htm;</span><br><span class="line"></span><br><span class="line">  location &#x2F; &#123;</span><br><span class="line">    # try_files $uri $uri&#x2F; &#x3D;404;</span><br><span class="line">    try_files $uri $uri&#x2F; &#x2F;index.php?q&#x3D;$uri&amp;$args;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  location ~ \.php$ &#123;</span><br><span class="line">      include snippets&#x2F;fastcgi-php.conf;</span><br><span class="line">      fastcgi_split_path_info ^(.+\.php)(&#x2F;.+)$;</span><br><span class="line">      fastcgi_pass unix:&#x2F;run&#x2F;php&#x2F;php-fpm.sock;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="安装配置vsftpd"><a href="#安装配置vsftpd" class="headerlink" title="安装配置vsftpd"></a>安装配置vsftpd</h2><p>安装后，修改配置文件<code>/etc/vsftpd.conf</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">local_enable&#x3D;YES</span><br><span class="line">write_enable&#x3D;YES</span><br><span class="line">chroot_local_user&#x3D;YES</span><br><span class="line">chroot_list_enable&#x3D;YES</span><br><span class="line">chroot_list_file&#x3D;&#x2F;etc&#x2F;vsftpd.chroot_list</span><br><span class="line">allow_writeable_chroot&#x3D;YES</span><br><span class="line">pm_service_name&#x3D;ftp</span><br></pre></td></tr></table></figure>
+
+<h3 id="添加用户，并限制权限"><a href="#添加用户，并限制权限" class="headerlink" title="添加用户，并限制权限"></a>添加用户，并限制权限</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">useradd [user_name]</span><br><span class="line">passwd [user_name]</span><br><span class="line">usermod -d &#x2F;var&#x2F;www&#x2F;html&#x2F;wordpress user_name -s &#x2F;sbin&#x2F;nologin</span><br><span class="line"></span><br><span class="line">setfacl -m u:ftpsecure:r-x &#x2F;var&#x2F;www&#x2F;html&#x2F;</span><br><span class="line"></span><br><span class="line">setfacl -R -m u:ftpsecure:rwx &#x2F;var&#x2F;www&#x2F;html&#x2F;wordpress</span><br><span class="line">setfacl -R -d -m u:ftpsecure:rwx &#x2F;var&#x2F;www&#x2F;html&#x2F;wordpress</span><br></pre></td></tr></table></figure>
+<p>如果提示没有setfacl命令，则执行安装acl命令 <code>apt install acl</code></p>
+<h3 id="ftp遇到问题和解决办法"><a href="#ftp遇到问题和解决办法" class="headerlink" title="ftp遇到问题和解决办法"></a>ftp遇到问题和解决办法</h3><ul>
+<li><p>登陆提示”500 OOPS: could not read chroot() list file:/etc/vsftpd.chroot_list”，需要创建文件<code>/etc/vsftpd.chroot_list</code></p>
+</li>
+<li><p>登陆ftp报530验证失败的问题，修改配置如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pm_service_name&#x3D;ftp</span><br></pre></td></tr></table></figure></li>
+<li><p>登陆提示”500 OOPS: vsftpd: refusing to run with writable root inside chroot()</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">allow_writeable_chroot&#x3D;YES</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>登陆提示 500 OOPS: vsftpd: refusing to run with writable root ，意思是登陆者具备对目录的写权限，这是由于目录设定权限为777，所以要是重新设定为755<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod 755 &#x2F;srv&#x2F;ftp</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="配置wordpress"><a href="#配置wordpress" class="headerlink" title="配置wordpress"></a>配置wordpress</h2><p>修改<code>wordpress/wp-config.php</code> 文件, 添加如下内容</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">define(&#39;FTP_HOST&#39;, &#39;localhost&#39;);</span><br><span class="line">define(&#39;FTP_USER&#39;, &#39;ftp&#39;);</span><br><span class="line">define(&#39;FTP_PASS&#39;, &#39;&#39;);</span><br></pre></td></tr></table></figure>
+<p>通过wordpress的api可以生成随机token，将输出替换到<code>wordpress/wp-config.php</code> </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$curl -s https:&#x2F;&#x2F;api.wordpress.org&#x2F;secret-key&#x2F;1.1&#x2F;salt&#x2F;</span><br><span class="line"></span><br><span class="line">define(&#39;AUTH_KEY&#39;,         &#39;uOeyPW$K[P&#125;23x^0l##N+qP#xzUlIBV[ZQlATs!7J?+5^!w0*bgEw|V6)k:YU0en&#39;);</span><br><span class="line">define(&#39;SECURE_AUTH_KEY&#39;,  &#39;Ad*-&#96;eK|U4Z*7g&#125;7CdX&lt;q0^EuGqT1Tt&#125;CaDRgF%NX-|fmk(:BACtws+^_0Pb8ZRA&#39;);</span><br><span class="line">define(&#39;LOGGED_IN_KEY&#39;,    &#39;:Z$&#125;&#x3D;h~z-[]8W&#125;wZ(|&#x2F;;]ZY;U&#123;&gt;u3K&gt;P|u6&#x2F;d:6&#125;&amp;h*);0ewhrcGm8$&#x2F;tPii#&#123;,%&#39;);</span><br><span class="line">define(&#39;NONCE_KEY&#39;,        &#39;d&#125;Ue8.+KPDGdH^%2t~fTljDj8e&#123;q&#123;raR!Q0piqM(gcQP&amp;7-$L3u0u|!Bn(-gh&#x2F;?B&#39;);</span><br><span class="line">define(&#39;AUTH_SALT&#39;,        &#39;UQh.k&gt;4UBTK6IecZe~lL6|J&#x2F;w^KFROIeCdZw^g&#x3D;(x?(L+j(-|%C FCt &#x3D;V*XVz+k&#39;);</span><br><span class="line">define(&#39;SECURE_AUTH_SALT&#39;, &#39;hHr&amp;dDCApb14yz@ks+;&#125;mk,s&lt;-[]KUj*UAhl0+&lt;pqT*!j;wxc+[mU[czh &#x3D;&gt;&lt;#em&#39;);</span><br><span class="line">define(&#39;LOGGED_IN_SALT&#39;,   &#39;WO,U^A||&amp;:E@2A2_|MS W1l&#96;fguj-7E&#123;Fz6QkC+OM96Ho49&lt;agM?O&#x3D;G2FloxuF?6&#39;);</span><br><span class="line">define(&#39;NONCE_SALT&#39;,       &#39;uDN.1::MJ&gt;~9Yp+e39y%o?r &gt;:+OcUSqg5_g&lt;Jt:Sr!um?U:U|MJ2q2qKiLDfmr@&#39;);</span><br></pre></td></tr></table></figure>
+
+<p>更新数据库配置到wp-config.php</p>
+<h2 id="更新url"><a href="#更新url" class="headerlink" title="更新url"></a>更新url</h2><p>开始使用http访问，后面切换到https后一直提示错误说跳转太多次。后来发现原因是套了cloudflare，cloudflare设置的是前端https后端http, 后端以http访问真实服务器后又跳转到https。所以请求一直在cf&lt;-&gt;wordpress之间无限跳转。所以首先要设置cloudflare的代理模式为严格安全，strict full safe，也就是前端和后端都用证书。然后修改wordpress的url方法有很多，之前通过直接修改数据库，这次发现wordpress有个wp的命令行工具，一键修改。</p>
+<h2 id="vsftpd-配置默认目录"><a href="#vsftpd-配置默认目录" class="headerlink" title="vsftpd 配置默认目录"></a>vsftpd 配置默认目录</h2><p>为local user配置默认目录，例如所有用户登录后进入/home目录, 添加配置<code>local_root=/home</code>，为匿名用户配置默认目录为tmp目录，则添加配置<code>anon_root=/tmp</code></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://serverfault.com/questions/544850/create-new-vsftpd-user-and-lock-to-specify-home-login-directory" target="_blank" rel="noopener">https://serverfault.com/questions/544850/create-new-vsftpd-user-and-lock-to-specify-home-login-directory</a><br><a href="https://shiftedbits.org/2012/01/29/enable-wordpress-automatic-updates-on-a-debian-server/" target="_blank" rel="noopener">https://shiftedbits.org/2012/01/29/enable-wordpress-automatic-updates-on-a-debian-server/</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://energygreek.github.io/2023/07/08/install-wordpress/" data-id="clsbmbv3r002sbwop46au00mo" data-title="install wordpress" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/wordpress/" rel="tag">wordpress</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-amrnb-and-amrwb" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/12/29/amrnb-and-amrwb/" class="article-date">
+  <time class="dt-published" datetime="2022-12-29T01:15:46.000Z" itemprop="datePublished">2022-12-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/12/29/amrnb-and-amrwb/">amrnb和amrwb的编解码</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h1><p>最近在公司开发一个amrnb/amrwb的转码工具，在网上看了很多资料，主要是这篇<a href="https://blog.csdn.net/runningya/article/details/6227384" target="_blank" rel="noopener">AMR在IP域中的编码(rfc3267,4867)</a> 对我帮助很大。 这里补充一下缺少和我自己的理解。</p>
+<h2 id="AMR编码介绍"><a href="#AMR编码介绍" class="headerlink" title="AMR编码介绍"></a>AMR编码介绍</h2><p>AMR是3GPP组织的一个音频编码规范，目前的手机都使用AMR, 比如公司的测试机华为、小米只支持amrnb/amrwb。amrnb是对窄带信号进行编码（200–3400 Hz），amrwb是对更宽的频率范围进行编码（50–7000 Hz）。<br>根据香农理论，采样频率要是目标频率的两倍，所以向上取整的amrnb的采样频率是8000Hz, amrwb的采样频率是16000Hz。</p>
+<h2 id="bitrate"><a href="#bitrate" class="headerlink" title="bitrate"></a>bitrate</h2><p>amrnb和amrwb有多种编码速率（bitrate），并支持在通话过程中通过CMR（codec mode request）协商来变化编码速率，不同于一般的编码器固定一种比特率。除此之外，还有没有人声时的SID（舒适噪音）模式。这时只需要发送一个Mode而不是发送无声的包，从而来降低带宽占用。</p>
+<h3 id="amrnb-不同比特率时的语音帧大小"><a href="#amrnb-不同比特率时的语音帧大小" class="headerlink" title="amrnb 不同比特率时的语音帧大小"></a>amrnb 不同比特率时的语音帧大小</h3><table>
+<thead>
+<tr>
+<th>Index</th>
+<th>Mode</th>
+<th>Class A bits</th>
+<th>total speech bits</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>4.75</td>
+<td>42</td>
+<td>95</td>
+</tr>
+<tr>
+<td>1</td>
+<td>5.15</td>
+<td>49</td>
+<td>103</td>
+</tr>
+<tr>
+<td>2</td>
+<td>5.9</td>
+<td>55</td>
+<td>118</td>
+</tr>
+<tr>
+<td>3</td>
+<td>6.7</td>
+<td>58</td>
+<td>134</td>
+</tr>
+<tr>
+<td>4</td>
+<td>7.4</td>
+<td>61</td>
+<td>148</td>
+</tr>
+<tr>
+<td>5</td>
+<td>7.95</td>
+<td>75</td>
+<td>159</td>
+</tr>
+<tr>
+<td>6</td>
+<td>10.2</td>
+<td>65</td>
+<td>204</td>
+</tr>
+<tr>
+<td>7</td>
+<td>12.2</td>
+<td>81</td>
+<td>244</td>
+</tr>
+</tbody></table>
+<h3 id="amrwb-不同比特率的语音帧大小"><a href="#amrwb-不同比特率的语音帧大小" class="headerlink" title="amrwb 不同比特率的语音帧大小"></a>amrwb 不同比特率的语音帧大小</h3><table>
+<thead>
+<tr>
+<th>Index</th>
+<th>AMR-WB codec mode</th>
+<th>Total number of bits</th>
+<th>Class A Class B Class C</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>6.60</td>
+<td>132</td>
+<td>54 78 0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>8.85</td>
+<td>177</td>
+<td>64 113 0</td>
+</tr>
+<tr>
+<td>2</td>
+<td>12.65</td>
+<td>253</td>
+<td>72 181 0</td>
+</tr>
+<tr>
+<td>3</td>
+<td>14.25</td>
+<td>285</td>
+<td>72 213 0</td>
+</tr>
+<tr>
+<td>4</td>
+<td>15.85</td>
+<td>317</td>
+<td>72 245 0</td>
+</tr>
+<tr>
+<td>5</td>
+<td>18.25</td>
+<td>365</td>
+<td>72 293 0</td>
+</tr>
+<tr>
+<td>6</td>
+<td>19.85</td>
+<td>397</td>
+<td>72 325 0</td>
+</tr>
+<tr>
+<td>7</td>
+<td>23.05</td>
+<td>461</td>
+<td>72 389 0</td>
+</tr>
+<tr>
+<td>8</td>
+<td>23.85</td>
+<td>477</td>
+<td>72 405 0</td>
+</tr>
+</tbody></table>
+<h2 id="payload-type"><a href="#payload-type" class="headerlink" title="payload type"></a>payload type</h2><p>amrnb和amrwb使用的动态payload type, 所以在用wireshark分析时，需要经常调整payload-type值</p>
+<h2 id="align-mode"><a href="#align-mode" class="headerlink" title="align mode"></a>align mode</h2><p>amrnb和amrwb在SIP协商中有两种align mode，对齐模式和节省带快模式。总结有几个区别</p>
+<ul>
+<li>对齐模式下CMR占8位，每个TOC占8位，然后每个语音帧补齐为整字节。</li>
+<li>节省带宽模式下，CMR占4位，每个TOC占6位，然后CMR + TOC + 所有语音帧加起来，最后补齐为整字节。</li>
+</ul>
+<p>以单帧的12.2kbps为例</p>
+<ul>
+<li>语音帧为244位，对齐之后为<code>(244 + 8 - 1)/8 = 31</code>字节。加上1字节的CMR和1字节的TOC, 一共33字节。</li>
+<li>语音帧为244位，加上4位CMR和6位TOC，一共为254位，对齐后为<code>(254 + 8-1)/8</code>，一种32字节字节。</li>
+</ul>
+<p>以两帧的12.2kbps为例</p>
+<ul>
+<li>两个语音帧分别占用31字节，加上1字节的CMR和2字节的TOC, 一共 65字节。</li>
+<li>两个语音帧分别占用244位， 加上4位的CMR和6 * 2位的TOC, 对齐后为<code>( 488 + 4 + 12  + 8 - 1)/8</code>，一共63字节。</li>
+</ul>
+<p>总之，对齐模式是先对齐成字节再求和，节省带宽模式是先计算<code>位和</code>再对齐成字节。特别是多帧的时候，节省带宽模式算起来更复杂。好在实际情况都是1帧。</p>
+<h2 id="基于opencore-amr的编解码"><a href="#基于opencore-amr的编解码" class="headerlink" title="基于opencore-amr的编解码"></a>基于opencore-amr的编解码</h2><p>开始用FFmpeg的库来做转码和推流，后来发现不支持节省带宽模式，而且还有个<a href="https://trac.ffmpeg.org/ticket/9891" target="_blank" rel="noopener">BUG</a>，所以后面自己基于opencore的库写的转码功能。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://energygreek.github.io/2022/12/29/amrnb-and-amrwb/" data-id="clsbmbv31001lbwop3ikwg1yf" data-title="amrnb和amrwb的编解码" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%9F%B3%E8%A7%86%E9%A2%91/" rel="tag">音视频</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-use-mdns-in-systemd-networkd" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/05/23/use-mdns-in-systemd-networkd/" class="article-date">
+  <time class="dt-published" datetime="2022-05-23T03:18:18.000Z" itemprop="datePublished">2022-05-23</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/05/23/use-mdns-in-systemd-networkd/">use mdns in systemd-networkd</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="使用systemd-resolved的mdns"><a href="#使用systemd-resolved的mdns" class="headerlink" title="使用systemd-resolved的mdns"></a>使用systemd-resolved的mdns</h1><p>之前的博客中使用了avahi来广播本机的hostname和服务，这对于打印机和其他无屏设备非常重要。而较新版本Linux发行版中systemd-networkd+systemd-resolved同样能实现此功能</p>
+<h2 id="Network-Manager"><a href="#Network-Manager" class="headerlink" title="Network Manager"></a>Network Manager</h2><p>目前不少发行版默认的网络管理工具是NetworkManager, 需要先将其关闭和卸载，安装systemd-networkd包</p>
+<h2 id="配置systemd-networkd"><a href="#配置systemd-networkd" class="headerlink" title="配置systemd-networkd"></a>配置systemd-networkd</h2><p>networkd 中可以配置网桥，tun等设备，也可以直接在其中配置dns和dhcp等，在其中加入MulticastDNS=yes和Multicast=yes来启用mDns</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[Match]</span><br><span class="line">Name&#x3D;eth0</span><br><span class="line"></span><br><span class="line">[Network]</span><br><span class="line">Address&#x3D;192.168.4.42&#x2F;24</span><br><span class="line">DNS&#x3D;114.114.114.114</span><br><span class="line">Gataway&#x3D;192.168.4.1</span><br><span class="line">MulticastDNS&#x3D;yes</span><br><span class="line"></span><br><span class="line">[Link]</span><br><span class="line">Multicast&#x3D;yes</span><br></pre></td></tr></table></figure>
+
+<h2 id="配置systemd-resolved"><a href="#配置systemd-resolved" class="headerlink" title="配置systemd-resolved"></a>配置systemd-resolved</h2><p>systemd-resolved功能类似与dnsmasq, 他会继承systemd-networkd中的dns信息，也会读取hostname用来广播，一般不用修改任何配置，之需要将其stub文件链接到/etc/resov.conf, 这样让系统的dns请求发到systemd-resolved</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># ln -sf &#x2F;run&#x2F;systemd&#x2F;resolve&#x2F;stub-resolv.conf &#x2F;etc&#x2F;resolv.conf</span><br><span class="line"># ls -l &#x2F;etc&#x2F;resolv.conf</span><br><span class="line">lrwxrwxrwx. 1 root root 37 May 22 22:03 &#x2F;etc&#x2F;resolv.conf -&gt; &#x2F;run&#x2F;systemd&#x2F;resolve&#x2F;stub-resolv.conf</span><br></pre></td></tr></table></figure>
+
+<h2 id="确认效果"><a href="#确认效果" class="headerlink" title="确认效果"></a>确认效果</h2><p>通过<code>resolvectl status</code>命令可以查看resolve配置，如下全局的MulticastDNS是启用的，而networkd中的配置是per link的，也处于启用状态，Scopes里显示了mDNS,说明其启用了  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Current Scopes: DNS LLMNR&#x2F;IPv4 LLMNR&#x2F;IPv6 mDNS&#x2F;IPv4 mDNS&#x2F;IPv6</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">[root@netpanc ~]# resolvectl status</span><br><span class="line">Global</span><br><span class="line">       LLMNR setting: yes</span><br><span class="line">MulticastDNS setting: yes</span><br><span class="line">  DNSOverTLS setting: no</span><br><span class="line">      DNSSEC setting: allow-downgrade</span><br><span class="line">    DNSSEC supported: yes</span><br><span class="line">          DNSSEC NTA: 10.in-addr.arpa</span><br><span class="line">                      16.172.in-addr.arpa</span><br><span class="line">                      168.192.in-addr.arpa</span><br><span class="line">                      17.172.in-addr.arpa</span><br><span class="line">                      18.172.in-addr.arpa</span><br><span class="line">                      19.172.in-addr.arpa</span><br><span class="line">                      20.172.in-addr.arpa</span><br><span class="line">                      21.172.in-addr.arpa</span><br><span class="line">                      22.172.in-addr.arpa</span><br><span class="line">                      23.172.in-addr.arpa</span><br><span class="line">                      24.172.in-addr.arpa</span><br><span class="line">                      25.172.in-addr.arpa</span><br><span class="line">                      26.172.in-addr.arpa</span><br><span class="line">                      27.172.in-addr.arpa</span><br><span class="line">                      28.172.in-addr.arpa</span><br><span class="line">                      29.172.in-addr.arpa</span><br><span class="line">                      30.172.in-addr.arpa</span><br><span class="line">                      31.172.in-addr.arpa</span><br><span class="line">                      corp</span><br><span class="line">                      d.f.ip6.arpa</span><br><span class="line">                      home</span><br><span class="line">                      internal</span><br><span class="line">                      intranet</span><br><span class="line">                      lan</span><br><span class="line">                      local</span><br><span class="line">                      private</span><br><span class="line">                      test</span><br><span class="line"></span><br><span class="line">Link 2 (eth0)</span><br><span class="line">      Current Scopes: DNS LLMNR&#x2F;IPv4 LLMNR&#x2F;IPv6 mDNS&#x2F;IPv4 mDNS&#x2F;IPv6</span><br><span class="line">       LLMNR setting: yes</span><br><span class="line">MulticastDNS setting: yes</span><br><span class="line">  DNSOverTLS setting: no</span><br><span class="line">      DNSSEC setting: allow-downgrade</span><br><span class="line">    DNSSEC supported: yes</span><br><span class="line">  Current DNS Server: 114.114.114.114</span><br><span class="line">         DNS Servers: 114.114.114.114</span><br></pre></td></tr></table></figure>
+
+<p>在其他设备上ping可以成功</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">PING netpanc.local (192.168.4.43) 56(84) bytes of data.</span><br><span class="line">64 bytes from netpanc.local (192.168.4.43): icmp_seq&#x3D;1 ttl&#x3D;64 time&#x3D;0.350 ms</span><br><span class="line">64 bytes from netpanc.local (192.168.4.43): icmp_seq&#x3D;2 ttl&#x3D;64 time&#x3D;0.799 ms</span><br><span class="line">64 bytes from netpanc.local (192.168.4.43): icmp_seq&#x3D;3 ttl&#x3D;64 time&#x3D;0.733 ms</span><br></pre></td></tr></table></figure>
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://wiki.archlinux.org/title/Systemd-resolved#mDNS" target="_blank" rel="noopener">https://wiki.archlinux.org/title/Systemd-resolved#mDNS</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://energygreek.github.io/2022/05/23/use-mdns-in-systemd-networkd/" data-id="clsbmbv54004tbwop9aifal3d" data-title="use mdns in systemd-networkd" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/os-maintain/" rel="tag">os-maintain</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-serialized-and-deserialize" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/05/17/serialized-and-deserialize/" class="article-date">
+  <time class="dt-published" datetime="2022-05-17T08:35:07.000Z" itemprop="datePublished">2022-05-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/05/17/serialized-and-deserialize/">序列化和反序列化</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h1><p>c/c++中，序列化是将基本类型或struct变为可存储和传递的形式，比如常用的<code>socket send</code>，将按协议组装的struct（pack)显示转换二进制（序列化）并发送给其他主机。而反序列化是将二进制转成基本类型或struct。另外还有<code>fwrite/fread</code>将结构体保存到文本中。 这种方式高效但容易出错。<br>而其他语言中可以使用xml, json等高级方式</p>
+<h2 id="转换方式"><a href="#转换方式" class="headerlink" title="转换方式"></a>转换方式</h2><h3 id="强制类型转换"><a href="#强制类型转换" class="headerlink" title="强制类型转换"></a>强制类型转换</h3><p>上面讲到的两个函数send和fwrite,都是将基本类型或struct类型强转为字符串, 这种可能受不同机器的对齐影响</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">ssize_t</span> <span class="title">send</span><span class="params">(<span class="keyword">int</span> sockfd, <span class="keyword">const</span> <span class="keyword">void</span> *buf, <span class="keyword">size_t</span> len, <span class="keyword">int</span> flags)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">size_t</span> <span class="title">fwrite</span><span class="params">(<span class="keyword">const</span> <span class="keyword">void</span> *ptr, <span class="keyword">size_t</span> <span class="built_in">size</span>, <span class="keyword">size_t</span> nmemb,</span></span></span><br><span class="line"><span class="function"><span class="params">    FILE *stream)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>序列化</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">buffer</span> &#123;</span></span><br><span class="line">  <span class="keyword">int</span> a;</span><br><span class="line">  <span class="keyword">char</span> b;</span><br><span class="line">  <span class="keyword">double</span> c;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">buffer</span> <span class="title">buf</span>;</span></span><br><span class="line">  buf.a = <span class="number">1</span>;</span><br><span class="line">  buf.b = <span class="string">'a'</span>;</span><br><span class="line">  buf.c = <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">  FILE *f = fopen(<span class="string">"/tmp/buf"</span>, <span class="string">"w+"</span>);</span><br><span class="line">  <span class="keyword">if</span> (f == <span class="literal">NULL</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  fwrite(&amp;buf, <span class="keyword">sizeof</span>(struct <span class="built_in">buffer</span>), <span class="number">1</span>, f);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>反序列化</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">buffer</span> &#123;</span></span><br><span class="line">  <span class="keyword">int</span> a;</span><br><span class="line">  <span class="keyword">char</span> b;</span><br><span class="line">  <span class="keyword">double</span> c;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">buffer</span> <span class="title">buf</span>;</span></span><br><span class="line"></span><br><span class="line">  FILE *f = fopen(<span class="string">"/tmp/buf"</span>, <span class="string">"r"</span>);</span><br><span class="line">  <span class="keyword">if</span> (f == <span class="literal">NULL</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  fread(&amp;buf, <span class="keyword">sizeof</span>(struct <span class="built_in">buffer</span>), <span class="number">1</span>, f);</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"%d--%c--%lf--\n"</span>, buf.a, buf.b, buf.c);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="使用protobuf"><a href="#使用protobuf" class="headerlink" title="使用protobuf"></a>使用protobuf</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">syntax &#x3D; &quot;proto3&quot;;</span><br><span class="line">package serialize;</span><br><span class="line"></span><br><span class="line">option optimize_for &#x3D; LITE_RUNTIME;</span><br><span class="line"></span><br><span class="line">message Person &#123;</span><br><span class="line">	string name &#x3D; 1;</span><br><span class="line">	int32 id &#x3D; 2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">tutorial::Person <span class="title">Serialize</span><span class="params">(<span class="built_in">std</span>::<span class="built_in">string</span> name, <span class="keyword">int</span> id, <span class="built_in">std</span>::<span class="built_in">string</span> email)</span></span>&#123;</span><br><span class="line">    tutorial::Person person;</span><br><span class="line">    person.set_name(name);</span><br><span class="line">    person.set_id(id);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> person;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Deserialize</span><span class="params">(tutorial::Person person)</span></span>&#123;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; person.SerializeAsString();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="optimize-for-option"><a href="#optimize-for-option" class="headerlink" title="optimize_for option"></a>optimize_for option</h3><p>optimize_for (file option): Can be set to SPEED, CODE_SIZE, or LITE_RUNTIME. This affects the C++ and Java code generators (and possibly third-party generators) in the following ways:</p>
+<ul>
+<li>SPEED (default): The protocol buffer compiler will generate code for serializing, parsing, and performing other common operations on your message types. This code is highly optimized.</li>
+<li>CODE_SIZE: The protocol buffer compiler will generate minimal classes and will rely on shared, reflection-based code to implement serialialization, parsing, and various other operations. The generated code will thus be much smaller than with SPEED, but operations will be slower. Classes will still implement exactly the same public API as they do in SPEED mode. This mode is most useful in apps that contain a very large number of .proto files and do not need all of them to be blindingly fast.</li>
+<li>LITE_RUNTIME: The protocol buffer compiler will generate classes that depend only on the “lite” runtime library (libprotobuf-lite instead of libprotobuf). The lite runtime is much smaller than the full library (around an order of magnitude smaller) but omits certain features like descriptors and reflection. This is particularly useful for apps running on constrained platforms like mobile phones. The compiler will still generate fast implementations of all methods as it does in SPEED mode. Generated classes will only implement the MessageLite interface in each language, which provides only a subset of the methods of the full Message interface.</li>
+</ul>
+<h2 id="其他还有如xml-json-ninja"><a href="#其他还有如xml-json-ninja" class="headerlink" title="其他还有如xml, json, ninja"></a>其他还有如xml, json, ninja</h2>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://energygreek.github.io/2022/05/17/serialized-and-deserialize/" data-id="clsbmbv4j0044bwop7vso0dj1" data-title="序列化和反序列化" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/seralize/" rel="tag">seralize</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-package-problem" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/05/12/package-problem/" class="article-date">
+  <time class="dt-published" datetime="2022-05-12T05:25:01.000Z" itemprop="datePublished">2022-05-12</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/05/12/package-problem/">背包问题</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="背包问题"><a href="#背包问题" class="headerlink" title="背包问题"></a>背包问题</h1><p>有一个承重为V的背包，有N个物品，重量分别为Cost[i], 价值分别为Value[i], 问选择放哪些物品时包的价值最大</p>
+<h2 id="状态方程"><a href="#状态方程" class="headerlink" title="状态方程"></a>状态方程</h2><p>解决动态编程的关键是找到状态方程，如下。 解决背包问题就是比较<code>放</code>与<code>不放</code>哪个价值高</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">F [i, v] ← max&#123;F [i − 1, v], F [i − 1, v − Ci] + Wi&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="01背包"><a href="#01背包" class="headerlink" title="01背包"></a>01背包</h2><p>要求物品最大为1个, 这里有几个版本</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/param.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> V = <span class="number">4</span>, N = <span class="number">3</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> cost[N] = &#123;<span class="number">1</span>, <span class="number">3</span>, <span class="number">4</span>&#125;;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> value[N] = &#123;<span class="number">15</span>, <span class="number">20</span>, <span class="number">30</span>&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// const int V = 10, N = 5;</span></span><br><span class="line"><span class="comment">// const int cost[N] = &#123;2, 3, 5, 2, 4&#125;;</span></span><br><span class="line"><span class="comment">// const int value[N] = &#123;2, 2, 1, 1, 2&#125;;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">O1Package_N</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> dp[N][V + <span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 0容量的价值为0, 合法</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;= V; i++) &#123;</span><br><span class="line">    dp[<span class="number">0</span>][i] = <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 初始化当包承重大于物品0重量的情况</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> j = cost[<span class="number">0</span>]; j &lt;= V; j++) &#123;</span><br><span class="line">    <span class="comment">// 当只装物品0时，包的价值就是物品0的价值</span></span><br><span class="line">    dp[<span class="number">0</span>][j] = value[<span class="number">0</span>];</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 先遍历物品，后遍历重量</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; N; i++) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> v = <span class="number">0</span>; v &lt;= V; v++) &#123;</span><br><span class="line">      <span class="comment">// F [i, v] ← max&#123;F [i − 1, v], F [i − 1, v − Ci] + Wi&#125;</span></span><br><span class="line">      <span class="comment">// F[i][v] = MAX(F[i - 1][v], F[i - 1][v - cost[i]] + value[i]);</span></span><br><span class="line">      <span class="keyword">int</span> bufang = dp[i - <span class="number">1</span>][v];</span><br><span class="line">      dp[i][v] = bufang;</span><br><span class="line">      <span class="keyword">if</span> (v &gt;= cost[i]) &#123;</span><br><span class="line">        <span class="keyword">int</span> fang = dp[i - <span class="number">1</span>][v - cost[i]] + value[i];</span><br><span class="line">        dp[i][v] = MAX(bufang, fang);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; N; i++) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt;= V; j++) &#123;</span><br><span class="line">      <span class="built_in">printf</span>(<span class="string">"%d\t"</span>, dp[i][j]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"%d\n"</span>, dp[N - <span class="number">1</span>][V]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">O1Package_N_plus_1</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">int</span> dp[N + <span class="number">1</span>][V + <span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 使用0个物品的价值为0</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;= V; i++) &#123;</span><br><span class="line">    dp[<span class="number">0</span>][i] = <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 先遍历物品，后遍历重量</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= N; i++) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> v = <span class="number">0</span>; v &lt;= V; v++) &#123;</span><br><span class="line">      dp[i][v] = dp[i - <span class="number">1</span>][v]; <span class="comment">//当重量不够装i时，价值为装i-1的价值,</span></span><br><span class="line">                               <span class="comment">//此步骤以备i+1时使用（下一个i循环）</span></span><br><span class="line">      <span class="keyword">if</span> (v &gt;= cost[i - <span class="number">1</span>]) &#123;</span><br><span class="line">        dp[i][v] = MAX(dp[i - <span class="number">1</span>][v], dp[i - <span class="number">1</span>][v - cost[i - <span class="number">1</span>]] + value[i - <span class="number">1</span>]);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;= N; i++) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt;= V; j++) &#123;</span><br><span class="line">      <span class="built_in">printf</span>(<span class="string">"%d\t"</span>, dp[i][j]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"%d\n"</span>, dp[N][V]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">O1Package_N_plus_1_origin</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">int</span> dp[N + <span class="number">1</span>][V + <span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 使用0个物品的价值为0</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;= V; i++) &#123;</span><br><span class="line">    dp[<span class="number">0</span>][i] = <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 先遍历物品，后遍历重量</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; N; i++) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> v = <span class="number">0</span>; v &lt;= V; v++) &#123;</span><br><span class="line">      <span class="comment">// 1. 当物品大于承重，物品不会放到背包，价值等于不放此物品时的情况</span></span><br><span class="line">      <span class="comment">// 即使物品小于承重，说明物品会放到背包。提前多赋值一次也是允许的</span></span><br><span class="line">      dp[i + <span class="number">1</span>][v] = dp[i][v];</span><br><span class="line">      <span class="keyword">if</span> (v &gt;= cost[i]) &#123;</span><br><span class="line">        dp[i + <span class="number">1</span>][v] = MAX(dp[i][v], dp[i][v - cost[i]] + value[i]);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;= N; i++) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt;= V; j++) &#123;</span><br><span class="line">      <span class="built_in">printf</span>(<span class="string">"%d\t"</span>, dp[i][j]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"%d\n"</span>, dp[N][V]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">O1Package_one_array_n</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">int</span> dp[V + <span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 使用0个物品的价值为0</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;= V; i++) &#123;</span><br><span class="line">    dp[i] = <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 先遍历物品，后遍历重量</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = N - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> v = V; v &gt;= cost[i]; v--) &#123;</span><br><span class="line">      <span class="keyword">int</span> bufang = dp[v];</span><br><span class="line">      <span class="keyword">int</span> fang = dp[v - cost[i]] + value[i];</span><br><span class="line">      dp[v] = MAX(bufang, fang);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt;= V; j++) &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%d\t"</span>, dp[j]);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"%d\n"</span>, dp[V]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="完全背包"><a href="#完全背包" class="headerlink" title="完全背包"></a>完全背包</h2><p>要求物品可以取无限个，但由于包的承重为V,所以每种物品最大数量为 V/cost[i]</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">CompletePackage_use_n</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">int</span> dp[N][V + <span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 0容量的价值为0, 合法</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; cost[<span class="number">0</span>]; i++) &#123;</span><br><span class="line">    dp[<span class="number">0</span>][i] = <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 初始化当包承重大于物品0重量的情况</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = cost[<span class="number">0</span>]; i &lt;= V; i++) &#123;</span><br><span class="line">    <span class="comment">// 当只装物品0时，包的价值就是物品0的价值</span></span><br><span class="line">    dp[<span class="number">0</span>][i] = i / cost[<span class="number">0</span>] * value[<span class="number">0</span>];</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 先遍历物品，后遍历重量</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; N; i++) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> v = <span class="number">0</span>; v &lt;= V; v++) &#123;</span><br><span class="line">      dp[i][v] = dp[i - <span class="number">1</span>][v]; <span class="comment">//当重量不够装i时，价值为装i-1的价值,</span></span><br><span class="line">                               <span class="comment">//此步骤以备i+1时使用（下一个i循环）</span></span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">int</span> k = <span class="number">1</span>; k &lt;= v / cost[i]; k++) &#123;</span><br><span class="line">        dp[i][v] = MAX(dp[i - <span class="number">1</span>][v], dp[i - <span class="number">1</span>][v - k * cost[i]] + k * value[i]);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; N; i++) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt;= V; j++) &#123;</span><br><span class="line">      <span class="built_in">printf</span>(<span class="string">"%d\t"</span>, dp[i][j]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"%d\n"</span>, dp[N - <span class="number">1</span>][V]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">CompletePackage_use_n_plus_1</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">int</span> dp[N + <span class="number">1</span>][V + <span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 0容量的价值为0, 合法</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;= V; i++) &#123;</span><br><span class="line">    dp[<span class="number">0</span>][i] = <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 先遍历物品，后遍历重量</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= N; i++) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> v = <span class="number">0</span>; v &lt;= V; v++) &#123;</span><br><span class="line">      dp[i][v] = dp[i - <span class="number">1</span>][v]; <span class="comment">//当重量不够装i时，价值为装i-1的价值,</span></span><br><span class="line">                               <span class="comment">//此步骤以备i+1时使用（下一个i循环）</span></span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">int</span> k = <span class="number">1</span>; k &lt;= v / cost[i<span class="number">-1</span>]; k++) &#123;</span><br><span class="line">        dp[i][v] = MAX(dp[i - <span class="number">1</span>][v], dp[i - <span class="number">1</span>][v - k * cost[i<span class="number">-1</span>]] + k * value[i<span class="number">-1</span>]);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;= N; i++) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt;= V; j++) &#123;</span><br><span class="line">      <span class="built_in">printf</span>(<span class="string">"%d\t"</span>, dp[i][j]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"%d\n"</span>, dp[N][V]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">CompletePackage_use_one_array_no_reverse_V</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">int</span> dp[V + <span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 0容量的价值为0, 合法</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;= V; i++) &#123;</span><br><span class="line">    dp[i] = <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 先遍历物品，后遍历重量</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= N; i++) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> v = <span class="number">0</span>; v &lt;= V; v++) &#123;</span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">int</span> k = <span class="number">1</span>; k &lt;= v / cost[i<span class="number">-1</span>]; k++) &#123;</span><br><span class="line">        dp[v] = MAX(dp[v], dp[v - k * cost[i<span class="number">-1</span>]] + k * value[i<span class="number">-1</span>]);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt;= V; j++) &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%d\t"</span>, dp[j]);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"%d\n"</span>, dp[V]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">CompletePackage_use_one_array_reverse_V</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">int</span> dp[V + <span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 0容量的价值为0, 合法</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;= V; i++) &#123;</span><br><span class="line">    dp[i] = <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 先遍历物品，后遍历重量</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= N; i++) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> v = V; v &lt;= cost[i<span class="number">-1</span>]; v--) &#123;</span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">int</span> k = <span class="number">1</span>; k &lt;= v / cost[i<span class="number">-1</span>]; k++) &#123;</span><br><span class="line">        dp[v] = MAX(dp[v], dp[v - k * cost[i<span class="number">-1</span>]] + k * value[i<span class="number">-1</span>]);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt;= V; j++) &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%d\t"</span>, dp[j]);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"%d\n"</span>, dp[V]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="多重背包"><a href="#多重背包" class="headerlink" title="多重背包"></a>多重背包</h2><p>多重背包规定了每个物品的最大数量cap[i], 但由于要考虑背包承重，所以真正可以容纳物品的最大个数是max（cap[i], V/cost[i])</p>
+<h2 id="疑问"><a href="#疑问" class="headerlink" title="疑问"></a>疑问</h2><h3 id="为何不需要将背包排序，-比如按重量排序或按价值排序，再将重量下而价值高的物品优先计算？"><a href="#为何不需要将背包排序，-比如按重量排序或按价值排序，再将重量下而价值高的物品优先计算？" class="headerlink" title="为何不需要将背包排序， 比如按重量排序或按价值排序，再将重量下而价值高的物品优先计算？"></a>为何不需要将背包排序， 比如按重量排序或按价值排序，再将重量下而价值高的物品优先计算？</h3><p>即使没有排序，由于第二层循环都是从<code>0-&gt;V</code>遍历和放物品i与不放物品i比较，所以顺序不重要</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; N; i++) &#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> v = <span class="number">0</span>; v &lt;= V; v++) &#123;</span><br><span class="line">    <span class="keyword">int</span> bufang = dp[i - <span class="number">1</span>][v];</span><br><span class="line">    dp[i][v] = bufang;</span><br><span class="line">    <span class="keyword">if</span> (v &gt;= cost[i]) &#123;</span><br><span class="line">      <span class="keyword">int</span> fang = dp[i - <span class="number">1</span>][v - cost[i]] + value[i];</span><br><span class="line">      dp[i][v] = MAX(bufang, fang);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="算法复杂度和优化"><a href="#算法复杂度和优化" class="headerlink" title="算法复杂度和优化"></a>算法复杂度和优化</h3><p>矩阵数组的时间复杂度为O(V<em>N),即两层for循环；空间复杂度为O(V</em>N) 即申请一个矩形数组，经过一元数组优化后，空间复杂度变为O(V)<br>除此之外，<br>大多情况下，通过两层遍历，可以只保留重量相同且价值最大的那个物品，这个操作的时间复杂度为O(N^2), 但当最糟糕的情况，即精心设计的物品没有相同重量或者相同价值的情况则此优化无效<br>另外，先加物品重量大于背包重量的物品忽略，可以加快速度</p>
+<h3 id="理解优化"><a href="#理解优化" class="headerlink" title="理解优化"></a>理解优化</h3><p>无论是用矩阵数组还是优化成一元数组，最好的理解方式是单步调试一遍</p>
+<h3 id="N行与N-1行"><a href="#N行与N-1行" class="headerlink" title="N行与N+1行"></a>N行与N+1行</h3><p>两种方式可以通用，只是当N行时，需要提前初始化物品0的情况</p>
+<h3 id="初始化问题"><a href="#初始化问题" class="headerlink" title="初始化问题"></a>初始化问题</h3><p>我们看到的求最优解的背包问题题目中，事实上有两种不太相同的问法。有的题目要求“恰好装满背包”时的最优解，有的题目则并没有要求必须把背包装满。一种区别这两种问法的实现方法是在初始化的时候有所不同。</p>
+<p>如果是第一种问法，要求恰好装满背包，那么在初始化时除了 F[0] 为 0，其它F[1..V ] 均设为 −∞，这样就可以保证最终得到的 F[V ] 是一种恰好装满背包的最优解。<br>如果并没有要求必须把背包装满，而是只希望价格尽量大，初始化时应该将 F[0..V ]全部设为 0。</p>
+<p>这是为什么呢？可以这样理解：初始化的 F 数组事实上就是在没有任何物品可以放入背包时的合法状态。如果要求背包恰好装满，那么此时只有容量为 0 的背包可以在什么也不装且价值为 0 的情况下被“恰好装满”，其它容量的背包均没有合法的解，属于未定义的状态，应该被赋值为 -∞ 了。如果背包并非必须被装满，那么任何容量的背包都有一个合法解“什么都不装”，这个解的价值为 0，所以初始时状态的值也就全部为 0了。</p>
+<h2 id="贪心算法"><a href="#贪心算法" class="headerlink" title="贪心算法"></a>贪心算法</h2><p>由于背包问题里的物品具备<strong>重量</strong>和<strong>价值</strong>两个维度，所以无法用贪心算法解决。而当维度为1的时候，可以用贪心算法，例如<del>零钱问题</del>和会议安排问题，因为不同零钱价值不同但其“重量”都为1，会议的“重量”也为1<br><strong>注</strong>: leetcode上的<a href="https://leetcode.com/problems/coin-change/" target="_blank" rel="noopener">零钱问题</a>不能用贪心算法</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>《背包问题九讲》</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://energygreek.github.io/2022/05/12/package-problem/" data-id="clsbmbv48003hbwop34mxczba" data-title="背包问题" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/algorithm/" rel="tag">algorithm</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-a-FakeIt-issue" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/05/05/a-FakeIt-issue/" class="article-date">
+  <time class="dt-published" datetime="2022-05-05T10:25:40.000Z" itemprop="datePublished">2022-05-05</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/05/05/a-FakeIt-issue/">记一个FakeIt使用问题</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="FakeIt"><a href="#FakeIt" class="headerlink" title="FakeIt"></a>FakeIt</h1><p>FakeIt是一个单元测试工具，类比gmock, 但是比gmock更modern和轻量，因为它支持c++11和header-only</p>
+<h2 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h2><p>FakeIt和gmock都提供Mock和调用计数功能，Mock通常用于接口类，用来定义并实例化接口类对象。gmock和FakeIt都能对调用参数进行校验，但FakeIt的Verify函数还提供在校验失败时打印参数值，这是gmock不具备的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">struct IAppManager &#123;</span><br><span class="line">  &#x2F;&#x2F; inotify calls when new event</span><br><span class="line">  virtual void notify_add_event(EventType event_type,</span><br><span class="line">                                const std::string&amp; filepath) &#x3D; 0;</span><br><span class="line">  virtual void notify_rename_event(EventType event_type,</span><br><span class="line">                                   const std::string&amp; filepath,</span><br><span class="line">                                   const std::string&amp; filepath_new) &#x3D; 0;</span><br><span class="line"></span><br><span class="line">  virtual ~IAppManager() &#x3D; default;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">TEST_CASE(&quot;Test Inotify&quot;) &#123;</span><br><span class="line">  Mock&lt;IAppManager&gt; appmanager_mock;</span><br><span class="line">  Fake(Dtor(appmanager_mock));</span><br><span class="line">  Fake(Method(appmanager_mock, notify_add_event));</span><br><span class="line">  Fake(Method(appmanager_mock, notify_rename_event));</span><br><span class="line"></span><br><span class="line">  auto&amp; app_manager &#x3D; appmanager_mock.get();</span><br><span class="line">  SECTION(&quot;test add&quot;) &#123;</span><br><span class="line">    std::thread t1([&amp;app_manager]()&#123;</span><br><span class="line">      app_manager.notify_add_event(EventType::File, &quot;filename&quot;);</span><br><span class="line">      app_manager.notify_add_event(EventType::File, &quot;filename&quot;);</span><br><span class="line">      app_manager.notify_add_event(EventType::File, &quot;filename&quot;);</span><br><span class="line">    &#125;);</span><br><span class="line">    t1.join();</span><br><span class="line">    Verify(Method(appmanager_mock, notify_add_event)).Exactly(2);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里没有对调用参数校验，而仅对调用次数验证，可以预见，结果失败，因为调用了3次。</p>
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>上面的测试用例会失败，因为次数不匹配。而这时FakeIt会打印所有调用的参数值，但参数由于是个引用，而且引用在线程退出时被释放，打印一个无效引用导致会抛异常</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">due to a fatal error condition:                                                                 </span><br><span class="line">  SIGSEGV - Segmentation violation signal</span><br></pre></td></tr></table></figure>
+
+<h2 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h2><p>对于本测试而言，解决办法就是将传参所引用的对象duration改大，如全局变量或者static，或者在线程外定义它</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">TEST_CASE(&quot;Test Inotify&quot;) &#123;</span><br><span class="line">  Mock&lt;IAppManager&gt; appmanager_mock;</span><br><span class="line">  Fake(Dtor(appmanager_mock));</span><br><span class="line">  Fake(Method(appmanager_mock, notify_add_event));</span><br><span class="line">  Fake(Method(appmanager_mock, notify_rename_event));</span><br><span class="line"></span><br><span class="line">  auto&amp; app_manager &#x3D; appmanager_mock.get();</span><br><span class="line">  SECTION(&quot;test add&quot;) &#123;</span><br><span class="line">    std::string filename &#x3D; &quot;asd&quot;;</span><br><span class="line">    std::thread t1([&amp;app_manager, &amp;filename]()&#123;</span><br><span class="line">      app_manager.notify_add_event(EventType::File, filename);</span><br><span class="line">      app_manager.notify_add_event(EventType::File, filename);</span><br><span class="line">      app_manager.notify_add_event(EventType::File, filename);</span><br><span class="line">    &#125;);</span><br><span class="line">    t1.join();</span><br><span class="line">    Verify(Method(appmanager_mock, notify_add_event)).Exactly(2);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>修改之后，不会触发SIGSEGV异常, 而是能正确打印出调用参数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Expected pattern: appmanager_mock.notify_add_event( Any arguments )</span><br><span class="line">Expected matches: exactly 2</span><br><span class="line">Actual matches  : 3</span><br><span class="line">Actual sequence : total of 3 actual invocations:                             </span><br><span class="line">  appmanager_mock.notify_add_event(?, asd)</span><br><span class="line">  appmanager_mock.notify_add_event(?, asd)</span><br><span class="line">  appmanager_mock.notify_add_event(?, asd)</span><br></pre></td></tr></table></figure>
+
+<p>但对于间接调用的接口，且在单元测试里无法控制变量类型，则没有什么办法，只能保证Extractly准确而不用打印参数值</p>
+<h2 id="gmock的方式"><a href="#gmock的方式" class="headerlink" title="gmock的方式"></a>gmock的方式</h2><p>gmock使用预先设定调用参数，在调用时再判断，所以不会出现无效引用的问题</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://energygreek.github.io/2022/05/05/a-FakeIt-issue/" data-id="clsbmbv2x001dbwoph949fuqg" data-title="记一个FakeIt使用问题" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/unit-test/" rel="tag">unit test</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/2/">下一页 &raquo;</a>
+  </nav>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/51%E5%8D%95%E7%89%87%E6%9C%BA/" rel="tag">51单片机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DP/" rel="tag">DP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aarch64/" rel="tag">aarch64</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/admin/" rel="tag">admin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/" rel="tag">algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algoritm/" rel="tag">algoritm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bash/" rel="tag">bash</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/basics/" rel="tag">basics</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/" rel="tag">c++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c-c/" rel="tag">c/c++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cmake/" rel="tag">cmake</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dns/" rel="tag">dns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/email-client/" rel="tag">email_client</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/exam/" rel="tag">exam</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/exception-safe/" rel="tag">exception-safe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ffmpeg/" rel="tag">ffmpeg</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/filesystem/" rel="tag">filesystem</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flask/" rel="tag">flask</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gdb/" rel="tag">gdb</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/" rel="tag">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/grpc/" rel="tag">grpc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/grub/" rel="tag">grub</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hawei/" rel="tag">hawei</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/heapsort/" rel="tag">heapsort</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/" rel="tag">k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linkage/" rel="tag">linkage</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux%E5%9F%BA%E7%A1%80/" rel="tag">linux基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lock/" rel="tag">lock</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lvm/" rel="tag">lvm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maintance/" rel="tag">maintance</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/malloc/" rel="tag">malloc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mdns/" rel="tag">mdns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memory/" rel="tag">memory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mutex/" rel="tag">mutex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mutt/" rel="tag">mutt</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/namespace/" rel="tag">namespace</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/network/" rel="tag">network</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/os-maintain/" rel="tag">os-maintain</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/printer/" rel="tag">printer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/program/" rel="tag">program</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rancher-k8s/" rel="tag">rancher,k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rhce/" rel="tag">rhce</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rtp/" rel="tag">rtp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/safe/" rel="tag">safe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scope/" rel="tag">scope</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/seralize/" rel="tag">seralize</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shared-ptr/" rel="tag">shared_ptr</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/socket/" rel="tag">socket</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/socketopt/" rel="tag">socketopt</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sql/" rel="tag">sql</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/storageduration/" rel="tag">storageduration</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sysemd/" rel="tag">sysemd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/template-programing/" rel="tag">template programing</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/terminal/" rel="tag">terminal</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tool/" rel="tag">tool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/udp/" rel="tag">udp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/unique-ptr/" rel="tag">unique_ptr</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/unit-test/" rel="tag">unit test</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/urxvt/" rel="tag">urxvt</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webcrawler/" rel="tag">webcrawler</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webserver/" rel="tag">webserver</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/weechat/" rel="tag">weechat</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/wordpress/" rel="tag">wordpress</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" rel="tag">二叉树</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E6%A0%B8%E5%8E%9F%E7%90%86/" rel="tag">内核原理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%B7%E6%9C%BA%E6%95%99%E7%A8%8B/" rel="tag">刷机教程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" rel="tag">包管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9F%A5%E6%89%BE/" rel="tag">查找</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/" rel="tag">系统调用</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E8%AF%91/" rel="tag">编译</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%B0%83%E4%BC%98/" rel="tag">调优</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9F%B3%E8%A7%86%E9%A2%91/" rel="tag">音视频</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/51%E5%8D%95%E7%89%87%E6%9C%BA/" style="font-size: 10px;">51单片机</a> <a href="/tags/DP/" style="font-size: 10px;">DP</a> <a href="/tags/Linux/" style="font-size: 10px;">Linux</a> <a href="/tags/aarch64/" style="font-size: 10px;">aarch64</a> <a href="/tags/admin/" style="font-size: 10px;">admin</a> <a href="/tags/algorithm/" style="font-size: 16px;">algorithm</a> <a href="/tags/algoritm/" style="font-size: 10px;">algoritm</a> <a href="/tags/android/" style="font-size: 10px;">android</a> <a href="/tags/bash/" style="font-size: 10px;">bash</a> <a href="/tags/basics/" style="font-size: 10px;">basics</a> <a href="/tags/c/" style="font-size: 12px;">c++</a> <a href="/tags/c-c/" style="font-size: 20px;">c/c++</a> <a href="/tags/cmake/" style="font-size: 10px;">cmake</a> <a href="/tags/dns/" style="font-size: 10px;">dns</a> <a href="/tags/docker/" style="font-size: 18px;">docker</a> <a href="/tags/email-client/" style="font-size: 10px;">email_client</a> <a href="/tags/exam/" style="font-size: 10px;">exam</a> <a href="/tags/exception-safe/" style="font-size: 10px;">exception-safe</a> <a href="/tags/ffmpeg/" style="font-size: 10px;">ffmpeg</a> <a href="/tags/filesystem/" style="font-size: 14px;">filesystem</a> <a href="/tags/flask/" style="font-size: 10px;">flask</a> <a href="/tags/gdb/" style="font-size: 10px;">gdb</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/grpc/" style="font-size: 10px;">grpc</a> <a href="/tags/grub/" style="font-size: 10px;">grub</a> <a href="/tags/hawei/" style="font-size: 10px;">hawei</a> <a href="/tags/heapsort/" style="font-size: 10px;">heapsort</a> <a href="/tags/k8s/" style="font-size: 10px;">k8s</a> <a href="/tags/linkage/" style="font-size: 10px;">linkage</a> <a href="/tags/linux/" style="font-size: 14px;">linux</a> <a href="/tags/linux%E5%9F%BA%E7%A1%80/" style="font-size: 10px;">linux基础</a> <a href="/tags/lock/" style="font-size: 10px;">lock</a> <a href="/tags/lvm/" style="font-size: 10px;">lvm</a> <a href="/tags/maintance/" style="font-size: 10px;">maintance</a> <a href="/tags/malloc/" style="font-size: 10px;">malloc</a> <a href="/tags/mdns/" style="font-size: 10px;">mdns</a> <a href="/tags/memory/" style="font-size: 12px;">memory</a> <a href="/tags/mutex/" style="font-size: 10px;">mutex</a> <a href="/tags/mutt/" style="font-size: 10px;">mutt</a> <a href="/tags/namespace/" style="font-size: 10px;">namespace</a> <a href="/tags/network/" style="font-size: 10px;">network</a> <a href="/tags/os-maintain/" style="font-size: 10px;">os-maintain</a> <a href="/tags/printer/" style="font-size: 10px;">printer</a> <a href="/tags/program/" style="font-size: 10px;">program</a> <a href="/tags/python/" style="font-size: 14px;">python</a> <a href="/tags/rancher-k8s/" style="font-size: 10px;">rancher,k8s</a> <a href="/tags/rhce/" style="font-size: 10px;">rhce</a> <a href="/tags/rtp/" style="font-size: 10px;">rtp</a> <a href="/tags/safe/" style="font-size: 12px;">safe</a> <a href="/tags/scope/" style="font-size: 10px;">scope</a> <a href="/tags/seralize/" style="font-size: 10px;">seralize</a> <a href="/tags/shared-ptr/" style="font-size: 10px;">shared_ptr</a> <a href="/tags/socket/" style="font-size: 10px;">socket</a> <a href="/tags/socketopt/" style="font-size: 10px;">socketopt</a> <a href="/tags/sql/" style="font-size: 12px;">sql</a> <a href="/tags/storageduration/" style="font-size: 10px;">storageduration</a> <a href="/tags/sysemd/" style="font-size: 10px;">sysemd</a> <a href="/tags/template-programing/" style="font-size: 10px;">template programing</a> <a href="/tags/terminal/" style="font-size: 10px;">terminal</a> <a href="/tags/tool/" style="font-size: 18px;">tool</a> <a href="/tags/udp/" style="font-size: 10px;">udp</a> <a href="/tags/unique-ptr/" style="font-size: 10px;">unique_ptr</a> <a href="/tags/unit-test/" style="font-size: 10px;">unit test</a> <a href="/tags/urxvt/" style="font-size: 10px;">urxvt</a> <a href="/tags/webcrawler/" style="font-size: 10px;">webcrawler</a> <a href="/tags/webserver/" style="font-size: 10px;">webserver</a> <a href="/tags/weechat/" style="font-size: 10px;">weechat</a> <a href="/tags/wordpress/" style="font-size: 10px;">wordpress</a> <a href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" style="font-size: 10px;">二叉树</a> <a href="/tags/%E5%86%85%E6%A0%B8%E5%8E%9F%E7%90%86/" style="font-size: 10px;">内核原理</a> <a href="/tags/%E5%88%B7%E6%9C%BA%E6%95%99%E7%A8%8B/" style="font-size: 10px;">刷机教程</a> <a href="/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" style="font-size: 10px;">包管理</a> <a href="/tags/%E6%9F%A5%E6%89%BE/" style="font-size: 10px;">查找</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 10px;">算法</a> <a href="/tags/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/" style="font-size: 10px;">系统调用</a> <a href="/tags/%E7%BC%96%E8%AF%91/" style="font-size: 10px;">编译</a> <a href="/tags/%E8%B0%83%E4%BC%98/" style="font-size: 10px;">调优</a> <a href="/tags/%E9%9F%B3%E8%A7%86%E9%A2%91/" style="font-size: 10px;">音视频</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/02/">二月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/12/">十二月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/05/">五月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">四月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">十二月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/11/">十一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">十月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/08/">八月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">三月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">二月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/02/07/streaming-h264-with-rtp/">streaming h264 with rtp</a>
+          </li>
+        
+          <li>
+            <a href="/2023/09/08/wifi-tool/">随身wifi工具</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/21/docker-network/">docker network</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/18/mail-setup/">mail setup</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/08/install-wordpress/">install wordpress</a>
+          </li>
+        
+          <li>
+            <a href="/2022/12/29/amrnb-and-amrwb/">amrnb和amrwb的编解码</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 greek_soon@hotmail.com<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

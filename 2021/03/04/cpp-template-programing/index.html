@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=z20lYmACQgemxcrzNk1C8Q"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'z20lYmACQgemxcrzNk1C8Q');
+</script>
+<!-- End Google Analytics -->
+
+  
+  <title>cpp-template-programing | 又是元气满满的一天</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="模板编程模板编程是其它高级语言没有的技术, 也称为范型编程，多在stl库使用。这种对类型的泛化相当于在编程之上编程 概述模板可以作用于函数和类，即能泛化类型，也可以泛化大小 123456789template &lt;typename T, int N&gt; void foo() &amp;#123; T t[N]; &amp;#125;template &lt;typename T, int N&gt; st">
+<meta property="og:type" content="article">
+<meta property="og:title" content="cpp-template-programing">
+<meta property="og:url" content="https://energygreek.github.io/2021/03/04/cpp-template-programing/index.html">
+<meta property="og:site_name" content="又是元气满满的一天">
+<meta property="og:description" content="模板编程模板编程是其它高级语言没有的技术, 也称为范型编程，多在stl库使用。这种对类型的泛化相当于在编程之上编程 概述模板可以作用于函数和类，即能泛化类型，也可以泛化大小 123456789template &lt;typename T, int N&gt; void foo() &amp;#123; T t[N]; &amp;#125;template &lt;typename T, int N&gt; st">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-03-04T09:40:45.000Z">
+<meta property="article:modified_time" content="2024-02-07T09:59:29.787Z">
+<meta property="article:author" content="greek_soon@hotmail.com">
+<meta property="article:tag" content="c&#x2F;c++">
+<meta property="article:tag" content="template programing">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/" title="又是元气满满的一天">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="又是元气满满的一天" type="application/atom+xml">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">又是元气满满的一天</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">个人博客</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS 订阅"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://energygreek.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-cpp-template-programing" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/03/04/cpp-template-programing/" class="article-date">
+  <time class="dt-published" datetime="2021-03-04T09:40:45.000Z" itemprop="datePublished">2021-03-04</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      cpp-template-programing
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="模板编程"><a href="#模板编程" class="headerlink" title="模板编程"></a>模板编程</h1><p>模板编程是其它高级语言没有的技术, 也称为范型编程，多在stl库使用。这种对类型的泛化相当于在编程之上编程</p>
+<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>模板可以作用于函数和类，即能泛化<code>类型</code>，也可以泛化<code>大小</code></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">int</span> N&gt; <span class="function"><span class="keyword">void</span> <span class="title">foo</span><span class="params">()</span> </span>&#123; T t[N]; &#125;</span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">int</span> N&gt; <span class="class"><span class="keyword">struct</span> <span class="title">Foo</span> &#123;</span> T t[N]; &#125;;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">   <span class="comment">// array of two int</span></span><br><span class="line">   foo&lt;<span class="keyword">int</span>, <span class="number">2</span>&gt;();</span><br><span class="line">   <span class="comment">// class has a array of two int </span></span><br><span class="line">   Foo&lt;<span class="keyword">int</span>, <span class="number">2</span>&gt; F;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="模板的特化"><a href="#模板的特化" class="headerlink" title="模板的特化"></a>模板的特化</h2><p>跟泛化相反的方向，叫特化，编译器会优先使用特化的版本, 而特化有2个方向，<code>类型特化</code>和<code>范围特化</code>  </p>
+<h3 id="类型特化"><a href="#类型特化" class="headerlink" title="类型特化"></a>类型特化</h3><p>对于特化类型个数的不同，分为偏特化和全特化，全特化即为所有类型都指定，特化类型越多匹配优先级越高<br>注意：模板函数不能偏特化</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">template&lt;typename T1, typename T2&gt; struct Foo&#123;&#125;;</span><br><span class="line">template&lt;typename T2&gt; struct Foo&lt;int, T2&gt; &#123;&#125;;</span><br><span class="line">&#x2F;&#x2F; 全特化</span><br><span class="line">template&lt;&gt; struct Foo&lt;int,int&gt;&#123;&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>例如`Foo&lt;int, int&gt; foo’，编译器会使用第三个版本</p>
+<h3 id="范围特化"><a href="#范围特化" class="headerlink" title="范围特化"></a>范围特化</h3><p>比如常见的指针和引用，这和int, float, class 都是无关的，属于另个维度，也可以说是范围, 在stl为兼容指针做大量的工作  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">template &lt;typename T, typename N&gt; struct Foo&lt;T *, N&gt; &#123;&#125;;</span><br></pre></td></tr></table></figure>
+<p>这样’Foo&lt;int *, int&gt; foo’会使用这个版本</p>
+<p>还例如指定对大小的特例化</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;模板</span><br><span class="line">template&lt;int n&gt; foo()&#123;&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;值特例化</span><br><span class="line">template&lt;&gt; foo&lt;10&gt; foo()&#123;&#125;</span><br></pre></td></tr></table></figure>
+<p>那么如果调用<code>foo&lt;10&gt;();</code>时，优先匹配特例化版本</p>
+<h3 id="函数匹配优先级"><a href="#函数匹配优先级" class="headerlink" title="函数匹配优先级"></a>函数匹配优先级</h3><p>在函数调用时，普通函数的匹配优先级高于模板函数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">template &lt;typename T&gt; void f(T) &#123; std::cout &lt;&lt; &quot;temp\n&quot;; &#125;</span><br><span class="line">void f(int d) &#123; std::cout &lt;&lt; &quot;temp1\n&quot;; &#125;</span><br><span class="line">template &lt;&gt; void f(int d) &#123; std::cout &lt;&lt; &quot;temp2\n&quot;; &#125;</span><br><span class="line"></span><br><span class="line">f(1); &#x2F;&#x2F; temp1</span><br></pre></td></tr></table></figure>
+
+<h3 id="自定义类型的范围特化"><a href="#自定义类型的范围特化" class="headerlink" title="自定义类型的范围特化"></a>自定义类型的范围特化</h3><p>上面讲的是指针类型和引用类型两种，但如果是自定义类型，那就无穷无尽了，所以模板编程也是’图灵完备’的</p>
+<p>例如以下，创建了一个自定义的类型来包装基本类型(int,float)，这样可以有自定义类型的特化版本</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">template &lt;typename T&gt; struct Decor &#123; using type &#x3D; T; &#125;;</span><br><span class="line">template &lt;typename T&gt; struct Strip &#123; using type &#x3D; T; &#125;;</span><br><span class="line">template &lt;typename T&gt; struct Strip&lt;Decor&lt;T&gt;&gt; &#123; using type &#x3D; T; &#125;;</span><br><span class="line">template &lt;typename T&gt; using StripDecor &#x3D; typename Strip&lt;T&gt;::type;</span><br><span class="line"></span><br><span class="line">template &lt;typename T&gt; class Row &#123;&#125;;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">  using nodecor &#x3D; Row&lt;int&gt;;</span><br><span class="line">  using decor &#x3D; Decor&lt;Row&lt;int&gt;&gt;;</span><br><span class="line">  &#x2F;&#x2F; 虽底层同为int, 但nodecor 类型不同于decor类型</span><br><span class="line">  static_assert(std::is_same&lt;col&gt;, nocol&gt;::value);</span><br><span class="line">  &#x2F;&#x2F; 通过Strip取出其底层类型</span><br><span class="line">  static_assert(std::is_same&lt;StripDecor&lt;col&gt;, nocol&gt;::value);</span><br><span class="line">  return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="模板的声明定义分离"><a href="#模板的声明定义分离" class="headerlink" title="模板的声明定义分离"></a>模板的声明定义分离</h3><ol>
+<li>由于template用来生成函数和类，所以编译器需要同时知道template的类型和其细节，所以模板函数不支持将定义放到源文件中</li>
+<li>而且编译器通常是以cpp为编译单元，当编译模板cpp时不知道调用cpp, 编译调用cpp时，不知道模板cpp。所以模板函数不支持将定义放到源文件中</li>
+<li>对于模板类可以将成员函数的定义放到源文件，但要为每个成员函数都添加’template’限定, <strong><em>而且要为实例添加特例化</em></strong>。</li>
+<li>显式特例化支持只声明不定义，而在源文件中为每种所需的类型都特例化，即与3相同。其实显示特例化是不需要特例化而强制特例化。 </li>
+</ol>
+<p>如下，模板类的定义放到cpp中，这样会报错，因为在编译call_foo.cpp时不知到模板定义, 因为没有生成过int版本的Foo。<br>为此，必须在foo.cpp里添加<code>template class Foo&lt;int&gt;</code>, 如同4，实在吃力不讨好。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// foo.h</span></span><br><span class="line">    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Foo</span> &#123;</span></span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">      Foo();</span><br><span class="line">      <span class="function"><span class="keyword">void</span> <span class="title">someMethod</span><span class="params">(T x)</span></span>;</span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">      T x;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// foo.cpp</span></span><br><span class="line">    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line">    Foo&lt;T&gt;::Foo()</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line">    <span class="keyword">void</span> Foo&lt;T&gt;::someMethod(T x)</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// call_foo.cpp</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">blah_blah_blah</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">      <span class="comment">// ...</span></span><br><span class="line">      Foo&lt;<span class="keyword">int</span>&gt; f;</span><br><span class="line">      f.someMethod(<span class="number">5</span>);</span><br><span class="line">      <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>当然把模板的定义放到头文件中会增加可执行文件的体积。</p>
+<h4 id="实际运用"><a href="#实际运用" class="headerlink" title="实际运用"></a>实际运用</h4><p>grpc 能以流和非流方式传输，而grpc参数protobuf消息类型是另一个范围。那么要封装grpc方法, 需要封装流+类型</p>
+<p>举例protobuf的消息类型有string, fixed32</p>
+<ul>
+<li>string</li>
+<li>fixed32</li>
+<li>Stream<fixed32></li>
+<li>Stream<string></li>
+</ul>
+<p>通过上面的偏特化可以即能区分流和非流又能区分类型</p>
+<h3 id="赘述一下模板的类型"><a href="#赘述一下模板的类型" class="headerlink" title="赘述一下模板的类型"></a>赘述一下模板的类型</h3><p>上面的模板类型T都是实际编程时定义的类型，但作为图灵完备的模板编程，未决的template类型也可以作为template类型</p>
+<p>如下是一个模板用另一个模板来特例化</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">template &lt;typename T&gt; struct Upper &#123;&#125;;</span><br><span class="line">template &lt;template &lt;typename&gt; class T&gt; struct Lower &#123;&#125;;</span><br><span class="line"></span><br><span class="line">template&lt;typename T&gt;</span><br><span class="line">Lower&lt;Upper&lt;T&gt;&gt; l;</span><br></pre></td></tr></table></figure>
+
+<h2 id="可变模版variadic-templates"><a href="#可变模版variadic-templates" class="headerlink" title="可变模版variadic templates"></a>可变模版variadic templates</h2><p>c中有可变参数<code>...</code>和gcc内置<code>__VA_ARGS__</code>宏定义, 实现不同个数的变量打印。这是由编译期实现的，会将format的格式符替换成参数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int printf ( const char * format, ... );</span><br></pre></td></tr></table></figure>
+
+<p>c++有模版，而且在c++11之后引入了动态参数模版，即模版函数或类可以使用动态参数</p>
+<h3 id="实际运用1"><a href="#实际运用1" class="headerlink" title="实际运用1"></a>实际运用1</h3><p>在实际项目中手动跑单元测试用例的时候，不希望再去看日志文件，而是想日志直接输出到终端, 有以下办法</p>
+<h4 id="c-11及以上标准"><a href="#c-11及以上标准" class="headerlink" title="c++11及以上标准"></a>c++11及以上标准</h4><p>可以使用动态参数模版替换原本的日志打印函数</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">undef</span> log_debug</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> First, <span class="keyword">typename</span> ...Rest&gt;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">log_debug</span><span class="params">(First &amp;&amp; first, Rest &amp;&amp; ... rest)</span></span>&#123;</span><br><span class="line">  <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; fmt::format(first, rest ...) &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 这时日志就直接输出到终端了, 这里使用了fmt库</span></span><br><span class="line">log_debug(<span class="string">"aasdas&#123;&#125;"</span>, <span class="string">"bbbb"</span>);</span><br></pre></td></tr></table></figure>
+
+<p>也可简单写成</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> ...Args&gt;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">log_debug</span><span class="params">(Args&amp;&amp; ...args)</span></span>&#123;</span><br><span class="line">	<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; fmt::format(args...) &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果不使用fmt格式化，还可以用</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">undef</span> log_debug</span></span><br><span class="line"><span class="comment">// 定义一个空函数</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">log_debug</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> First, <span class="keyword">typename</span> Rest&gt;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">log_debug</span><span class="params">(First&amp;&amp; first, Arg&amp;&amp; ...arg)</span></span>&#123;</span><br><span class="line">	<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; first;</span><br><span class="line">	log_debug(arg...);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>需要解释一下，函数<code>log_debug()</code>必须要先声明，因为模版实例化的的最终要调用这个无参的函数<br>模拟一下堆栈, 因为参数在每次递归时减少一个，所以最终是0个参数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">log_debug(1, 0.2, &quot;aaa&quot;);</span><br><span class="line">log_debug(0.2, &quot;aaa&quot;);</span><br><span class="line">log_debug(&quot;aaa&quot;);</span><br><span class="line">log_debug();</span><br></pre></td></tr></table></figure>
+
+<h4 id="c-11以前的标准"><a href="#c-11以前的标准" class="headerlink" title="c++11以前的标准"></a>c++11以前的标准</h4><p>可以使用宏定义来替换了, 然后需要重载<code>,</code>方法</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> log_debug(...) std::cout , __VA_ARGS__ , std::endl</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="built_in">std</span>::ostream&amp; <span class="keyword">operator</span>,(<span class="built_in">std</span>::ostream&amp; out, <span class="keyword">const</span> T&amp; t) &#123;</span><br><span class="line">  out &lt;&lt; t;</span><br><span class="line">  <span class="keyword">return</span> out;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//overloaded version to handle all those special std::endl and others...</span></span><br><span class="line"><span class="built_in">std</span>::ostream&amp; <span class="keyword">operator</span>,(<span class="built_in">std</span>::ostream&amp; out, <span class="built_in">std</span>::ostream&amp;(*f)(<span class="built_in">std</span>::ostream&amp;)) &#123;</span><br><span class="line">  out &lt;&lt; f;</span><br><span class="line">  <span class="keyword">return</span> out;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="直接用c的方式"><a href="#直接用c的方式" class="headerlink" title="直接用c的方式"></a>直接用c的方式</h4><p>因为printf是支持varidic的</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">undef</span> log_debug</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> log_debug(...) printf(__VA_ARGS__), printf(<span class="meta-string">"\n"</span>)</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  log_debug(<span class="string">"example"</span>,<span class="string">"output"</span>,<span class="string">"filler"</span>,<span class="string">"text"</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="c-17-引入了fold-expression"><a href="#c-17-引入了fold-expression" class="headerlink" title="c++17 引入了fold expression"></a>c++17 引入了<code>fold expression</code></h4><p>可以改写为</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> ...Args&gt;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">log_debug</span><span class="params">(Args &amp;&amp; ...args)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    (<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; ... &lt;&lt; args);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>动态参数模版除了以上的用法，还有更多用处, 例如<code>std::tupe</code>的实现</p>
+<h3 id="实际运用2"><a href="#实际运用2" class="headerlink" title="实际运用2"></a>实际运用2</h3><h4 id="使用模板生成并发代码"><a href="#使用模板生成并发代码" class="headerlink" title="使用模板生成并发代码"></a>使用模板生成并发代码</h4><p>以下代码实现复制二维数组，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">for( size_t ch&#x3D;0 ; ch&lt;channelNum ; ++ch ) &#123;</span><br><span class="line">    for( size_t i&#x3D;0; i&lt;length ; ++i ) &#123;</span><br><span class="line">        out[ch][i]&#x3D;in[ch][i];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但以下理论更快，没有两层for，前提是知道channel大小</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">for(size_t i&#x3D;0;i&lt;length;++i) &#123;</span><br><span class="line">    out[0][i]&#x3D;in[0][i];</span><br><span class="line">    out[1][i]&#x3D;in[1][i];</span><br><span class="line">    out[2][i]&#x3D;in[2][i];</span><br><span class="line">    out[3][i]&#x3D;in[3][i];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但如果用模板，就不需要知道channel大小，自动生成上面的代码</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">int</span> count&gt; <span class="class"><span class="keyword">class</span> <span class="title">Copy</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="keyword">static</span> <span class="keyword">inline</span> <span class="keyword">void</span> <span class="title">go</span><span class="params">(<span class="keyword">float</span> **<span class="keyword">const</span> out, <span class="keyword">float</span> **<span class="keyword">const</span> in, <span class="keyword">int</span> i)</span> </span>&#123;</span><br><span class="line">    Copy&lt;count - <span class="number">1</span>&gt;::go(out, in, i);</span><br><span class="line">    out[count - <span class="number">1</span>][i] = in[count - <span class="number">1</span>][i];</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;&gt; <span class="class"><span class="keyword">class</span> <span class="title">Copy</span>&lt;0&gt; &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="keyword">static</span> <span class="keyword">inline</span> <span class="keyword">void</span> <span class="title">go</span><span class="params">(<span class="keyword">float</span> **<span class="keyword">const</span>, <span class="keyword">float</span> **<span class="keyword">const</span>, <span class="keyword">int</span>)</span> </span>&#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">int</span> channelNum&gt;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">parall_copy</span><span class="params">(<span class="keyword">float</span> **out, <span class="keyword">float</span> **in, <span class="keyword">size_t</span> length)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>; i &lt; length; ++i) &#123;</span><br><span class="line">    Copy&lt;channelNum&gt;::go(out, in, i);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>需要提醒的，如同打印日志的，0的特例化不能省，否则编译出错</p>
+<h3 id="实际运用3-工厂模式"><a href="#实际运用3-工厂模式" class="headerlink" title="实际运用3 工厂模式"></a>实际运用3 工厂模式</h3><p>在使用spdlog时发现有使用到template未决名, 用来实现两个维度的工厂模式。</p>
+<p>第一层提供两种sink的工厂，而其factory是未决名，所以要加上<code>Factory::template</code>消歧义，不然<code>&lt;</code>会当成小于号  </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// factory functions</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Factory = default_factory&gt;</span><br><span class="line"><span class="keyword">inline</span> <span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;logger&gt; basic_logger_mt(<span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span> &amp;logger_name, <span class="keyword">const</span> <span class="keyword">filename_t</span> &amp;filename, <span class="keyword">bool</span> truncate = <span class="literal">false</span>)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> Factory::<span class="keyword">template</span> create&lt;sinks::basic_file_sink_mt&gt;(logger_name, filename, truncate);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Factory = default_factory&gt;</span><br><span class="line"><span class="keyword">inline</span> <span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;logger&gt; basic_logger_st(<span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span> &amp;logger_name, <span class="keyword">const</span> <span class="keyword">filename_t</span> &amp;filename, <span class="keyword">bool</span> truncate = <span class="literal">false</span>)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> Factory::<span class="keyword">template</span> create&lt;sinks::basic_file_sink_st&gt;(logger_name, filename, truncate);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>此时factory可以是<code>synchronous_factory</code>, 也可以是异步版本，但这需要用户自己实现。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Default logger factory-  creates synchronous loggers</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">synchronous_factory</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> Sink, <span class="keyword">typename</span>... SinkArgs&gt;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;spdlog::logger&gt; <span class="title">create</span><span class="params">(<span class="built_in">std</span>::<span class="built_in">string</span> logger_name, SinkArgs &amp;&amp;... args)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">auto</span> sink = <span class="built_in">std</span>::make_shared&lt;Sink&gt;(<span class="built_in">std</span>::forward&lt;SinkArgs&gt;(args)...);</span><br><span class="line">        <span class="keyword">auto</span> new_logger = <span class="built_in">std</span>::make_shared&lt;logger&gt;(<span class="built_in">std</span>::<span class="built_in">move</span>(logger_name), <span class="built_in">std</span>::<span class="built_in">move</span>(sink));</span><br><span class="line">        details::registry::instance().initialize_logger(new_logger);</span><br><span class="line">        <span class="keyword">return</span> new_logger;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> default_factory = synchronous_factory;</span><br></pre></td></tr></table></figure>
+
+<p>简化为下面的demo，固然可以直接使用call_dd的方式，但维度只有一个。而call_dd2则有2个维度了<br>但必须使用<code>T::template</code>消歧义, 因为此时的foo未决名, 不知道是那个类里面的foo。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">struct AA &#123;</span><br><span class="line">  template &lt;typename cc&gt; static void foo() &#123; std::cout &lt;&lt; &quot;dd::foo\n&quot;; &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">struct BB &#123;</span><br><span class="line">  template &lt;typename cc&gt; static void foo() &#123; std::cout &lt;&lt; &quot;dd::foo\n&quot;; &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">template &lt;typename T&gt; void call_dd() &#123; AA::foo&lt;T&gt;(); &#125;</span><br><span class="line">template &lt;typename T, typename K&gt; void call_dd2() &#123; T::template foo&lt;K&gt;(); &#125;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">  call_dd&lt;void&gt;();</span><br><span class="line">  call_dd2&lt;AA&gt;();</span><br><span class="line">  call_dd2&lt;AA, int&gt;();</span><br><span class="line">  call_dd2&lt;BB, long&gt;();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>##模版与宏定义、虚函数的区别</p>
+<ol>
+<li>宏定义在预处理期执行，模板在编译期执行，而虚函数也称动态绑定在运行时执行</li>
+<li>宏和模板都将运行时的工作提前了，用编译时间换取运行效率</li>
+<li>宏定义没有类型检查，这点模板比较好</li>
+<li>模板虽然会延长编译时间，但当编译期实例化类型后，查找模板函数和查找普通函数的速度几乎相同</li>
+</ol>
+<h2 id="待决名dependent-name"><a href="#待决名dependent-name" class="headerlink" title="待决名dependent name"></a>待决名dependent name</h2><ol>
+<li>待决名的意思是在定义的地方，类型还不能决断，需要延后到实例化确定时。而非待决名指类型在定义的地方已经确定。  </li>
+<li>延后将导致此时无法在定义点进行错误检查，以及消除<code>typename</code>和<code>template</code>歧义，这导致需要在调用点加上template</li>
+</ol>
+<p>待决名如:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">template&lt;typename T&gt;</span><br><span class="line">struct X : B&lt;T&gt; &#x2F;&#x2F; &quot;B&lt;T&gt;&quot; 取决于 T</span><br><span class="line">&#123;</span><br><span class="line">    typename T::A* pa; &#x2F;&#x2F; &quot;T::A&quot; 取决于 T</span><br><span class="line">                       &#x2F;&#x2F; （此 &quot;typename&quot; 的使用的目的见下文）</span><br><span class="line">    void f(B&lt;T&gt;* pb)</span><br><span class="line">    &#123;</span><br><span class="line">        static int i &#x3D; B&lt;T&gt;::i; &#x2F;&#x2F; &quot;B&lt;T&gt;::i&quot; 取决于 T</span><br><span class="line">        pb-&gt;j++; &#x2F;&#x2F; &quot;pb-&gt;j&quot; 取决于 T</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>让人吃惊的例子, 这就是非待决名的情况下，立即绑定</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">g</span><span class="params">(<span class="keyword">double</span>)</span> </span>&#123; <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"g(double)\n"</span>; &#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">template</span>&lt;<span class="class"><span class="keyword">class</span> <span class="title">T</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">struct</span> <span class="title">S</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">f</span><span class="params">()</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        g(<span class="number">1</span>); <span class="comment">// "g" 是非待决名，现在绑定</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">g</span><span class="params">(<span class="keyword">int</span>)</span> </span>&#123; <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"g(int)\n"</span>; &#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    g(<span class="number">1</span>);  <span class="comment">// 调用 g(int)</span></span><br><span class="line"> </span><br><span class="line">    S&lt;<span class="keyword">int</span>&gt; s;</span><br><span class="line">    s.f(); <span class="comment">// 调用 g(double)</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="typename消歧义"><a href="#typename消歧义" class="headerlink" title="typename消歧义"></a>typename消歧义</h3><p>在模板（包括别名模版）的声明或定义中，不是当前实例化的成员且取决于某个模板形参的名字不会被认为是类型，<br>除非使用关键词 typename 或它已经被设立为类型名（例如用 typedef 声明或通过用作基类名）。 </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;vector&gt;</span></span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">int</span> p = <span class="number">1</span>;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">foo</span><span class="params">(<span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;T&gt; &amp;v)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// std::vector&lt;T&gt;::const_iterator 是待决名，</span></span><br><span class="line">    <span class="keyword">typename</span> <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;T&gt;::const_iterator it = v.<span class="built_in">begin</span>();</span><br><span class="line"> </span><br><span class="line">    <span class="comment">// 下列内容因为没有 'typename' 而会被解析成</span></span><br><span class="line">    <span class="comment">// 类型待决的成员变量 'const_iterator' 和某变量 'p' 的乘法。</span></span><br><span class="line">    <span class="comment">// 因为在此处有一个可见的全局 'p'，所以此模板定义能编译。</span></span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;T&gt;::const_iterator* p; </span><br><span class="line"> </span><br><span class="line">    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;T&gt;::const_iterator <span class="keyword">iter_t</span>;</span><br><span class="line">    <span class="keyword">iter_t</span> * p2; <span class="comment">// iter_t 是待决名，但已知它是类型名</span></span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">S</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">typedef</span> <span class="keyword">int</span> <span class="keyword">value_t</span>; <span class="comment">// 当前实例化的成员</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">f</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        S&lt;T&gt;::<span class="keyword">value_t</span> n&#123;&#125;; <span class="comment">// S&lt;T&gt; 待决，但不需要 'typename'</span></span><br><span class="line">        <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; n &lt;&lt; <span class="string">'\n'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; v;</span><br><span class="line">    foo(v); <span class="comment">// 模板实例化失败：类型 std::vector&lt;int&gt; 中没有</span></span><br><span class="line">            <span class="comment">// 名字是 'const_iterator' 的成员变量</span></span><br><span class="line">    S&lt;<span class="keyword">int</span>&gt;().f();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="template消歧义"><a href="#template消歧义" class="headerlink" title="template消歧义"></a>template消歧义</h3><p>与此相似，模板定义中不是当前实例化的成员的待决名同样不被认为是模板名，除非使用消歧义关键词 template，或它已被设立为模板名： </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">template&lt;typename T&gt;</span><br><span class="line">struct S</span><br><span class="line">&#123;</span><br><span class="line">    template&lt;typename U&gt; void foo() &#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line">template&lt;typename T&gt;</span><br><span class="line">void bar()</span><br><span class="line">&#123;</span><br><span class="line">    S&lt;T&gt; s;</span><br><span class="line">    s.foo&lt;T&gt;();          &#x2F;&#x2F; 错误：&lt; 被解析为小于运算符</span><br><span class="line">    s.template foo&lt;T&gt;(); &#x2F;&#x2F; OK</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>template 消歧义可以使用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">T::template</span><br><span class="line">s.template</span><br><span class="line">this-&gt;template</span><br></pre></td></tr></table></figure>
+
+<h2 id="std-forward-转发在模版的使用"><a href="#std-forward-转发在模版的使用" class="headerlink" title="std::forward 转发在模版的使用"></a>std::forward 转发在模版的使用</h2><p>为什么完美转发的对象必须是右值引用？</p>
+<h3 id="说明一下右值引用"><a href="#说明一下右值引用" class="headerlink" title="说明一下右值引用"></a>说明一下右值引用</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"> 引用类型 	可以引用的值类型 	使用场景</span><br><span class="line">非常量左值 	常量左值 	非常量右值 	常量右值</span><br><span class="line">非常量左值引用 	Y 	N 	N 	N 	无</span><br><span class="line">常量左值引用 	Y 	Y 	Y 	Y 	常用于类中构建拷贝构造函数</span><br><span class="line">非常量右值引用 	N 	N 	Y 	N 	移动语义、完美转发</span><br><span class="line">常量右值引用 	N 	N 	Y 	Y 	无实际用途</span><br></pre></td></tr></table></figure>
+
+<p>##参考<br><a href="https://en.cppreference.com/w/cpp/language/parameter_pack" target="_blank" rel="noopener">https://en.cppreference.com/w/cpp/language/parameter_pack</a><br><a href="https://en.cppreference.com/w/cpp/language/fold" target="_blank" rel="noopener">https://en.cppreference.com/w/cpp/language/fold</a><br><a href="https://en.cppreference.com/w/cpp/language/overload_resolution#Best_viable_function" target="_blank" rel="noopener">https://en.cppreference.com/w/cpp/language/overload_resolution#Best_viable_function</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://energygreek.github.io/2021/03/04/cpp-template-programing/" data-id="clsbmbv3g0024bwopdva9f908" data-title="cpp-template-programing" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c-c/" rel="tag">c/c++</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/template-programing/" rel="tag">template programing</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2021/03/10/setup-printer-use-avahi/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前一篇</strong>
+      <div class="article-nav-title">
+        
+          使用avahi将传统打印机支持无线打印
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2021/03/02/temporary-object-and-reference/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">右值, 临时变量与引用</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/51%E5%8D%95%E7%89%87%E6%9C%BA/" rel="tag">51单片机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DP/" rel="tag">DP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aarch64/" rel="tag">aarch64</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/admin/" rel="tag">admin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/" rel="tag">algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algoritm/" rel="tag">algoritm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bash/" rel="tag">bash</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/basics/" rel="tag">basics</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/" rel="tag">c++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c-c/" rel="tag">c/c++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cmake/" rel="tag">cmake</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dns/" rel="tag">dns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/email-client/" rel="tag">email_client</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/exam/" rel="tag">exam</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/exception-safe/" rel="tag">exception-safe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ffmpeg/" rel="tag">ffmpeg</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/filesystem/" rel="tag">filesystem</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flask/" rel="tag">flask</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gdb/" rel="tag">gdb</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/" rel="tag">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/grpc/" rel="tag">grpc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/grub/" rel="tag">grub</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hawei/" rel="tag">hawei</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/heapsort/" rel="tag">heapsort</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/" rel="tag">k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linkage/" rel="tag">linkage</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux%E5%9F%BA%E7%A1%80/" rel="tag">linux基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lock/" rel="tag">lock</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lvm/" rel="tag">lvm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maintance/" rel="tag">maintance</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/malloc/" rel="tag">malloc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mdns/" rel="tag">mdns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memory/" rel="tag">memory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mutex/" rel="tag">mutex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mutt/" rel="tag">mutt</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/namespace/" rel="tag">namespace</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/network/" rel="tag">network</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/os-maintain/" rel="tag">os-maintain</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/printer/" rel="tag">printer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/program/" rel="tag">program</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rancher-k8s/" rel="tag">rancher,k8s</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rhce/" rel="tag">rhce</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rtp/" rel="tag">rtp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/safe/" rel="tag">safe</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scope/" rel="tag">scope</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/seralize/" rel="tag">seralize</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shared-ptr/" rel="tag">shared_ptr</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/socket/" rel="tag">socket</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/socketopt/" rel="tag">socketopt</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sql/" rel="tag">sql</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/storageduration/" rel="tag">storageduration</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sysemd/" rel="tag">sysemd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/template-programing/" rel="tag">template programing</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/terminal/" rel="tag">terminal</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tool/" rel="tag">tool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/udp/" rel="tag">udp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/unique-ptr/" rel="tag">unique_ptr</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/unit-test/" rel="tag">unit test</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/urxvt/" rel="tag">urxvt</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webcrawler/" rel="tag">webcrawler</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/webserver/" rel="tag">webserver</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/weechat/" rel="tag">weechat</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/wordpress/" rel="tag">wordpress</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" rel="tag">二叉树</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E6%A0%B8%E5%8E%9F%E7%90%86/" rel="tag">内核原理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%B7%E6%9C%BA%E6%95%99%E7%A8%8B/" rel="tag">刷机教程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" rel="tag">包管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9F%A5%E6%89%BE/" rel="tag">查找</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/" rel="tag">系统调用</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E8%AF%91/" rel="tag">编译</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%B0%83%E4%BC%98/" rel="tag">调优</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9F%B3%E8%A7%86%E9%A2%91/" rel="tag">音视频</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/51%E5%8D%95%E7%89%87%E6%9C%BA/" style="font-size: 10px;">51单片机</a> <a href="/tags/DP/" style="font-size: 10px;">DP</a> <a href="/tags/Linux/" style="font-size: 10px;">Linux</a> <a href="/tags/aarch64/" style="font-size: 10px;">aarch64</a> <a href="/tags/admin/" style="font-size: 10px;">admin</a> <a href="/tags/algorithm/" style="font-size: 16px;">algorithm</a> <a href="/tags/algoritm/" style="font-size: 10px;">algoritm</a> <a href="/tags/android/" style="font-size: 10px;">android</a> <a href="/tags/bash/" style="font-size: 10px;">bash</a> <a href="/tags/basics/" style="font-size: 10px;">basics</a> <a href="/tags/c/" style="font-size: 12px;">c++</a> <a href="/tags/c-c/" style="font-size: 20px;">c/c++</a> <a href="/tags/cmake/" style="font-size: 10px;">cmake</a> <a href="/tags/dns/" style="font-size: 10px;">dns</a> <a href="/tags/docker/" style="font-size: 18px;">docker</a> <a href="/tags/email-client/" style="font-size: 10px;">email_client</a> <a href="/tags/exam/" style="font-size: 10px;">exam</a> <a href="/tags/exception-safe/" style="font-size: 10px;">exception-safe</a> <a href="/tags/ffmpeg/" style="font-size: 10px;">ffmpeg</a> <a href="/tags/filesystem/" style="font-size: 14px;">filesystem</a> <a href="/tags/flask/" style="font-size: 10px;">flask</a> <a href="/tags/gdb/" style="font-size: 10px;">gdb</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/grpc/" style="font-size: 10px;">grpc</a> <a href="/tags/grub/" style="font-size: 10px;">grub</a> <a href="/tags/hawei/" style="font-size: 10px;">hawei</a> <a href="/tags/heapsort/" style="font-size: 10px;">heapsort</a> <a href="/tags/k8s/" style="font-size: 10px;">k8s</a> <a href="/tags/linkage/" style="font-size: 10px;">linkage</a> <a href="/tags/linux/" style="font-size: 14px;">linux</a> <a href="/tags/linux%E5%9F%BA%E7%A1%80/" style="font-size: 10px;">linux基础</a> <a href="/tags/lock/" style="font-size: 10px;">lock</a> <a href="/tags/lvm/" style="font-size: 10px;">lvm</a> <a href="/tags/maintance/" style="font-size: 10px;">maintance</a> <a href="/tags/malloc/" style="font-size: 10px;">malloc</a> <a href="/tags/mdns/" style="font-size: 10px;">mdns</a> <a href="/tags/memory/" style="font-size: 12px;">memory</a> <a href="/tags/mutex/" style="font-size: 10px;">mutex</a> <a href="/tags/mutt/" style="font-size: 10px;">mutt</a> <a href="/tags/namespace/" style="font-size: 10px;">namespace</a> <a href="/tags/network/" style="font-size: 10px;">network</a> <a href="/tags/os-maintain/" style="font-size: 10px;">os-maintain</a> <a href="/tags/printer/" style="font-size: 10px;">printer</a> <a href="/tags/program/" style="font-size: 10px;">program</a> <a href="/tags/python/" style="font-size: 14px;">python</a> <a href="/tags/rancher-k8s/" style="font-size: 10px;">rancher,k8s</a> <a href="/tags/rhce/" style="font-size: 10px;">rhce</a> <a href="/tags/rtp/" style="font-size: 10px;">rtp</a> <a href="/tags/safe/" style="font-size: 12px;">safe</a> <a href="/tags/scope/" style="font-size: 10px;">scope</a> <a href="/tags/seralize/" style="font-size: 10px;">seralize</a> <a href="/tags/shared-ptr/" style="font-size: 10px;">shared_ptr</a> <a href="/tags/socket/" style="font-size: 10px;">socket</a> <a href="/tags/socketopt/" style="font-size: 10px;">socketopt</a> <a href="/tags/sql/" style="font-size: 12px;">sql</a> <a href="/tags/storageduration/" style="font-size: 10px;">storageduration</a> <a href="/tags/sysemd/" style="font-size: 10px;">sysemd</a> <a href="/tags/template-programing/" style="font-size: 10px;">template programing</a> <a href="/tags/terminal/" style="font-size: 10px;">terminal</a> <a href="/tags/tool/" style="font-size: 18px;">tool</a> <a href="/tags/udp/" style="font-size: 10px;">udp</a> <a href="/tags/unique-ptr/" style="font-size: 10px;">unique_ptr</a> <a href="/tags/unit-test/" style="font-size: 10px;">unit test</a> <a href="/tags/urxvt/" style="font-size: 10px;">urxvt</a> <a href="/tags/webcrawler/" style="font-size: 10px;">webcrawler</a> <a href="/tags/webserver/" style="font-size: 10px;">webserver</a> <a href="/tags/weechat/" style="font-size: 10px;">weechat</a> <a href="/tags/wordpress/" style="font-size: 10px;">wordpress</a> <a href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" style="font-size: 10px;">二叉树</a> <a href="/tags/%E5%86%85%E6%A0%B8%E5%8E%9F%E7%90%86/" style="font-size: 10px;">内核原理</a> <a href="/tags/%E5%88%B7%E6%9C%BA%E6%95%99%E7%A8%8B/" style="font-size: 10px;">刷机教程</a> <a href="/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" style="font-size: 10px;">包管理</a> <a href="/tags/%E6%9F%A5%E6%89%BE/" style="font-size: 10px;">查找</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 10px;">算法</a> <a href="/tags/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/" style="font-size: 10px;">系统调用</a> <a href="/tags/%E7%BC%96%E8%AF%91/" style="font-size: 10px;">编译</a> <a href="/tags/%E8%B0%83%E4%BC%98/" style="font-size: 10px;">调优</a> <a href="/tags/%E9%9F%B3%E8%A7%86%E9%A2%91/" style="font-size: 10px;">音视频</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/02/">二月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/12/">十二月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/05/">五月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">四月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">三月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">一月 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">十二月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/11/">十一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">十月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/08/">八月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">四月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">三月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">二月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">十月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">七月 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/02/07/streaming-h264-with-rtp/">streaming h264 with rtp</a>
+          </li>
+        
+          <li>
+            <a href="/2023/09/08/wifi-tool/">随身wifi工具</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/21/docker-network/">docker network</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/18/mail-setup/">mail setup</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/08/install-wordpress/">install wordpress</a>
+          </li>
+        
+          <li>
+            <a href="/2022/12/29/amrnb-and-amrwb/">amrnb和amrwb的编解码</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 greek_soon@hotmail.com<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
